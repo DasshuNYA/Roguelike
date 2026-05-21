@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "ResourceSystem.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	ResourceSystem* ResourceSystem::Instance()
 	{
@@ -33,31 +33,17 @@ namespace XYZEngine
 
 	const sf::Texture* ResourceSystem::GetTextureShared(const std::string& name) const
 	{
-		std::map<std::string, sf::Texture*>::const_iterator texture = textures.find(name);
-
-		if (texture == textures.end())
-		{
-			return nullptr;
-		}
-
-		return texture->second;
+		return textures.find(name)->second;
 	}
 
 	sf::Texture* ResourceSystem::GetTextureCopy(const std::string& name) const
 	{
-		std::map<std::string, sf::Texture*>::const_iterator texture = textures.find(name);
-
-		if (texture == textures.end())
-		{
-			return nullptr;
-		}
-
-		return new sf::Texture(*texture->second);
+		return new sf::Texture(*textures.find(name)->second);
 	}
 
 	void ResourceSystem::DeleteSharedTexture(const std::string& name)
 	{
-		std::map<std::string, sf::Texture*>::iterator texturePair = textures.find(name);
+		auto texturePair = textures.find(name);
 
 		if (texturePair == textures.end())
 		{
@@ -65,19 +51,11 @@ namespace XYZEngine
 		}
 
 		sf::Texture* deletingTexture = texturePair->second;
-
 		textures.erase(texturePair);
-
 		delete deletingTexture;
 	}
 
-	void ResourceSystem::LoadTextureMap(
-		const std::string& name,
-		std::string sourcePath,
-		sf::Vector2u elementPixelSize,
-		int totalElements,
-		bool isSmooth
-	)
+	void ResourceSystem::LoadTextureMap(const std::string& name, std::string sourcePath, sf::Vector2u elementPixelSize, int totalElements, bool isSmooth)
 	{
 		if (textureMaps.find(name) != textureMaps.end())
 		{
@@ -90,24 +68,17 @@ namespace XYZEngine
 		{
 			std::vector<sf::Texture*> textureMapElements;
 
-			sf::Vector2u textureSize = textureMap.getSize();
-
-			const int textureWidth = static_cast<int>(textureSize.x);
-			const int textureHeight = static_cast<int>(textureSize.y);
-
-			const int elementWidth = static_cast<int>(elementPixelSize.x);
-			const int elementHeight = static_cast<int>(elementPixelSize.y);
-
+			auto textureSize = textureMap.getSize();
 			int loadedElements = 0;
 
-			for (int y = 0; y <= textureHeight - elementHeight; y += elementHeight)
+			for (int y = 0; y <= static_cast<int>(textureSize.y - elementPixelSize.y); y += elementPixelSize.y)
 			{
 				if (loadedElements == totalElements)
 				{
 					break;
 				}
 
-				for (int x = 0; x <= textureWidth - elementWidth; x += elementWidth)
+				for (int x = 0; x <= static_cast<int>(textureSize.x - elementPixelSize.x); x += elementPixelSize.x)
 				{
 					if (loadedElements == totalElements)
 					{
@@ -116,10 +87,7 @@ namespace XYZEngine
 
 					sf::Texture* newTextureMapElement = new sf::Texture();
 
-					if (newTextureMapElement->loadFromFile(
-						sourcePath,
-						sf::IntRect(x, y, elementWidth, elementHeight)
-					))
+					if (newTextureMapElement->loadFromFile(sourcePath, sf::IntRect(x, y, elementPixelSize.x, elementPixelSize.y)))
 					{
 						newTextureMapElement->setSmooth(isSmooth);
 						textureMapElements.push_back(newTextureMapElement);
@@ -137,97 +105,93 @@ namespace XYZEngine
 		}
 	}
 
-	const sf::Texture* ResourceSystem::GetTextureMapElementShared(
-		const std::string& name,
-		int elementIndex
-	) const
+	const sf::Texture* ResourceSystem::GetTextureMapElementShared(const std::string& name, int elementIndex) const
 	{
-		std::map<std::string, std::vector<sf::Texture*>>::const_iterator textureMap =
-			textureMaps.find(name);
-
-		if (textureMap == textureMaps.end())
-		{
-			return nullptr;
-		}
-
-		if (elementIndex < 0 || elementIndex >= static_cast<int>(textureMap->second.size()))
-		{
-			return nullptr;
-		}
-
-		return textureMap->second[elementIndex];
+		return textureMaps.find(name)->second[elementIndex];
 	}
 
-	sf::Texture* ResourceSystem::GetTextureMapElementCopy(
-		const std::string& name,
-		int elementIndex
-	) const
+	sf::Texture* ResourceSystem::GetTextureMapElementCopy(const std::string& name, int elementIndex) const
 	{
-		std::map<std::string, std::vector<sf::Texture*>>::const_iterator textureMap =
-			textureMaps.find(name);
-
-		if (textureMap == textureMaps.end())
-		{
-			return nullptr;
-		}
-
-		if (elementIndex < 0 || elementIndex >= static_cast<int>(textureMap->second.size()))
-		{
-			return nullptr;
-		}
-
-		return new sf::Texture(*textureMap->second[elementIndex]);
+		return new sf::Texture(*textureMaps.find(name)->second[elementIndex]);
 	}
 
 	int ResourceSystem::GetTextureMapElementsCount(const std::string& name) const
 	{
-		std::map<std::string, std::vector<sf::Texture*>>::const_iterator textureMap =
-			textureMaps.find(name);
-
-		if (textureMap == textureMaps.end())
-		{
-			return 0;
-		}
-
-		return static_cast<int>(textureMap->second.size());
+		return static_cast<int>(textureMaps.find(name)->second.size());
 	}
 
 	void ResourceSystem::DeleteSharedTextureMap(const std::string& name)
 	{
-		std::map<std::string, std::vector<sf::Texture*>>::iterator textureMap =
-			textureMaps.find(name);
+		auto textureMap = textureMaps.find(name);
 
 		if (textureMap == textureMaps.end())
 		{
 			return;
 		}
 
-		std::vector<sf::Texture*> deletingTextures = textureMap->second;
-
-		for (size_t i = 0; i < deletingTextures.size(); i++)
+		for (int i = 0; i < textureMap->second.size(); i++)
 		{
-			delete deletingTextures[i];
+			delete textureMap->second[i];
 		}
 
 		textureMaps.erase(textureMap);
+	}
+
+	void ResourceSystem::LoadSoundBuffer(const std::string& name, std::string sourcePath)
+	{
+		if (soundBuffers.find(name) != soundBuffers.end())
+		{
+			return;
+		}
+
+		sf::SoundBuffer* newSoundBuffer = new sf::SoundBuffer();
+
+		if (newSoundBuffer->loadFromFile(sourcePath))
+		{
+			soundBuffers.emplace(name, newSoundBuffer);
+		}
+		else
+		{
+			delete newSoundBuffer;
+		}
+	}
+
+	const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(const std::string& name) const
+	{
+		return soundBuffers.find(name)->second;
+	}
+
+	void ResourceSystem::DeleteSharedSoundBuffer(const std::string& name)
+	{
+		auto soundBufferPair = soundBuffers.find(name);
+
+		if (soundBufferPair == soundBuffers.end())
+		{
+			return;
+		}
+
+		sf::SoundBuffer* deletingSoundBuffer = soundBufferPair->second;
+		soundBuffers.erase(soundBufferPair);
+		delete deletingSoundBuffer;
 	}
 
 	void ResourceSystem::Clear()
 	{
 		DeleteAllTextures();
 		DeleteAllTextureMaps();
+		DeleteAllSoundBuffers();
 	}
 
 	void ResourceSystem::DeleteAllTextures()
 	{
 		std::vector<std::string> keysToDelete;
 
-		for (const std::pair<const std::string, sf::Texture*>& texturePair : textures)
+		for (const auto& texturePair : textures)
 		{
 			keysToDelete.push_back(texturePair.first);
 		}
 
-		for (const std::string& key : keysToDelete)
+		for (const auto& key : keysToDelete)
 		{
 			DeleteSharedTexture(key);
 		}
@@ -237,14 +201,29 @@ namespace XYZEngine
 	{
 		std::vector<std::string> keysToDelete;
 
-		for (const std::pair<const std::string, std::vector<sf::Texture*>>& textureMapPair : textureMaps)
+		for (const auto& textureMapPair : textureMaps)
 		{
 			keysToDelete.push_back(textureMapPair.first);
 		}
 
-		for (const std::string& key : keysToDelete)
+		for (const auto& key : keysToDelete)
 		{
 			DeleteSharedTextureMap(key);
+		}
+	}
+
+	void ResourceSystem::DeleteAllSoundBuffers()
+	{
+		std::vector<std::string> keysToDelete;
+
+		for (const auto& soundBufferPair : soundBuffers)
+		{
+			keysToDelete.push_back(soundBufferPair.first);
+		}
+
+		for (const auto& key : keysToDelete)
+		{
+			DeleteSharedSoundBuffer(key);
 		}
 	}
 }

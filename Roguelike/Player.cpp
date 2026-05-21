@@ -7,35 +7,35 @@
 #include "SpriteColliderComponent.h"
 #include "PlayerMovementComponent.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	Player::Player()
 	{
-		gameObject = XYZEngine::GameWorld::Instance()->CreateGameObject("Player");
+		gameObject = Engine::GameWorld::Instance()->CreateGameObject("Player");
 
-		auto playerRenderer = gameObject->AddComponent<XYZEngine::SpriteRendererComponent>();
+		auto playerRenderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
 		playerRenderer->SetTexture(
-			*XYZEngine::ResourceSystem::Instance()->GetTextureShared("player")
+			*Engine::ResourceSystem::Instance()->GetTextureShared("player")
 		);
 
 		playerRenderer->SetPixelSize(48, 48);
 
-		auto playerCamera = gameObject->AddComponent<XYZEngine::CameraComponent>();
-		playerCamera->SetWindow(&XYZEngine::RenderSystem::Instance()->GetMainWindow());
+		auto playerCamera = gameObject->AddComponent<Engine::CameraComponent>();
+		playerCamera->SetWindow(&Engine::RenderSystem::Instance()->GetMainWindow());
 		playerCamera->SetBaseResolution(1280, 720);
 
-		gameObject->AddComponent<XYZEngine::InputComponent>();
+		gameObject->AddComponent<Engine::InputComponent>();
 
-		auto body = gameObject->AddComponent<XYZEngine::RigidbodyComponent>();
+		auto body = gameObject->AddComponent<Engine::RigidbodyComponent>();
 		body->SetLinearDamping(0.f);
 
 		gameObject->AddComponent<PlayerMovementComponent>();
 
-		gameObject->AddComponent<XYZEngine::SpriteColliderComponent>();
+		gameObject->AddComponent<Engine::SpriteColliderComponent>();
 	}
 
-	XYZEngine::GameObject* Player::GetGameObject()
+	Engine::GameObject* Player::GetGameObject()
 	{
 		return gameObject;
 	}

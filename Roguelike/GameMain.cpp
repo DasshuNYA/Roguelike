@@ -7,18 +7,18 @@
 #include "DeveloperLevel.h"
 #include "Matrix2D.h"
 
-using namespace XYZRoguelike;
+using namespace Roguelike;
 
 int main()
 {
-	XYZEngine::RenderSystem::Instance()->SetMainWindow(new sf::RenderWindow(sf::VideoMode(1280, 720), "XYZRoguelike"));
+	Engine::RenderSystem::Instance()->SetMainWindow(new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike"));
 
-	XYZEngine::ResourceSystem::Instance()->LoadTexture("ball", "Resources/Textures/ball.png");
+	Engine::ResourceSystem::Instance()->LoadTexture("ball", "Resources/Textures/ball.png");
 
 	auto developerLevel = std::make_shared<DeveloperLevel>();
 	developerLevel->Start();
 
-	XYZEngine::Engine::Instance()->Run();
+	Engine::Engine::Instance()->Run();
 
 	return 0;
 }

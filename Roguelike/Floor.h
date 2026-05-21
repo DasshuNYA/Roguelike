@@ -1,11 +1,11 @@
 #pragma once
 
-namespace XYZEngine
+namespace Engine
 {
 	class GameObject;
 }
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	class Floor
 	{
@@ -13,6 +13,6 @@ namespace XYZRoguelike
 		Floor(float x, float y);
 
 	private:
-		XYZEngine::GameObject* gameObject = nullptr;
+		Engine::GameObject* gameObject = nullptr;
 	};
 }

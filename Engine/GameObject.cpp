@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	GameObject::GameObject()
 	{

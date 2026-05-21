@@ -4,10 +4,12 @@
 
 #include <map>
 #include <string>
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-namespace XYZEngine
+namespace Engine
 {
 	class ResourceSystem
 	{
@@ -25,19 +27,25 @@ namespace XYZEngine
 		int GetTextureMapElementsCount(const std::string& name) const;
 		void DeleteSharedTextureMap(const std::string& name);
 
+		void LoadSoundBuffer(const std::string& name, std::string sourcePath);
+		const sf::SoundBuffer* GetSoundBufferShared(const std::string& name) const;
+		void DeleteSharedSoundBuffer(const std::string& name);
+
 		void Clear();
 
 	private:
 		std::map<std::string, sf::Texture*> textures;
 		std::map<std::string, std::vector<sf::Texture*>> textureMaps;
+		std::map<std::string, sf::SoundBuffer*> soundBuffers;
 
 		ResourceSystem() {}
 		~ResourceSystem() {}
 
 		ResourceSystem(ResourceSystem const&) = delete;
-		ResourceSystem& operator= (ResourceSystem const&) = delete;
+		ResourceSystem& operator=(ResourceSystem const&) = delete;
 
 		void DeleteAllTextures();
 		void DeleteAllTextureMaps();
+		void DeleteAllSoundBuffers();
 	};
 }

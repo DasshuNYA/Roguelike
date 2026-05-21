@@ -9,7 +9,7 @@
 #include "Vector.h"
 #include "Matrix2D.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class TransformComponent : public Component
 	{

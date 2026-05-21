@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "PhysicsSystem.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class GameWorld
 	{

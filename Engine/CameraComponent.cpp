@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "CameraComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	CameraComponent::CameraComponent(GameObject* gameObject)
 		: Component(gameObject)

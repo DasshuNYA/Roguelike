@@ -4,7 +4,7 @@
 #include "Trigger.h"
 #include "ColliderComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	Trigger::Trigger(ColliderComponent* newFirst, ColliderComponent* newSecond)
 		: first(newFirst), second(newSecond)

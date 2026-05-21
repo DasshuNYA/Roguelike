@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "InputComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	InputComponent::InputComponent(GameObject* gameObject)
 		: Component(gameObject)

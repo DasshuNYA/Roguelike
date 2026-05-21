@@ -2,12 +2,12 @@
 
 #pragma once
 
-namespace XYZEngine
+namespace Engine
 {
 	class GameObject;
 }
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	class Wall
 	{
@@ -17,9 +17,9 @@ namespace XYZRoguelike
 		Wall(const Wall&) = delete;
 		Wall& operator=(const Wall&) = delete;
 
-		XYZEngine::GameObject* GetGameObject() const;
+		Engine::GameObject* GetGameObject() const;
 
 	private:
-		XYZEngine::GameObject* gameObject = nullptr;
+		Engine::GameObject* gameObject = nullptr;
 	};
 }

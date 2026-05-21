@@ -3,12 +3,12 @@
 #include "ColliderComponent.h"
 #include "TransformComponent.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	class DetectionTriggerComponent : public XYZEngine::ColliderComponent
+	class DetectionTriggerComponent : public Engine::ColliderComponent
 	{
 	public:
-		DetectionTriggerComponent(XYZEngine::GameObject* gameObject);
+		DetectionTriggerComponent(Engine::GameObject* gameObject);
 
 		void Update(float deltaTime) override;
 		void Render() override;
@@ -16,7 +16,7 @@ namespace XYZRoguelike
 		void SetRadius(float newRadius);
 
 	private:
-		XYZEngine::TransformComponent* transform = nullptr;
+		Engine::TransformComponent* transform = nullptr;
 		float radius = 180.f;
 	};
 }

@@ -1,34 +1,35 @@
+// @file GameResourceLoader.cpp
+
 #include "pch.h"
 #include "GameResourceLoader.h"
 
 #include "ResourceSystem.h"
-#include "AudioSystem.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	void GameResourceLoader::Load()
 	{
-		XYZEngine::ResourceSystem::Instance()->LoadTexture(
+		Engine::ResourceSystem::Instance()->LoadTexture(
 			"player",
 			"Resources/Textures/Player.png"
 		);
 
-		XYZEngine::ResourceSystem::Instance()->LoadTexture(
+		Engine::ResourceSystem::Instance()->LoadTexture(
 			"enemy",
 			"Resources/Textures/Enemy.png"
 		);
 
-		XYZEngine::ResourceSystem::Instance()->LoadTexture(
+		Engine::ResourceSystem::Instance()->LoadTexture(
 			"wall",
 			"Resources/Textures/Wall.png"
 		);
 
-		XYZEngine::ResourceSystem::Instance()->LoadTexture(
+		Engine::ResourceSystem::Instance()->LoadTexture(
 			"floor",
 			"Resources/Textures/Floor.png"
 		);
 
-		XYZEngine::AudioSystem::Instance()->LoadMusic(
+		Engine::ResourceSystem::Instance()->LoadSoundBuffer(
 			"main_theme",
 			"Resources/Sounds/backgroundMusic.wav"
 		);

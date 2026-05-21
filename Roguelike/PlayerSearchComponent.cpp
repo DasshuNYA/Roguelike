@@ -3,13 +3,13 @@
 #include "pch.h"
 #include "PlayerSearchComponent.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	PlayerSearchComponent::PlayerSearchComponent(XYZEngine::GameObject* gameObject)
+	PlayerSearchComponent::PlayerSearchComponent(Engine::GameObject* gameObject)
 		: Component(gameObject)
 	{
-		transform = gameObject->GetComponent<XYZEngine::TransformComponent>();
-		rigidbody = gameObject->GetComponent<XYZEngine::RigidbodyComponent>();
+		transform = gameObject->GetComponent<Engine::TransformComponent>();
+		rigidbody = gameObject->GetComponent<Engine::RigidbodyComponent>();
 	}
 
 	void PlayerSearchComponent::Update(float deltaTime)
@@ -24,13 +24,13 @@ namespace XYZRoguelike
 			return;
 		}
 
-		XYZEngine::Vector2Df playerPosition =
-			player->GetComponent<XYZEngine::TransformComponent>()->GetWorldPosition();
+		Engine::Vector2Df playerPosition =
+			player->GetComponent<Engine::TransformComponent>()->GetWorldPosition();
 
-		XYZEngine::Vector2Df enemyPosition =
+		Engine::Vector2Df enemyPosition =
 			transform->GetWorldPosition();
 
-		XYZEngine::Vector2Df direction =
+		Engine::Vector2Df direction =
 		{
 			playerPosition.x - enemyPosition.x,
 			playerPosition.y - enemyPosition.y
@@ -54,7 +54,7 @@ namespace XYZRoguelike
 	{
 	}
 
-	void PlayerSearchComponent::SetPlayer(XYZEngine::GameObject* newPlayer)
+	void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer)
 	{
 		player = newPlayer;
 	}

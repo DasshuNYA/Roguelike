@@ -5,7 +5,7 @@
 #include "TransformComponent.h"
 #include "Vector.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class RigidbodyComponent : public Component
 	{

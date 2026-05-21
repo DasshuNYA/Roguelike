@@ -14,20 +14,20 @@
 #include <cassert>
 #include <iostream>
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	Wall::Wall(float x, float y)
-		: gameObject(XYZEngine::GameWorld::Instance()->CreateGameObject("Wall"))
+		: gameObject(Engine::GameWorld::Instance()->CreateGameObject("Wall"))
 	{
 		assert(gameObject && "Wall GameObject was not created");
 
-		auto transform = gameObject->GetComponent<XYZEngine::TransformComponent>();
+		auto transform = gameObject->GetComponent<Engine::TransformComponent>();
 		assert(transform && "Wall requires TransformComponent");
 
 		transform->SetWorldPosition(x, y);
 
-		auto renderer = gameObject->AddComponent<XYZEngine::SpriteRendererComponent>();
-		auto texture = XYZEngine::ResourceSystem::Instance()->GetTextureShared("wall");
+		auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
+		auto texture = Engine::ResourceSystem::Instance()->GetTextureShared("wall");
 
 		if (renderer != nullptr && texture != nullptr)
 		{
@@ -39,9 +39,9 @@ namespace XYZRoguelike
 			std::cerr << "[Wall] Failed to initialize sprite renderer or texture." << std::endl;
 		}
 
-		gameObject->AddComponent<XYZEngine::SpriteColliderComponent>();
+		gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
-		auto rigidbody = gameObject->AddComponent<XYZEngine::RigidbodyComponent>();
+		auto rigidbody = gameObject->AddComponent<Engine::RigidbodyComponent>();
 
 		if (rigidbody != nullptr)
 		{
@@ -53,7 +53,7 @@ namespace XYZRoguelike
 		}
 	}
 
-	XYZEngine::GameObject* Wall::GetGameObject() const
+	Engine::GameObject* Wall::GetGameObject() const
 	{
 		return gameObject;
 	}

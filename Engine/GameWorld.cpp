@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "GameWorld.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	GameWorld* GameWorld::Instance()
 	{

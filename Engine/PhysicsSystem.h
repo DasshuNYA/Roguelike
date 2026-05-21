@@ -8,7 +8,7 @@
 #include "RigidbodyComponent.h"
 #include "Vector.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class PhysicsSystem
 	{

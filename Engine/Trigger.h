@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace XYZEngine
+namespace Engine
 {
 	class ColliderComponent;
 	class GameObject;

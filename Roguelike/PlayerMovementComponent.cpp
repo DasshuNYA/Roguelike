@@ -3,13 +3,13 @@
 #include "pch.h"
 #include "PlayerMovementComponent.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	PlayerMovementComponent::PlayerMovementComponent(XYZEngine::GameObject* gameObject)
+	PlayerMovementComponent::PlayerMovementComponent(Engine::GameObject* gameObject)
 		: Component(gameObject)
 	{
-		input = gameObject->GetComponent<XYZEngine::InputComponent>();
-		rigidbody = gameObject->GetComponent<XYZEngine::RigidbodyComponent>();
+		input = gameObject->GetComponent<Engine::InputComponent>();
+		rigidbody = gameObject->GetComponent<Engine::RigidbodyComponent>();
 	}
 
 	void PlayerMovementComponent::Update(float deltaTime)
@@ -19,7 +19,7 @@ namespace XYZRoguelike
 			return;
 		}
 
-		XYZEngine::Vector2Df direction =
+		Engine::Vector2Df direction =
 		{
 			input->GetHorizontalAxis(),
 			input->GetVerticalAxis()

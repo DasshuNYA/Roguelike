@@ -7,7 +7,7 @@
 #include "RenderSystem.h"
 #include <SFML/Graphics/Sprite.hpp>
 
-namespace XYZEngine
+namespace Engine
 {
 	class SpriteColliderComponent : public ColliderComponent
 	{

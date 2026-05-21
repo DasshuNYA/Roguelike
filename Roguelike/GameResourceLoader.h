@@ -1,6 +1,6 @@
 #pragma once
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	class GameResourceLoader
 	{

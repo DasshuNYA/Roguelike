@@ -14,30 +14,30 @@
 #include "ResourceSystem.h"
 #include "Trigger.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	Enemy::Enemy(XYZEngine::GameObject* player, float x, float y)
+	Enemy::Enemy(Engine::GameObject* player, float x, float y)
 	{
-		gameObject = XYZEngine::GameWorld::Instance()->CreateGameObject("Enemy");
+		gameObject = Engine::GameWorld::Instance()->CreateGameObject("Enemy");
 
-		XYZEngine::TransformComponent* transform =
-			gameObject->GetComponent<XYZEngine::TransformComponent>();
+		Engine::TransformComponent* transform =
+			gameObject->GetComponent<Engine::TransformComponent>();
 
 		transform->SetWorldPosition(x, y);
 
-		XYZEngine::SpriteRendererComponent* renderer =
-			gameObject->AddComponent<XYZEngine::SpriteRendererComponent>();
+		Engine::SpriteRendererComponent* renderer =
+			gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
 		renderer->SetTexture(
-			*XYZEngine::ResourceSystem::Instance()->GetTextureShared("enemy")
+			*Engine::ResourceSystem::Instance()->GetTextureShared("enemy")
 		);
 
 		renderer->SetPixelSize(48, 48);
 
-		gameObject->AddComponent<XYZEngine::SpriteColliderComponent>();
+		gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
-		XYZEngine::RigidbodyComponent* rigidbody =
-			gameObject->AddComponent<XYZEngine::RigidbodyComponent>();
+		Engine::RigidbodyComponent* rigidbody =
+			gameObject->AddComponent<Engine::RigidbodyComponent>();
 
 		rigidbody->SetLinearDamping(1.f);
 
@@ -52,7 +52,7 @@ namespace XYZRoguelike
 		detectionTrigger->SetRadius(180.f);
 
 		detectionTrigger->SubscribeTriggerEnter(
-			[search, player](XYZEngine::Trigger trigger)
+			[search, player](Engine::Trigger trigger)
 			{
 				if (trigger.HasGameObject(player))
 				{
@@ -62,7 +62,7 @@ namespace XYZRoguelike
 		);
 
 		detectionTrigger->SubscribeTriggerExit(
-			[search, player](XYZEngine::Trigger trigger)
+			[search, player](Engine::Trigger trigger)
 			{
 				if (trigger.HasGameObject(player))
 				{
@@ -72,7 +72,7 @@ namespace XYZRoguelike
 		);
 	}
 
-	XYZEngine::GameObject* Enemy::GetGameObject() const
+	Engine::GameObject* Enemy::GetGameObject() const
 	{
 		return gameObject;
 	}

@@ -9,14 +9,14 @@
 #include "InputComponent.h"
 #include "GameObject.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	class Player
 	{
 	public:
 		Player();
-		XYZEngine::GameObject* GetGameObject();
+		Engine::GameObject* GetGameObject();
 	private:
-		XYZEngine::GameObject* gameObject;
+		Engine::GameObject* gameObject;
 	};
 }

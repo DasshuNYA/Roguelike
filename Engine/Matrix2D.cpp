@@ -5,7 +5,7 @@
 
 constexpr float PI = 3.14159265358979323846f;
 
-namespace XYZEngine
+namespace Engine
 {
 	Matrix2D::Matrix2D()
 	{

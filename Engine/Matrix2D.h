@@ -8,7 +8,7 @@
 #include <array>
 #include "Vector.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class Matrix2D
 	{

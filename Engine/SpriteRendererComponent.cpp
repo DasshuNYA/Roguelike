@@ -5,7 +5,7 @@
 #include "TransformComponent.h"
 #include "RenderSystem.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	SpriteRendererComponent::SpriteRendererComponent(GameObject* gameObject)
 		: Component(gameObject)

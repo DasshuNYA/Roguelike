@@ -5,7 +5,7 @@
 #include "Component.h"
 #include <SFML/Window.hpp> 
 
-namespace XYZEngine
+namespace Engine
 {
 	class InputComponent : public Component
 	{

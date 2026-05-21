@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ColliderComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	ColliderComponent::ColliderComponent(GameObject* gameObject)
 		: Component(gameObject)

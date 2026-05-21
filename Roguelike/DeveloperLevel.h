@@ -7,9 +7,9 @@
 #include "Scene.h"
 #include "Player.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	class DeveloperLevel : public XYZEngine::Scene
+	class DeveloperLevel : public Engine::Scene
 	{
 	public:
 		void Start() override;

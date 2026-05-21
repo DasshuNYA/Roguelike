@@ -4,7 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace XYZEngine
+namespace Engine
 {
 	class RenderSystem
 	{

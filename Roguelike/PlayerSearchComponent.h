@@ -8,24 +8,24 @@
 #include "GameObject.h"
 #include "Vector.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	class PlayerSearchComponent : public XYZEngine::Component
+	class PlayerSearchComponent : public Engine::Component
 	{
 	public:
-		PlayerSearchComponent(XYZEngine::GameObject* gameObject);
+		PlayerSearchComponent(Engine::GameObject* gameObject);
 
 		void Update(float deltaTime) override;
 		void Render() override;
 
-		void SetPlayer(XYZEngine::GameObject* newPlayer);
+		void SetPlayer(Engine::GameObject* newPlayer);
 		void SetPlayerDetected(bool detected);
 
 	private:
-		XYZEngine::GameObject* player = nullptr;
+		Engine::GameObject* player = nullptr;
 
-		XYZEngine::TransformComponent* transform = nullptr;
-		XYZEngine::RigidbodyComponent* rigidbody = nullptr;
+		Engine::TransformComponent* transform = nullptr;
+		Engine::RigidbodyComponent* rigidbody = nullptr;
 
 		bool isPlayerDetected = false;
 

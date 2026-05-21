@@ -6,16 +6,16 @@
 #include "RenderSystem.h"
 #include "PhysicsSystem.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	DetectionTriggerComponent::DetectionTriggerComponent(XYZEngine::GameObject* gameObject)
+	DetectionTriggerComponent::DetectionTriggerComponent(Engine::GameObject* gameObject)
 		: ColliderComponent(gameObject)
 	{
-		transform = gameObject->GetComponent<XYZEngine::TransformComponent>();
+		transform = gameObject->GetComponent<Engine::TransformComponent>();
 
 		SetTrigger(true);
 
-		XYZEngine::PhysicsSystem::Instance()->Subscribe(this);
+		Engine::PhysicsSystem::Instance()->Subscribe(this);
 	}
 
 	void DetectionTriggerComponent::Update(float deltaTime)
@@ -25,7 +25,7 @@ namespace XYZRoguelike
 			return;
 		}
 
-		XYZEngine::Vector2Df position = transform->GetWorldPosition();
+		Engine::Vector2Df position = transform->GetWorldPosition();
 
 		bounds = sf::FloatRect(
 			position.x - radius,
@@ -42,7 +42,7 @@ namespace XYZRoguelike
 			return;
 		}
 
-		XYZEngine::Vector2Df position = transform->GetWorldPosition();
+		Engine::Vector2Df position = transform->GetWorldPosition();
 
 		// DEBUG: enemy detection radius visualization.
 		sf::CircleShape circle(radius);
@@ -52,7 +52,7 @@ namespace XYZRoguelike
 		circle.setOutlineColor(sf::Color(0, 255, 0, 120));
 		circle.setOutlineThickness(2.f);
 
-		XYZEngine::RenderSystem::Instance()->Render(circle);
+		Engine::RenderSystem::Instance()->Render(circle);
 	}
 
 	void DetectionTriggerComponent::SetRadius(float newRadius)

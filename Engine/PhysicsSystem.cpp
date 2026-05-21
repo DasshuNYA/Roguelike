@@ -4,7 +4,7 @@
 #include "PhysicsSystem.h"
 #include "TransformComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	PhysicsSystem* PhysicsSystem::Instance()
 	{

@@ -1,5 +1,5 @@
 ﻿  pch.cpp
-  AudioSystem.cpp
+  AudioComponent.cpp
   CameraComponent.cpp
   ColliderComponent.cpp
   Collision.cpp

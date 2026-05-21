@@ -6,7 +6,7 @@
 #include "Floor.h"
 #include "Wall.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	LevelBuilder::LevelBuilder(float startX, float startY, float tileSize, int width, int height)
 	{

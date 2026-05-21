@@ -2,24 +2,24 @@
 
 #pragma once
 
-namespace XYZEngine
+namespace Engine
 {
 	class GameObject;
 }
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	class Enemy
 	{
 	public:
-		Enemy(XYZEngine::GameObject* player, float x, float y);
+		Enemy(Engine::GameObject* player, float x, float y);
 
 		Enemy(const Enemy&) = delete;
 		Enemy& operator=(const Enemy&) = delete;
 
-		XYZEngine::GameObject* GetGameObject() const;
+		Engine::GameObject* GetGameObject() const;
 
 	private:
-		XYZEngine::GameObject* gameObject = nullptr;
+		Engine::GameObject* gameObject = nullptr;
 	};
 }

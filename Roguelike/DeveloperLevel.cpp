@@ -3,46 +3,38 @@
 #include "pch.h"
 #include "DeveloperLevel.h"
 
+#include "AudioComponent.h"
+#include "GameObject.h"
+#include "GameResourceLoader.h"
 #include "GameWorld.h"
-#include "AudioSystem.h"
+#include "ResourceSystem.h"
 #include "TransformComponent.h"
 
 #include "Enemy.h"
 #include "LevelBuilder.h"
-#include "GameResourceLoader.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
 	void DeveloperLevel::Start()
 	{
 		GameResourceLoader::Load();
 
-		XYZEngine::AudioSystem::Instance()->SetMusicVolume(10.f);
-		XYZEngine::AudioSystem::Instance()->PlayMusic("main_theme", true);
-
-		const float levelStartX = 256.f;
-		const float levelStartY = 96.f;
-		const float tileSize = 64.f;
-
-		const int levelWidth = 12;
-		const int levelHeight = 8;
-
 		LevelBuilder levelBuilder(
-			levelStartX,
-			levelStartY,
-			tileSize,
-			levelWidth,
-			levelHeight
+			256.f,
+			96.f,
+			64.f,
+			12,
+			8
 		);
 
 		levelBuilder.Build();
 
 		player = std::make_shared<Player>();
 
-		XYZEngine::GameObject* playerObject = player->GetGameObject();
+		Engine::GameObject* playerObject = player->GetGameObject();
 
 		playerObject
-			->GetComponent<XYZEngine::TransformComponent>()
+			->GetComponent<Engine::TransformComponent>()
 			->SetWorldPosition(
 				levelBuilder.GetPlayerSpawnX(),
 				levelBuilder.GetPlayerSpawnY()
@@ -53,6 +45,20 @@ namespace XYZRoguelike
 			levelBuilder.GetEnemySpawnX(),
 			levelBuilder.GetEnemySpawnY()
 		);
+
+		Engine::GameObject* musicObject =
+			Engine::GameWorld::Instance()->CreateGameObject("Music");
+
+		Engine::AudioComponent* music =
+			musicObject->AddComponent<Engine::AudioComponent>();
+
+		music->SetAudio(
+			*Engine::ResourceSystem::Instance()->GetSoundBufferShared("main_theme")
+		);
+
+		music->SetLoop(true);
+		music->SetVolume(20.f);
+		music->Play();
 	}
 
 	void DeveloperLevel::Restart()
@@ -63,7 +69,6 @@ namespace XYZRoguelike
 
 	void DeveloperLevel::Stop()
 	{
-		XYZEngine::AudioSystem::Instance()->StopMusic();
-		XYZEngine::GameWorld::Instance()->Clear();
+		Engine::GameWorld::Instance()->Clear();
 	}
 }

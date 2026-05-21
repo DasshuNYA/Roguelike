@@ -7,19 +7,19 @@
 #include "RigidbodyComponent.h"
 #include "Vector.h"
 
-namespace XYZRoguelike
+namespace Roguelike
 {
-	class PlayerMovementComponent : public XYZEngine::Component
+	class PlayerMovementComponent : public Engine::Component
 	{
 	public:
-		PlayerMovementComponent(XYZEngine::GameObject* gameObject);
+		PlayerMovementComponent(Engine::GameObject* gameObject);
 
 		void Update(float deltaTime) override;
 		void Render() override;
 
 	private:
-		XYZEngine::InputComponent* input = nullptr;
-		XYZEngine::RigidbodyComponent* rigidbody = nullptr;
+		Engine::InputComponent* input = nullptr;
+		Engine::RigidbodyComponent* rigidbody = nullptr;
 
 		float speed = 500.f;
 	};

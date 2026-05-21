@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 
-namespace XYZEngine
+namespace Engine
 {
 	Engine* Engine::Instance()
 	{

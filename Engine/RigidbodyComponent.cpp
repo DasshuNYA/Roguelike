@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "RigidbodyComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	RigidbodyComponent::RigidbodyComponent(GameObject* gameObject)
 		: Component(gameObject)

@@ -6,7 +6,7 @@
 #include <cmath>
 #include <iostream>
 
-namespace XYZEngine
+namespace Engine
 {
 	TransformComponent::TransformComponent(GameObject* gameObject)
 		: Component(gameObject)

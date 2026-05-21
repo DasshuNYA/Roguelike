@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace XYZEngine
+namespace Engine
 {
 	template<typename T>
 	struct Vector2D

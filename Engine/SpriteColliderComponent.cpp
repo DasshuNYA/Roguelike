@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "SpriteColliderComponent.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	SpriteColliderComponent::SpriteColliderComponent(GameObject* gameObject)
 		: ColliderComponent(gameObject)

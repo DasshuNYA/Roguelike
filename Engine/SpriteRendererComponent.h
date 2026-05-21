@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-namespace XYZEngine
+namespace Engine
 {
 	class SpriteRendererComponent : public Component
 	{

@@ -9,7 +9,7 @@
 #include "Trigger.h"
 #include "PhysicsSystem.h"
 
-namespace XYZEngine
+namespace Engine
 {
 	class ColliderComponent : public Component
 	{
