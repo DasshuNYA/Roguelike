@@ -1,0 +1,22 @@
+﻿  pch.cpp
+  AudioSystem.cpp
+  CameraComponent.cpp
+  ColliderComponent.cpp
+  Collision.cpp
+  Component.cpp
+  Engine.cpp
+  GameObject.cpp
+  GameWorld.cpp
+  InputComponent.cpp
+  Matrix2D.cpp
+  PhysicsSystem.cpp
+  RenderSystem.cpp
+  ResourceSystem.cpp
+  RigidbodyComponent.cpp
+  Sprite.cpp
+  SpriteColliderComponent.cpp
+  SpriteRendererComponent.cpp
+  TransformComponent.cpp
+  Trigger.cpp
+  Generating Code...
+  XYZEngine.vcxproj -> E:\roguelike\roguelike\bin\Engine\Debug\Engine.lib
