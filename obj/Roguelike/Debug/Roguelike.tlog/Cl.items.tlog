@@ -5,6 +5,7 @@ E:\roguelike\roguelike\Roguelike\Floor.cpp;E:\roguelike\roguelike\obj\Roguelike\
 E:\roguelike\roguelike\Roguelike\GameResourceLoader.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\GameResourceLoader.obj
 E:\roguelike\roguelike\Roguelike\LevelBuilder.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\LevelBuilder.obj
 E:\roguelike\roguelike\Roguelike\Player.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\Player.obj
+E:\roguelike\roguelike\Roguelike\PlayerAttackComponent.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\PlayerAttackComponent.obj
 E:\roguelike\roguelike\Roguelike\PlayerMovementComponent.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\PlayerMovementComponent.obj
 E:\roguelike\roguelike\Roguelike\PlayerSearchComponent.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\PlayerSearchComponent.obj
 E:\roguelike\roguelike\Roguelike\GameMain.cpp;E:\roguelike\roguelike\obj\Roguelike\Debug\GameMain.obj

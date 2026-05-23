@@ -4,6 +4,8 @@
 
 #include <map>
 #include <iostream>
+#include <vector>
+
 #include "ColliderComponent.h"
 #include "RigidbodyComponent.h"
 #include "Vector.h"
@@ -18,8 +20,10 @@ namespace Engine
 		void Update();
 
 		float GetFixedDeltaTime() const;
+
 		void Subscribe(ColliderComponent* collider);
 		void Unsubscribe(ColliderComponent* collider);
+
 	private:
 		PhysicsSystem() {}
 		~PhysicsSystem() {}

@@ -5,20 +5,29 @@
 
 #include "GameWorld.h"
 #include "GameObject.h"
+
 #include "TransformComponent.h"
 #include "SpriteRendererComponent.h"
 #include "SpriteColliderComponent.h"
 #include "RigidbodyComponent.h"
+
 #include "PlayerSearchComponent.h"
 #include "DetectionTriggerComponent.h"
+
+#include "StatsComponent.h"
+#include "AttackComponent.h"
+#include "DeathComponent.h"
+
 #include "ResourceSystem.h"
 #include "Trigger.h"
+#include "Logger.h"
 
 namespace Roguelike
 {
 	Enemy::Enemy(Engine::GameObject* player, float x, float y)
 	{
-		gameObject = Engine::GameWorld::Instance()->CreateGameObject("Enemy");
+		gameObject =
+			Engine::GameWorld::Instance()->CreateGameObject("Enemy");
 
 		Engine::TransformComponent* transform =
 			gameObject->GetComponent<Engine::TransformComponent>();
@@ -41,6 +50,18 @@ namespace Roguelike
 
 		rigidbody->SetLinearDamping(1.f);
 
+		auto stats =
+			gameObject->AddComponent<Engine::StatsComponent>();
+
+		stats->SetStats(100.f, 15.f);
+
+		gameObject->AddComponent<Engine::DeathComponent>();
+
+		auto attack =
+			gameObject->AddComponent<Engine::AttackComponent>();
+
+		attack->SetAttackPower(25.f);
+
 		PlayerSearchComponent* search =
 			gameObject->AddComponent<PlayerSearchComponent>();
 
@@ -50,6 +71,7 @@ namespace Roguelike
 			gameObject->AddComponent<DetectionTriggerComponent>();
 
 		detectionTrigger->SetRadius(180.f);
+		detectionTrigger->SetShowDebug(true); // SetShowDebug
 
 		detectionTrigger->SubscribeTriggerEnter(
 			[search, player](Engine::Trigger trigger)
@@ -57,6 +79,8 @@ namespace Roguelike
 				if (trigger.HasGameObject(player))
 				{
 					search->SetPlayerDetected(true);
+
+					LOG_INFO("Enemy detected player.");
 				}
 			}
 		);
@@ -67,9 +91,13 @@ namespace Roguelike
 				if (trigger.HasGameObject(player))
 				{
 					search->SetPlayerDetected(false);
+
+					LOG_INFO("Player left enemy detection radius.");
 				}
 			}
 		);
+
+		LOG_INFO("Enemy created.");
 	}
 
 	Engine::GameObject* Enemy::GetGameObject() const

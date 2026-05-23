@@ -15,8 +15,12 @@ namespace Roguelike
 	{
 	public:
 		Player();
+
 		Engine::GameObject* GetGameObject();
+
+		void SetAttackTarget(Engine::GameObject* target);
+
 	private:
-		Engine::GameObject* gameObject;
+		Engine::GameObject* gameObject = nullptr;
 	};
 }

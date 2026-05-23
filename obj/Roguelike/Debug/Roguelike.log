@@ -1,13 +1,5 @@
-﻿  DetectionTriggerComponent.cpp
-  DeveloperLevel.cpp
-  Enemy.cpp
-  Floor.cpp
-  GameResourceLoader.cpp
-  LevelBuilder.cpp
+﻿  Enemy.cpp
   Player.cpp
-  PlayerMovementComponent.cpp
-  PlayerSearchComponent.cpp
-  GameMain.cpp
   Wall.cpp
   Generating Code...
   Roguelike.vcxproj -> E:\roguelike\roguelike\bin\Roguelike\Debug\Roguelike.exe

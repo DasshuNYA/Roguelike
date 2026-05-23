@@ -9,14 +9,16 @@
 #include "GameWorld.h"
 #include "ResourceSystem.h"
 #include "TransformComponent.h"
+#include "Logger.h"
 
-#include "Enemy.h"
 #include "LevelBuilder.h"
 
 namespace Roguelike
 {
 	void DeveloperLevel::Start()
 	{
+		LOG_INFO("DeveloperLevel start.");
+
 		GameResourceLoader::Load();
 
 		LevelBuilder levelBuilder(
@@ -40,11 +42,13 @@ namespace Roguelike
 				levelBuilder.GetPlayerSpawnY()
 			);
 
-		new Enemy(
+		enemy = std::make_unique<Enemy>(
 			playerObject,
 			levelBuilder.GetEnemySpawnX(),
 			levelBuilder.GetEnemySpawnY()
 		);
+
+		player->SetAttackTarget(enemy->GetGameObject());
 
 		Engine::GameObject* musicObject =
 			Engine::GameWorld::Instance()->CreateGameObject("Music");
@@ -57,18 +61,27 @@ namespace Roguelike
 		);
 
 		music->SetLoop(true);
-		music->SetVolume(20.f);
+		music->SetVolume(40.f);
 		music->Play();
+
+		LOG_INFO("DeveloperLevel created successfully.");
 	}
 
 	void DeveloperLevel::Restart()
 	{
+		LOG_WARN("DeveloperLevel restart.");
+
 		Stop();
 		Start();
 	}
 
 	void DeveloperLevel::Stop()
 	{
+		LOG_INFO("DeveloperLevel stop.");
+
 		Engine::GameWorld::Instance()->Clear();
+
+		player = nullptr;
+		enemy = nullptr;
 	}
 }

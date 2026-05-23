@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "GameWorld.h"
 
+#include "Logger.h"
+
 namespace Engine
 {
 	GameWorld* GameWorld::Instance()
@@ -66,7 +68,51 @@ namespace Engine
 
 	void GameWorld::DestroyGameObject(GameObject* gameObject)
 	{
+		if (gameObject == nullptr)
+		{
+			LOG_WARN("DestroyGameObject called with null object.");
+			return;
+		}
+
+		auto existingObject = std::find(
+			markedToDestroyGameObjects.begin(),
+			markedToDestroyGameObjects.end(),
+			gameObject
+		);
+
+		if (existingObject != markedToDestroyGameObjects.end())
+		{
+			return;
+		}
+
 		markedToDestroyGameObjects.push_back(gameObject);
+	}
+
+	bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
+	{
+		if (gameObject == nullptr)
+		{
+			return false;
+		}
+
+		auto destroyedObject = std::find(
+			markedToDestroyGameObjects.begin(),
+			markedToDestroyGameObjects.end(),
+			gameObject
+		);
+
+		if (destroyedObject != markedToDestroyGameObjects.end())
+		{
+			return false;
+		}
+
+		auto existingObject = std::find(
+			gameObjects.begin(),
+			gameObjects.end(),
+			gameObject
+		);
+
+		return existingObject != gameObjects.end();
 	}
 
 	void GameWorld::Clear()
@@ -90,6 +136,11 @@ namespace Engine
 
 	void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)
 	{
+		if (gameObject == nullptr)
+		{
+			return;
+		}
+
 		gameObjects.erase(
 			std::remove_if(
 				gameObjects.begin(),
@@ -101,6 +152,8 @@ namespace Engine
 			),
 			gameObjects.end()
 		);
+
+		LOG_INFO("GameObject destroyed: " + gameObject->GetName());
 
 		delete gameObject;
 	}

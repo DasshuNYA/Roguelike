@@ -6,6 +6,7 @@
 
 #include "Scene.h"
 #include "Player.h"
+#include "Enemy.h"
 
 namespace Roguelike
 {
@@ -18,5 +19,6 @@ namespace Roguelike
 
 	private:
 		std::shared_ptr<Player> player;
+		std::unique_ptr<Enemy> enemy;
 	};
 }

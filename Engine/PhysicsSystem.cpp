@@ -164,11 +164,21 @@ namespace Engine
 
 	void PhysicsSystem::Subscribe(ColliderComponent* collider)
 	{
+		if (collider == nullptr)
+		{
+			return;
+		}
+
 		colliders.push_back(collider);
 	}
 
 	void PhysicsSystem::Unsubscribe(ColliderComponent* collider)
 	{
+		if (collider == nullptr)
+		{
+			return;
+		}
+
 		colliders.erase(
 			std::remove_if(
 				colliders.begin(),
@@ -180,5 +190,20 @@ namespace Engine
 			),
 			colliders.end()
 		);
+
+		for (
+			auto triggeredPair = triggersEnteredPair.cbegin(),
+			nextTriggeredPair = triggeredPair;
+			triggeredPair != triggersEnteredPair.cend();
+			triggeredPair = nextTriggeredPair
+			)
+		{
+			++nextTriggeredPair;
+
+			if (triggeredPair->first == collider || triggeredPair->second == collider)
+			{
+				triggersEnteredPair.erase(triggeredPair);
+			}
+		}
 	}
 }

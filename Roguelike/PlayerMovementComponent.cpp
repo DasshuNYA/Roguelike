@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "PlayerMovementComponent.h"
 
+#include "StatsComponent.h"
+
 namespace Roguelike
 {
 	PlayerMovementComponent::PlayerMovementComponent(Engine::GameObject* gameObject)
@@ -16,6 +18,15 @@ namespace Roguelike
 	{
 		if (input == nullptr || rigidbody == nullptr)
 		{
+			return;
+		}
+
+		Engine::StatsComponent* stats =
+			gameObject->GetComponent<Engine::StatsComponent>();
+
+		if (stats != nullptr && stats->IsDead())
+		{
+			rigidbody->SetLinearVelocity({ 0.f, 0.f });
 			return;
 		}
 

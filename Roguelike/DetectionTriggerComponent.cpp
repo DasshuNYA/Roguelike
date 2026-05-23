@@ -18,6 +18,11 @@ namespace Roguelike
 		Engine::PhysicsSystem::Instance()->Subscribe(this);
 	}
 
+	DetectionTriggerComponent::~DetectionTriggerComponent()
+	{
+		Engine::PhysicsSystem::Instance()->Unsubscribe(this);
+	}
+
 	void DetectionTriggerComponent::Update(float deltaTime)
 	{
 		if (transform == nullptr)
@@ -37,7 +42,7 @@ namespace Roguelike
 
 	void DetectionTriggerComponent::Render()
 	{
-		if (transform == nullptr)
+		if (!showDebug || transform == nullptr)
 		{
 			return;
 		}
@@ -58,5 +63,10 @@ namespace Roguelike
 	void DetectionTriggerComponent::SetRadius(float newRadius)
 	{
 		radius = newRadius;
+	}
+
+	void DetectionTriggerComponent::SetShowDebug(bool value)
+	{
+		showDebug = value;
 	}
 }

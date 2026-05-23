@@ -1,4 +1,4 @@
-// file @GameWorld.h
+// @file GameWorld.h
 
 #pragma once
 
@@ -19,16 +19,19 @@ namespace Engine
 
 		GameObject* CreateGameObject();
 		GameObject* CreateGameObject(std::string name);
-		void DestroyGameObject(GameObject* gameObject);
-		void Clear();
 
+		void DestroyGameObject(GameObject* gameObject);
+		bool IsGameObjectAlive(GameObject* gameObject) const;
+
+		void Clear();
 		void Print() const;
+
 	private:
 		GameWorld() {}
 		~GameWorld() {}
 
 		GameWorld(GameWorld const&) = delete;
-		GameWorld& operator= (GameWorld const&) = delete;
+		GameWorld& operator=(GameWorld const&) = delete;
 
 		float fixedCounter = 0.f;
 

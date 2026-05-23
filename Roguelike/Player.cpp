@@ -6,6 +6,13 @@
 #include "ResourceSystem.h"
 #include "SpriteColliderComponent.h"
 #include "PlayerMovementComponent.h"
+#include "PlayerAttackComponent.h"
+
+#include "StatsComponent.h"
+#include "AttackComponent.h"
+#include "DeathComponent.h"
+
+#include "Logger.h"
 
 namespace Roguelike
 {
@@ -31,12 +38,37 @@ namespace Roguelike
 		body->SetLinearDamping(0.f);
 
 		gameObject->AddComponent<PlayerMovementComponent>();
-
 		gameObject->AddComponent<Engine::SpriteColliderComponent>();
+
+		auto stats = gameObject->AddComponent<Engine::StatsComponent>();
+		stats->SetStats(100.f, 0.f);
+
+		gameObject->AddComponent<Engine::DeathComponent>();
+
+		auto attack = gameObject->AddComponent<Engine::AttackComponent>();
+		attack->SetAttackPower(25.f);
+
+		gameObject->AddComponent<PlayerAttackComponent>();
+
+		LOG_INFO("Player created.");
 	}
 
 	Engine::GameObject* Player::GetGameObject()
 	{
 		return gameObject;
+	}
+
+	void Player::SetAttackTarget(Engine::GameObject* target)
+	{
+		PlayerAttackComponent* attackComponent =
+			gameObject->GetComponent<PlayerAttackComponent>();
+
+		if (attackComponent == nullptr)
+		{
+			LOG_ERROR("PlayerAttackComponent not found.");
+			return;
+		}
+
+		attackComponent->SetTarget(target);
 	}
 }

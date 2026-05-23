@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "SpriteColliderComponent.h"
 
+#include "Logger.h"
+
 namespace Engine
 {
 	SpriteColliderComponent::SpriteColliderComponent(GameObject* gameObject)
@@ -12,48 +14,52 @@ namespace Engine
 
 		if (spriteRenderer == nullptr)
 		{
-			std::cout << "SpriteRenderer required to SpriteCollider." << std::endl;
+			LOG_ERROR("SpriteRenderer required to SpriteCollider.");
 
 			gameObject->RemoveComponent(this);
 			return;
 		}
 
-		sprite = gameObject->GetComponent<SpriteRendererComponent>()->GetSprite();
+		sprite = spriteRenderer->GetSprite();
 
 		PhysicsSystem::Instance()->Subscribe(this);
 	}
 
 	SpriteColliderComponent::~SpriteColliderComponent()
 	{
-		if (&bounds != nullptr)
-		{
-			std::destroy_at(&bounds);
-		}
-
 		PhysicsSystem::Instance()->Unsubscribe(this);
 	}
 
 	void SpriteColliderComponent::Update(float deltaTime)
 	{
+		if (sprite == nullptr)
+		{
+			return;
+		}
+
 		bounds = sprite->getGlobalBounds();
 	}
 
 	void SpriteColliderComponent::Render()
 	{
-		// DEBUG: collider bounds visualization disabled.
+		if (!showDebug)
+		{
+			return;
+		}
 
-		/*
+		// DEBUG: collider bounds visualization.
 		sf::RectangleShape rectangle(sf::Vector2f(bounds.width, bounds.height));
 
 		rectangle.setPosition(bounds.left, bounds.top);
-
 		rectangle.setFillColor(sf::Color::Transparent);
-
 		rectangle.setOutlineColor(sf::Color::White);
-
 		rectangle.setOutlineThickness(2.f);
 
 		RenderSystem::Instance()->Render(rectangle);
-		*/
+	}
+
+	void SpriteColliderComponent::SetShowDebug(bool value)
+	{
+		showDebug = value;
 	}
 }

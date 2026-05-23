@@ -10,6 +10,8 @@
 
 namespace Engine
 {
+	class Scene;
+
 	class Engine
 	{
 	public:
@@ -18,10 +20,13 @@ namespace Engine
 
 		static Engine* Instance();
 
+		void SetScene(Scene* newScene);
 		void Run();
 
 	private:
 		Engine();
 		~Engine() = default;
+
+		Scene* scene = nullptr;
 	};
 }

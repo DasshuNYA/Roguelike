@@ -1,24 +1,47 @@
 ﻿// @file GameMain.cpp
 
-#include <SFML/Graphics.hpp>
-#include "Player.h"
-#include "Engine.h"
-#include "ResourceSystem.h"
-#include "DeveloperLevel.h"
-#include "Matrix2D.h"
+#include "pch.h"
 
-using namespace Roguelike;
+#include <memory>
+
+#include "Engine.h"
+#include "RenderSystem.h"
+#include "Logger.h"
+#include "DeveloperLevel.h"
+
+void SetupLogger()
+{
+	auto logger = std::make_shared<Engine::Logger>();
+
+	logger->addSink(std::make_shared<Engine::ConsoleSink>());
+	logger->addSink(std::make_shared<Engine::FileSink>("log.txt"));
+
+	Engine::LoggerRegistry::getInstance().registerLogger("global", logger);
+	Engine::LoggerRegistry::getInstance().setDefaultLogger(logger);
+}
 
 int main()
 {
-	Engine::RenderSystem::Instance()->SetMainWindow(new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike"));
+	SetupLogger();
 
-	Engine::ResourceSystem::Instance()->LoadTexture("ball", "Resources/Textures/ball.png");
+	LOG_INFO("Logger initialized.");
+	LOG_INFO("Game started.");
 
-	auto developerLevel = std::make_shared<DeveloperLevel>();
-	developerLevel->Start();
+	sf::RenderWindow* window = new sf::RenderWindow(
+		sf::VideoMode(1280, 720),
+		"Roguelike"
+	);
 
+	Engine::RenderSystem::Instance()->SetMainWindow(window);
+
+	Roguelike::DeveloperLevel developerLevel;
+
+	Engine::Engine::Instance()->SetScene(&developerLevel);
 	Engine::Engine::Instance()->Run();
+
+	LOG_INFO("Game closed.");
+
+	delete window;
 
 	return 0;
 }

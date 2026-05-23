@@ -5,55 +5,66 @@
 
 #include "GameWorld.h"
 #include "RenderSystem.h"
-
-#include <cstdlib>
-#include <ctime>
+#include "Scene.h"
+#include "Logger.h"
 
 namespace Engine
 {
-	Engine* Engine::Instance()
-	{
-		static Engine instance;
-		return &instance;
-	}
-
 	Engine::Engine()
 	{
-		unsigned int seed = static_cast<unsigned int>(time(nullptr));
-		srand(seed);
+	}
+
+	Engine* Engine::Instance()
+	{
+		static Engine engine;
+		return &engine;
+	}
+
+	void Engine::SetScene(Scene* newScene)
+	{
+		scene = newScene;
 	}
 
 	void Engine::Run()
 	{
-		sf::Clock gameClock;
-		sf::Event event;
-
-		while (RenderSystem::Instance()->GetMainWindow().isOpen())
+		if (scene == nullptr)
 		{
-			sf::Time dt = gameClock.restart();
-			float deltaTime = dt.asSeconds();
+			LOG_ERROR("Engine cannot run because scene is null.");
+			return;
+		}
 
-			while (RenderSystem::Instance()->GetMainWindow().pollEvent(event))
+		scene->Start();
+
+		sf::RenderWindow& window = RenderSystem::Instance()->GetMainWindow();
+
+		sf::Clock clock;
+
+		while (window.isOpen())
+		{
+			sf::Event event;
+
+			while (window.pollEvent(event))
 			{
 				if (event.type == sf::Event::Closed)
 				{
-					RenderSystem::Instance()->GetMainWindow().close();
+					window.close();
 				}
 			}
 
-			if (!RenderSystem::Instance()->GetMainWindow().isOpen())
-			{
-				break;
-			}
-
-			RenderSystem::Instance()->GetMainWindow().clear();
+			float deltaTime = clock.restart().asSeconds();
 
 			GameWorld::Instance()->Update(deltaTime);
 			GameWorld::Instance()->FixedUpdate(deltaTime);
-			GameWorld::Instance()->Render();
-			GameWorld::Instance()->LateUpdate();
 
-			RenderSystem::Instance()->GetMainWindow().display();
+			window.clear();
+
+			GameWorld::Instance()->Render();
+
+			window.display();
+
+			GameWorld::Instance()->LateUpdate();
 		}
+
+		scene->Stop();
 	}
 }

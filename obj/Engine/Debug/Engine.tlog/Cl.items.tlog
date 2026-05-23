@@ -1,8 +1,10 @@
+E:\roguelike\roguelike\Engine\AttackComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\AttackComponent.obj
 E:\roguelike\roguelike\Engine\AudioComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\AudioComponent.obj
 E:\roguelike\roguelike\Engine\CameraComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\CameraComponent.obj
 E:\roguelike\roguelike\Engine\ColliderComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\ColliderComponent.obj
 E:\roguelike\roguelike\Engine\Collision.cpp;E:\roguelike\roguelike\obj\Engine\Debug\Collision.obj
 E:\roguelike\roguelike\Engine\Component.cpp;E:\roguelike\roguelike\obj\Engine\Debug\Component.obj
+E:\roguelike\roguelike\Engine\DeathComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\DeathComponent.obj
 E:\roguelike\roguelike\Engine\Engine.cpp;E:\roguelike\roguelike\obj\Engine\Debug\Engine.obj
 E:\roguelike\roguelike\Engine\GameObject.cpp;E:\roguelike\roguelike\obj\Engine\Debug\GameObject.obj
 E:\roguelike\roguelike\Engine\GameWorld.cpp;E:\roguelike\roguelike\obj\Engine\Debug\GameWorld.obj
@@ -16,5 +18,6 @@ E:\roguelike\roguelike\Engine\RigidbodyComponent.cpp;E:\roguelike\roguelike\obj\
 E:\roguelike\roguelike\Engine\Sprite.cpp;E:\roguelike\roguelike\obj\Engine\Debug\Sprite.obj
 E:\roguelike\roguelike\Engine\SpriteColliderComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\SpriteColliderComponent.obj
 E:\roguelike\roguelike\Engine\SpriteRendererComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\SpriteRendererComponent.obj
+E:\roguelike\roguelike\Engine\StatsComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\StatsComponent.obj
 E:\roguelike\roguelike\Engine\TransformComponent.cpp;E:\roguelike\roguelike\obj\Engine\Debug\TransformComponent.obj
 E:\roguelike\roguelike\Engine\Trigger.cpp;E:\roguelike\roguelike\obj\Engine\Debug\Trigger.obj

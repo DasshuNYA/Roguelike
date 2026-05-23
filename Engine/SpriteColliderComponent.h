@@ -5,6 +5,7 @@
 #include "ColliderComponent.h"
 #include "SpriteRendererComponent.h"
 #include "RenderSystem.h"
+
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace Engine
@@ -17,8 +18,11 @@ namespace Engine
 
 		void Update(float deltaTime) override;
 		void Render() override;
+
+		void SetShowDebug(bool value);
+
 	private:
-		const sf::Sprite* sprite;
+		const sf::Sprite* sprite = nullptr;
+		bool showDebug = false;
 	};
 }
-
