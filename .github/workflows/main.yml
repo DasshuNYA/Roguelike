@@ -1,0 +1,31 @@
+name: Build Roguelike
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup MSBuild
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # Step 3: Build solution
+      - name: Build solution
+        run: |
+          msbuild Game.sln ^
+          /p:Configuration=Debug ^
+          /p:Platform=x64 ^
+          /t:Roguelike
