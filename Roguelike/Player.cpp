@@ -3,16 +3,14 @@
 #include "pch.h"
 #include "Player.h"
 
+#include "DeathComponent.h"
+#include "GameConfig.h"
+#include "Logger.h"
+#include "PlayerMovementComponent.h"
+#include "RangedAttackComponent.h"
 #include "ResourceSystem.h"
 #include "SpriteColliderComponent.h"
-#include "PlayerMovementComponent.h"
-#include "PlayerAttackComponent.h"
-
 #include "StatsComponent.h"
-#include "AttackComponent.h"
-#include "DeathComponent.h"
-
-#include "Logger.h"
 
 namespace Roguelike
 {
@@ -29,7 +27,9 @@ Player::Player()
     playerRenderer->SetPixelSize(48, 48);
 
     auto playerCamera = gameObject->AddComponent<Engine::CameraComponent>();
+
     playerCamera->SetWindow(&Engine::RenderSystem::Instance()->GetMainWindow());
+
     playerCamera->SetBaseResolution(1280, 720);
 
     gameObject->AddComponent<Engine::InputComponent>();
@@ -41,31 +41,39 @@ Player::Player()
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
-    stats->SetStats(100.f, 0.f);
+    stats->SetStats(GameConfig::PlayerHealth, GameConfig::PlayerArmor);
 
     gameObject->AddComponent<Engine::DeathComponent>();
-
-    auto attack = gameObject->AddComponent<Engine::AttackComponent>();
-    attack->SetAttackPower(25.f);
-
-    gameObject->AddComponent<PlayerAttackComponent>();
+    gameObject->AddComponent<RangedAttackComponent>();
 
     LOG_INFO("Player created.");
 }
 
-Engine::GameObject* Player::GetGameObject() { return gameObject; }
-
-void Player::SetAttackTarget(Engine::GameObject* target)
+void Player::AddAttackTarget(Engine::GameObject* target)
 {
-    PlayerAttackComponent* attackComponent =
-        gameObject->GetComponent<PlayerAttackComponent>();
+    RangedAttackComponent* attackComponent =
+        gameObject->GetComponent<RangedAttackComponent>();
 
     if (attackComponent == nullptr)
     {
-        LOG_ERROR("PlayerAttackComponent not found.");
+        LOG_ERROR("RangedAttackComponent not found.");
         return;
     }
 
-    attackComponent->SetTarget(target);
+    attackComponent->AddTarget(target);
+}
+
+void Player::SetObstacles(const std::vector<Engine::GameObject*>& obstacles)
+{
+    RangedAttackComponent* attackComponent =
+        gameObject->GetComponent<RangedAttackComponent>();
+
+    if (attackComponent == nullptr)
+    {
+        LOG_ERROR("RangedAttackComponent not found.");
+        return;
+    }
+
+    attackComponent->SetObstacles(obstacles);
 }
 }  // namespace Roguelike

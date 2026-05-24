@@ -68,6 +68,9 @@
     <ClCompile Include="DeathComponent.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="TextRendererComponent.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -156,6 +159,9 @@
     <ClInclude Include="DeathComponent.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="TextRendererComponent.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -187,6 +193,9 @@
     </Filter>
     <Filter Include="Gameplay">
       <UniqueIdentifier>{54522e4f-6907-4292-8a97-9d22a3b76dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{1e9f8bcc-ae42-4f1c-b0d1-e2eecc41d1a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

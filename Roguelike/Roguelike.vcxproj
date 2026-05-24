@@ -161,33 +161,50 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Creeper.cpp" />
     <ClCompile Include="DetectionTriggerComponent.cpp" />
     <ClCompile Include="DeveloperLevel.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="GameHudComponent.cpp" />
     <ClCompile Include="GameResourceLoader.cpp" />
     <ClCompile Include="LevelBuilder.cpp" />
     <ClCompile Include="MazeGenerator.cpp" />
+    <ClCompile Include="MazeNavigation.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAttackComponent.cpp" />
     <ClCompile Include="PlayerMovementComponent.cpp" />
     <ClCompile Include="PlayerSearchComponent.cpp" />
     <ClCompile Include="GameMain.cpp" />
+    <ClCompile Include="ProjectileComponent.cpp" />
+    <ClCompile Include="RangedAttackComponent.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="Warrior.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="Creeper.h" />
     <ClInclude Include="DetectionTriggerComponent.h" />
     <ClInclude Include="DeveloperLevel.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="GameConfig.h" />
+    <ClInclude Include="GameHudComponent.h" />
     <ClInclude Include="GameResourceLoader.h" />
     <ClInclude Include="LevelBuilder.h" />
     <ClInclude Include="MazeGenerator.h" />
+    <ClInclude Include="MazeNavigation.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerAttackComponent.h" />
     <ClInclude Include="PlayerMovementComponent.h" />
     <ClInclude Include="PlayerSearchComponent.h" />
+    <ClInclude Include="ProjectileComponent.h" />
+    <ClInclude Include="RangedAttackComponent.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="Warrior.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

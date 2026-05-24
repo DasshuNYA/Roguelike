@@ -2,18 +2,30 @@
 
 #pragma once
 
+#include "Vector.h"
+
 #include <vector>
 
 namespace Roguelike
 {
+class DeveloperLevel;
+
 class MazeGenerator
 {
    public:
-    MazeGenerator(int width, int height);
+    MazeGenerator(int width, int height, DeveloperLevel* level);
 
     void Generate();
 
     float GetTileSize() const;
+
+    const std::vector<Engine::Vector2Df>& GetFloorPositions() const;
+
+   private:
+    std::vector<std::pair<int, int>> GetAvailableDirections(int x, int y);
+
+    void CarvePath(int x1, int y1, int x2, int y2);
+    void BuildObjects();
 
    private:
     int width = 0;
@@ -21,12 +33,11 @@ class MazeGenerator
 
     float tileSize = 64.f;
 
+    DeveloperLevel* level = nullptr;
+
     std::vector<std::vector<bool>> visited;
     std::vector<std::vector<bool>> isWall;
 
-    std::vector<std::pair<int, int>> GetAvailableDirections(int x, int y);
-
-    void CarvePath(int x1, int y1, int x2, int y2);
-    void BuildObjects();
+    std::vector<Engine::Vector2Df> floorPositions;
 };
 }  // namespace Roguelike

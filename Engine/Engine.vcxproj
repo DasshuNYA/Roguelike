@@ -189,6 +189,7 @@
     <ClInclude Include="SpriteColliderComponent.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="StatsComponent.h" />
+    <ClInclude Include="TextRendererComponent.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="Vector.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="SpriteColliderComponent.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="StatsComponent.cpp" />
+    <ClCompile Include="TextRendererComponent.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Trigger.cpp" />
   </ItemGroup>

@@ -1,0 +1,180 @@
+// @file ProjectileComponent.cpp
+
+#include "pch.h"
+#include "ProjectileComponent.h"
+
+#include "GameObject.h"
+#include "GameWorld.h"
+#include "RenderSystem.h"
+#include "StatsComponent.h"
+#include "TransformComponent.h"
+
+#include <SFML/Graphics.hpp>
+
+namespace Roguelike
+{
+ProjectileComponent::ProjectileComponent(Engine::GameObject* gameObject)
+    : Component(gameObject)
+{
+    transform = gameObject->GetComponent<Engine::TransformComponent>();
+}
+
+void ProjectileComponent::Update(float deltaTime)
+{
+    if (transform == nullptr)
+    {
+        return;
+    }
+
+    lifeTime -= deltaTime;
+
+    if (lifeTime <= 0.f)
+    {
+        Engine::GameWorld::Instance()->DestroyGameObject(gameObject);
+        return;
+    }
+
+    transform->MoveBy(direction.x * speed * deltaTime,
+                      direction.y * speed * deltaTime);
+
+    if (CheckObstacles())
+    {
+        Engine::GameWorld::Instance()->DestroyGameObject(gameObject);
+        return;
+    }
+
+    CheckTargets();
+}
+
+void ProjectileComponent::Render()
+{
+    if (transform == nullptr)
+    {
+        return;
+    }
+
+    Engine::Vector2Df position = transform->GetWorldPosition();
+
+    sf::CircleShape shape(radius);
+    shape.setOrigin(radius, radius);
+    shape.setPosition(position.x, position.y);
+    shape.setFillColor(sf::Color::Yellow);
+
+    Engine::RenderSystem::Instance()->Render(shape);
+}
+
+void ProjectileComponent::SetDirection(const Engine::Vector2Df& newDirection)
+{
+    direction = newDirection;
+}
+
+void ProjectileComponent::SetDamage(float newDamage) { damage = newDamage; }
+
+void ProjectileComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
+
+void ProjectileComponent::SetRadius(float newRadius) { radius = newRadius; }
+
+void ProjectileComponent::SetLifeTime(float newLifeTime)
+{
+    lifeTime = newLifeTime;
+}
+
+void ProjectileComponent::SetTargets(
+    const std::vector<Engine::GameObject*>& newTargets)
+{
+    targets = newTargets;
+}
+
+void ProjectileComponent::SetObstacles(
+    const std::vector<Engine::GameObject*>& newObstacles)
+{
+    obstacles = newObstacles;
+}
+
+bool ProjectileComponent::CheckObstacles()
+{
+    Engine::Vector2Df projectilePosition = transform->GetWorldPosition();
+
+    for (Engine::GameObject* obstacle : obstacles)
+    {
+        if (obstacle == nullptr)
+        {
+            continue;
+        }
+
+        if (!Engine::GameWorld::Instance()->IsGameObjectAlive(obstacle))
+        {
+            continue;
+        }
+
+        Engine::TransformComponent* obstacleTransform =
+            obstacle->GetComponent<Engine::TransformComponent>();
+
+        if (obstacleTransform == nullptr)
+        {
+            continue;
+        }
+
+        Engine::Vector2Df obstaclePosition =
+            obstacleTransform->GetWorldPosition();
+
+        Engine::Vector2Df difference = {
+            obstaclePosition.x - projectilePosition.x,
+            obstaclePosition.y - projectilePosition.y};
+
+        if (difference.GetLength() <= 36.f)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void ProjectileComponent::CheckTargets()
+{
+    for (Engine::GameObject* target : targets)
+    {
+        if (target == nullptr)
+        {
+            continue;
+        }
+
+        if (!Engine::GameWorld::Instance()->IsGameObjectAlive(target))
+        {
+            continue;
+        }
+
+        Engine::TransformComponent* targetTransform =
+            target->GetComponent<Engine::TransformComponent>();
+
+        Engine::StatsComponent* targetStats =
+            target->GetComponent<Engine::StatsComponent>();
+
+        if (targetTransform == nullptr || targetStats == nullptr)
+        {
+            continue;
+        }
+
+        if (targetStats->IsDead())
+        {
+            continue;
+        }
+
+        Engine::Vector2Df projectilePosition = transform->GetWorldPosition();
+
+        Engine::Vector2Df targetPosition = targetTransform->GetWorldPosition();
+
+        Engine::Vector2Df difference = {
+            targetPosition.x - projectilePosition.x,
+            targetPosition.y - projectilePosition.y};
+
+        if (difference.GetLength() <= 32.f)
+        {
+            targetStats->TakeDamage(damage);
+            Engine::GameWorld::Instance()->DestroyGameObject(gameObject);
+            return;
+        }
+    }
+}
+}  // namespace Roguelike

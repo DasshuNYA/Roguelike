@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "Character.h"
+
+#include <string>
+
 namespace Engine
 {
 class GameObject;
@@ -9,17 +13,12 @@ class GameObject;
 
 namespace Roguelike
 {
-class Enemy
+class Enemy : public Character
 {
-   public:
-    Enemy(Engine::GameObject* player, float x, float y);
-
-    Enemy(const Enemy&) = delete;
-    Enemy& operator=(const Enemy&) = delete;
-
-    Engine::GameObject* GetGameObject() const;
-
-   private:
-    Engine::GameObject* gameObject = nullptr;
+   protected:
+    void BuildEnemy(Engine::GameObject* player, const std::string& name,
+                    const std::string& textureKey, float x, float y,
+                    float health, float armor, float attackPower, float speed,
+                    float detectionRadius);
 };
 }  // namespace Roguelike

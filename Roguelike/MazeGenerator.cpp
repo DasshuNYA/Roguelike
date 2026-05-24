@@ -3,9 +3,11 @@
 #include "pch.h"
 #include "MazeGenerator.h"
 
+#include "DeveloperLevel.h"
 #include "Floor.h"
-#include "Wall.h"
 #include "Logger.h"
+#include "MazeNavigation.h"
+#include "Wall.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -13,8 +15,9 @@
 
 namespace Roguelike
 {
-MazeGenerator::MazeGenerator(int newWidth, int newHeight)
-    : width(newWidth), height(newHeight)
+MazeGenerator::MazeGenerator(int newWidth, int newHeight,
+                             DeveloperLevel* newLevel)
+    : width(newWidth), height(newHeight), level(newLevel)
 {
     if (width % 2 == 0)
     {
@@ -58,7 +61,8 @@ void MazeGenerator::Generate()
             continue;
         }
 
-        auto direction = directions[std::rand() % directions.size()];
+        std::pair<int, int> direction =
+            directions[std::rand() % directions.size()];
 
         int nextX = x + direction.first;
         int nextY = y + direction.second;
@@ -77,6 +81,11 @@ void MazeGenerator::Generate()
 
 float MazeGenerator::GetTileSize() const { return tileSize; }
 
+const std::vector<Engine::Vector2Df>& MazeGenerator::GetFloorPositions() const
+{
+    return floorPositions;
+}
+
 std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x,
                                                                        int y)
 {
@@ -85,7 +94,7 @@ std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x,
 
     std::vector<std::pair<int, int>> available;
 
-    for (auto direction : directions)
+    for (const auto& direction : directions)
     {
         int nextX = x + direction.first;
         int nextY = y + direction.second;
@@ -121,6 +130,14 @@ void MazeGenerator::CarvePath(int x1, int y1, int x2, int y2)
 
 void MazeGenerator::BuildObjects()
 {
+    if (level == nullptr)
+    {
+        LOG_ERROR("MazeGenerator failed. DeveloperLevel is null.");
+        return;
+    }
+
+    floorPositions.clear();
+
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -128,13 +145,32 @@ void MazeGenerator::BuildObjects()
             float worldX = x * tileSize;
             float worldY = y * tileSize;
 
-            new Floor(worldX, worldY);
+            level->floors.push_back(std::make_unique<Floor>(worldX, worldY));
+
+            if (!isWall[y][x])
+            {
+                floorPositions.push_back({worldX, worldY});
+            }
 
             if (isWall[y][x])
             {
-                new Wall(worldX, worldY);
+                level->walls.push_back(std::make_unique<Wall>(worldX, worldY));
             }
         }
     }
+
+    // Builds a walkable grid for enemy pathfinding after maze generation.
+    std::vector<std::vector<bool>> walkableGrid(
+        height, std::vector<bool>(width, false));
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            walkableGrid[y][x] = !isWall[y][x];
+        }
+    }
+
+    MazeNavigation::Instance()->SetMap(walkableGrid, tileSize);
 }
 }  // namespace Roguelike

@@ -8,7 +8,6 @@
 #include "GameWorld.h"
 #include "StatsComponent.h"
 #include "TransformComponent.h"
-#include "Vector.h"
 
 #include <SFML/Window/Mouse.hpp>
 
@@ -46,47 +45,14 @@ void PlayerAttackComponent::Update(float deltaTime)
 
     wasLeftMousePressed = true;
 
-    if (target == nullptr)
-    {
-        return;
-    }
-
-    if (!Engine::GameWorld::Instance()->IsGameObjectAlive(target))
-    {
-        target = nullptr;
-        return;
-    }
-
     if (transform == nullptr || attack == nullptr)
     {
         return;
     }
 
-    Engine::TransformComponent* targetTransform =
-        target->GetComponent<Engine::TransformComponent>();
+    Engine::GameObject* target = FindNearestTargetInRange();
 
-    if (targetTransform == nullptr)
-    {
-        target = nullptr;
-        return;
-    }
-
-    Engine::StatsComponent* targetStats =
-        target->GetComponent<Engine::StatsComponent>();
-
-    if (targetStats != nullptr && targetStats->IsDead())
-    {
-        target = nullptr;
-        return;
-    }
-
-    Engine::Vector2Df playerPosition = transform->GetWorldPosition();
-    Engine::Vector2Df targetPosition = targetTransform->GetWorldPosition();
-
-    Engine::Vector2Df direction = {targetPosition.x - playerPosition.x,
-                                   targetPosition.y - playerPosition.y};
-
-    if (direction.GetLength() > attackRange)
+    if (target == nullptr)
     {
         return;
     }
@@ -98,6 +64,71 @@ void PlayerAttackComponent::Render() {}
 
 void PlayerAttackComponent::SetTarget(Engine::GameObject* newTarget)
 {
-    target = newTarget;
+    targets.clear();
+
+    if (newTarget != nullptr)
+    {
+        targets.push_back(newTarget);
+    }
+}
+
+void PlayerAttackComponent::AddTarget(Engine::GameObject* newTarget)
+{
+    if (newTarget != nullptr)
+    {
+        targets.push_back(newTarget);
+    }
+}
+
+Engine::GameObject* PlayerAttackComponent::FindNearestTargetInRange()
+{
+    Engine::GameObject* nearestTarget = nullptr;
+    float nearestDistance = attackRange;
+
+    Engine::Vector2Df playerPosition = transform->GetWorldPosition();
+
+    for (Engine::GameObject* target : targets)
+    {
+        if (target == nullptr)
+        {
+            continue;
+        }
+
+        if (!Engine::GameWorld::Instance()->IsGameObjectAlive(target))
+        {
+            continue;
+        }
+
+        Engine::StatsComponent* targetStats =
+            target->GetComponent<Engine::StatsComponent>();
+
+        if (targetStats != nullptr && targetStats->IsDead())
+        {
+            continue;
+        }
+
+        Engine::TransformComponent* targetTransform =
+            target->GetComponent<Engine::TransformComponent>();
+
+        if (targetTransform == nullptr)
+        {
+            continue;
+        }
+
+        Engine::Vector2Df targetPosition = targetTransform->GetWorldPosition();
+
+        Engine::Vector2Df direction = {targetPosition.x - playerPosition.x,
+                                       targetPosition.y - playerPosition.y};
+
+        float distance = direction.GetLength();
+
+        if (distance <= nearestDistance)
+        {
+            nearestDistance = distance;
+            nearestTarget = target;
+        }
+    }
+
+    return nearestTarget;
 }
 }  // namespace Roguelike

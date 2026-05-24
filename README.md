@@ -1,99 +1,131 @@
 # Roguelike
 
-Небольшой roguelike-проект на C++ с использованием собственной компонентной архитектуры и SFML.
+A small component-based roguelike prototype written in C++ using SFML.
 
-## Возможности
-
-- Компонентная система (`Component`)
-- Игровые объекты (`GameObject`)
-- Система сцен
-- Физика и коллизии
-- Система триггеров
-- Камера
-- Процедурная генерация лабиринта
-- Игрок и враги
-- Система HP, брони и атак
-- Логирование в консоль и файл
-- Обработка ошибок и критических ситуаций
+The project was created as part of a game development learning course and demonstrates:
+- component architecture;
+- procedural maze generation;
+- player and enemy combat;
+- enemy AI;
+- scene and object systems;
+- resource management;
+- HUD rendering;
+- pathfinding and navigation.
 
 ---
 
-## Управление
+# Features
 
-| Клавиша | Действие |
-|---|---|
-| WASD | Движение |
-| ЛКМ | Атака |
+## Gameplay
+- Procedural maze generation
+- Player movement
+- Enemy spawning
+- Enemy detection system
+- Melee combat
+- Health and armor system
+- Enemy AI navigation
+- Victory and death states
 
 ---
 
-## Используемые технологии
+# Architecture
+
+The project uses:
+- component-based architecture;
+- inheritance for gameplay entities;
+- scene-based world management.
+
+---
+
+# Main Systems
+
+## Character System
+Base Character class used for:
+- Player
+- Enemy
+- Creeper
+
+---
+
+## Combat System
+Includes:
+- StatsComponent
+- AttackComponent
+- PlayerAttackComponent
+- DeathComponent
+
+Supports:
+- damage;
+- armor;
+- death handling;
+- attack cooldowns.
+
+Detailed documentation:
+- `docs/combat-system.md`
+
+---
+
+## Enemy Spawner
+EnemySpawner is responsible for:
+- enemy creation;
+- configurable enemy count;
+- configurable spawn rules;
+- safe spawn distance from player.
+
+---
+
+## Maze Generation
+MazeGenerator creates:
+- floor tiles;
+- walls;
+- navigation layout.
+
+Enemies use maze navigation to avoid walls and move through corridors.
+
+---
+
+# Technologies
 
 - C++
 - SFML
+- Visual Studio 2022
 
 ---
 
-## Архитектура проекта
+# Build
 
-### Основные компоненты
-
-- `StatsComponent` — HP и броня
-- `AttackComponent` — атака и нанесение урона
-- `DeathComponent` — уничтожение объекта после смерти
-- `PlayerMovementComponent` — управление игроком
-- `PlayerSearchComponent` — преследование игрока врагом
-- `DetectionTriggerComponent` — обнаружение игрока по радиусу
+## Requirements
+- Visual Studio 2022
+- SFML
+- Windows x64
 
 ---
 
-## Логирование
+## Build Steps
 
-В проекте реализована собственная система логирования:
-
-- `INFO`
-- `WARNING`
-- `ERROR`
-
-Логи выводятся:
-- в консоль;
-- в файл `log.txt`.
+1. Open `Game.sln`
+2. Select:
+   - Debug x64
+   - or Release x64
+3. Build solution
 
 ---
 
-## Процедурная генерация
+# Code Style
 
-Для генерации уровня используется алгоритм DFS (Depth-First Search).
+The project uses `clang-format`.
 
-Генерация выполняется классом:
+Formatting configuration:
+- Allman braces
+- 4 spaces indentation
+- 80 column limit
+
+---
+
+# Project Structure
 
 ```text
-MazeGenerator
-```
-
----
-
-## Структура проекта
-
-```text
-Engine/      - движок
-Roguelike/   - игровая логика
-Resources/   - ресурсы проекта
-```
-
----
-
-## Сборка проекта
-
-1. Открыть `.sln` в Visual Studio 2022
-2. Выбрать `Debug x64`
-3. Собрать проект
-4. Запустить `Roguelike`
-
-*или запуск build.bat
-
----
-
-## Автор
-
-DashuNYA
+Engine/         -> engine systems
+Roguelike/      -> gameplay code
+Resources/      -> textures, fonts, sounds
+docs/           -> documentation

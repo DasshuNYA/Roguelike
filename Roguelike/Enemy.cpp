@@ -3,71 +3,64 @@
 #include "pch.h"
 #include "Enemy.h"
 
-#include "GameWorld.h"
-#include "GameObject.h"
-
-#include "TransformComponent.h"
-#include "SpriteRendererComponent.h"
-#include "SpriteColliderComponent.h"
-#include "RigidbodyComponent.h"
-
-#include "PlayerSearchComponent.h"
-#include "DetectionTriggerComponent.h"
-
-#include "StatsComponent.h"
 #include "AttackComponent.h"
 #include "DeathComponent.h"
-
-#include "ResourceSystem.h"
-#include "Trigger.h"
+#include "DetectionTriggerComponent.h"
+#include "GameObject.h"
+#include "GameWorld.h"
 #include "Logger.h"
+#include "PlayerSearchComponent.h"
+#include "ResourceSystem.h"
+#include "RigidbodyComponent.h"
+#include "SpriteColliderComponent.h"
+#include "SpriteRendererComponent.h"
+#include "StatsComponent.h"
+#include "TransformComponent.h"
+#include "Trigger.h"
 
 namespace Roguelike
 {
-Enemy::Enemy(Engine::GameObject* player, float x, float y)
+void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
+                       const std::string& textureKey, float x, float y,
+                       float health, float armor, float attackPower,
+                       float speed, float detectionRadius)
 {
-    gameObject = Engine::GameWorld::Instance()->CreateGameObject("Enemy");
+    gameObject = Engine::GameWorld::Instance()->CreateGameObject(name);
 
-    Engine::TransformComponent* transform =
-        gameObject->GetComponent<Engine::TransformComponent>();
+    auto transform = gameObject->GetComponent<Engine::TransformComponent>();
 
     transform->SetWorldPosition(x, y);
 
-    Engine::SpriteRendererComponent* renderer =
-        gameObject->AddComponent<Engine::SpriteRendererComponent>();
+    auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
     renderer->SetTexture(
-        *Engine::ResourceSystem::Instance()->GetTextureShared("enemy"));
+        *Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
 
     renderer->SetPixelSize(48, 48);
 
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
-    Engine::RigidbodyComponent* rigidbody =
-        gameObject->AddComponent<Engine::RigidbodyComponent>();
+    auto rigidbody = gameObject->AddComponent<Engine::RigidbodyComponent>();
 
     rigidbody->SetLinearDamping(1.f);
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
-
-    stats->SetStats(100.f, 15.f);
+    stats->SetStats(health, armor);
 
     gameObject->AddComponent<Engine::DeathComponent>();
 
     auto attack = gameObject->AddComponent<Engine::AttackComponent>();
+    attack->SetAttackPower(attackPower);
 
-    attack->SetAttackPower(25.f);
-
-    PlayerSearchComponent* search =
-        gameObject->AddComponent<PlayerSearchComponent>();
-
+    auto search = gameObject->AddComponent<PlayerSearchComponent>();
     search->SetPlayer(player);
+    search->SetSpeed(speed);
 
-    DetectionTriggerComponent* detectionTrigger =
+    auto detectionTrigger =
         gameObject->AddComponent<DetectionTriggerComponent>();
 
-    detectionTrigger->SetRadius(180.f);
-    detectionTrigger->SetShowDebug(true);  // SetShowDebug
+    detectionTrigger->SetRadius(detectionRadius);
+    detectionTrigger->SetShowDebug(false);
 
     detectionTrigger->SubscribeTriggerEnter(
         [search, player](Engine::Trigger trigger)
@@ -75,8 +68,6 @@ Enemy::Enemy(Engine::GameObject* player, float x, float y)
             if (trigger.HasGameObject(player))
             {
                 search->SetPlayerDetected(true);
-
-                LOG_INFO("Enemy detected player.");
             }
         });
 
@@ -86,13 +77,9 @@ Enemy::Enemy(Engine::GameObject* player, float x, float y)
             if (trigger.HasGameObject(player))
             {
                 search->SetPlayerDetected(false);
-
-                LOG_INFO("Player left enemy detection radius.");
             }
         });
 
-    LOG_INFO("Enemy created.");
+    LOG_INFO(name + " created.");
 }
-
-Engine::GameObject* Enemy::GetGameObject() const { return gameObject; }
 }  // namespace Roguelike

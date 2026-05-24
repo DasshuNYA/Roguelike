@@ -1,3 +1,5 @@
+// @file Component.h
+
 #pragma once
 
 namespace Engine
@@ -13,9 +15,9 @@ class Component
     virtual void Update(float deltaTime) = 0;
     virtual void Render() = 0;
 
-    GameObject* GetGameObject();
+    GameObject* GetGameObject() const;
 
    protected:
-    GameObject* gameObject;
+    GameObject* gameObject = nullptr;
 };
 }  // namespace Engine

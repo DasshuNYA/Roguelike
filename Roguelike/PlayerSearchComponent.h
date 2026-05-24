@@ -3,10 +3,12 @@
 #pragma once
 
 #include "Component.h"
-#include "TransformComponent.h"
-#include "RigidbodyComponent.h"
 #include "GameObject.h"
+#include "RigidbodyComponent.h"
+#include "TransformComponent.h"
 #include "Vector.h"
+
+#include <vector>
 
 namespace Engine
 {
@@ -25,6 +27,11 @@ class PlayerSearchComponent : public Engine::Component
 
     void SetPlayer(Engine::GameObject* newPlayer);
     void SetPlayerDetected(bool detected);
+    void SetSpeed(float newSpeed);
+
+   private:
+    void UpdatePath();
+    void MoveByPath();
 
    private:
     Engine::GameObject* player = nullptr;
@@ -40,5 +47,11 @@ class PlayerSearchComponent : public Engine::Component
 
     float attackCooldown = 1.f;
     float currentAttackCooldown = 0.f;
+
+    float pathUpdateCooldown = 0.8f;
+    float currentPathUpdateCooldown = 0.f;
+
+    std::vector<Engine::Vector2Df> path;
+    int currentPathIndex = 0;
 };
 }  // namespace Roguelike

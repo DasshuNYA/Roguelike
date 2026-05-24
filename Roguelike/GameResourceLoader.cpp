@@ -13,6 +13,9 @@ void GameResourceLoader::Load()
         "player", "Resources/Textures/Player.png");
 
     Engine::ResourceSystem::Instance()->LoadTexture(
+        "creeper", "Resources/Textures/Creeper.png");
+
+    Engine::ResourceSystem::Instance()->LoadTexture(
         "enemy", "Resources/Textures/Enemy.png");
 
     Engine::ResourceSystem::Instance()->LoadTexture(

@@ -3,8 +3,6 @@
 #include "pch.h"
 #include "GameWorld.h"
 
-#include "Logger.h"
-
 namespace Engine
 {
 GameWorld* GameWorld::Instance()
@@ -70,20 +68,21 @@ void GameWorld::DestroyGameObject(GameObject* gameObject)
 {
     if (gameObject == nullptr)
     {
-        LOG_WARN("DestroyGameObject called with null object.");
         return;
     }
 
-    auto existingObject =
-        std::find(markedToDestroyGameObjects.begin(),
-                  markedToDestroyGameObjects.end(), gameObject);
-
-    if (existingObject != markedToDestroyGameObjects.end())
+    if (!IsGameObjectAlive(gameObject))
     {
         return;
     }
 
-    markedToDestroyGameObjects.push_back(gameObject);
+    auto iterator = std::find(markedToDestroyGameObjects.begin(),
+                              markedToDestroyGameObjects.end(), gameObject);
+
+    if (iterator == markedToDestroyGameObjects.end())
+    {
+        markedToDestroyGameObjects.push_back(gameObject);
+    }
 }
 
 bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
@@ -93,19 +92,10 @@ bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
         return false;
     }
 
-    auto destroyedObject =
-        std::find(markedToDestroyGameObjects.begin(),
-                  markedToDestroyGameObjects.end(), gameObject);
-
-    if (destroyedObject != markedToDestroyGameObjects.end())
-    {
-        return false;
-    }
-
-    auto existingObject =
+    auto iterator =
         std::find(gameObjects.begin(), gameObjects.end(), gameObject);
 
-    return existingObject != gameObjects.end();
+    return iterator != gameObjects.end();
 }
 
 void GameWorld::Clear()
@@ -129,17 +119,10 @@ void GameWorld::Print() const
 
 void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)
 {
-    if (gameObject == nullptr)
-    {
-        return;
-    }
-
     gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(),
                                      [gameObject](GameObject* obj)
                                      { return obj == gameObject; }),
                       gameObjects.end());
-
-    LOG_INFO("GameObject destroyed: " + gameObject->GetName());
 
     delete gameObject;
 }

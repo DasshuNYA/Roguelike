@@ -1,6 +1,7 @@
 // @file Vector.h
 
 #pragma once
+#include <cmath>
 
 namespace Engine
 {

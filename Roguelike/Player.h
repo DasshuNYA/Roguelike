@@ -3,24 +3,23 @@
 #pragma once
 
 #include "CameraComponent.h"
-#include "GameWorld.h"
-#include "SpriteRendererComponent.h"
-#include "RenderSystem.h"
-#include "InputComponent.h"
+#include "Character.h"
 #include "GameObject.h"
+#include "GameWorld.h"
+#include "InputComponent.h"
+#include "RenderSystem.h"
+#include "SpriteRendererComponent.h"
+
+#include <vector>
 
 namespace Roguelike
 {
-class Player
+class Player : public Character
 {
    public:
     Player();
 
-    Engine::GameObject* GetGameObject();
-
-    void SetAttackTarget(Engine::GameObject* target);
-
-   private:
-    Engine::GameObject* gameObject = nullptr;
+    void AddAttackTarget(Engine::GameObject* target);
+    void SetObstacles(const std::vector<Engine::GameObject*>& obstacles);
 };
 }  // namespace Roguelike

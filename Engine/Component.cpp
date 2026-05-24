@@ -1,13 +1,13 @@
+// @file Component.cpp
+
 #include "pch.h"
 #include "Component.h"
-#include <iostream>
 
 namespace Engine
 {
-Component::Component(GameObject* gameObject) : gameObject(gameObject) {}
-Component::~Component()
-{
-    std::cout << "Deleted component: " << this << std::endl;
-}
-GameObject* Component::GetGameObject() { return gameObject; }
+Component::Component(GameObject* newGameObject) { gameObject = newGameObject; }
+
+Component::~Component() {}
+
+GameObject* Component::GetGameObject() const { return gameObject; }
 }  // namespace Engine

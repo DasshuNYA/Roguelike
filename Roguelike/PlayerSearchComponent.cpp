@@ -4,8 +4,9 @@
 #include "PlayerSearchComponent.h"
 
 #include "AttackComponent.h"
-#include "StatsComponent.h"
 #include "GameWorld.h"
+#include "MazeNavigation.h"
+#include "StatsComponent.h"
 
 namespace Roguelike
 {
@@ -24,6 +25,11 @@ void PlayerSearchComponent::Update(float deltaTime)
         currentAttackCooldown -= deltaTime;
     }
 
+    if (currentPathUpdateCooldown > 0.f)
+    {
+        currentPathUpdateCooldown -= deltaTime;
+    }
+
     if (rigidbody == nullptr)
     {
         return;
@@ -35,6 +41,8 @@ void PlayerSearchComponent::Update(float deltaTime)
         rigidbody->SetLinearVelocity({0.f, 0.f});
         player = nullptr;
         isPlayerDetected = false;
+        path.clear();
+        currentPathIndex = 0;
         return;
     }
 
@@ -44,6 +52,8 @@ void PlayerSearchComponent::Update(float deltaTime)
     if (selfStats != nullptr && selfStats->IsDead())
     {
         rigidbody->SetLinearVelocity({0.f, 0.f});
+        path.clear();
+        currentPathIndex = 0;
         return;
     }
 
@@ -54,6 +64,8 @@ void PlayerSearchComponent::Update(float deltaTime)
     {
         rigidbody->SetLinearVelocity({0.f, 0.f});
         isPlayerDetected = false;
+        path.clear();
+        currentPathIndex = 0;
         return;
     }
 
@@ -71,18 +83,21 @@ void PlayerSearchComponent::Update(float deltaTime)
         rigidbody->SetLinearVelocity({0.f, 0.f});
         player = nullptr;
         isPlayerDetected = false;
+        path.clear();
+        currentPathIndex = 0;
         return;
     }
 
     Engine::Vector2Df playerPosition = playerTransform->GetWorldPosition();
+
     Engine::Vector2Df enemyPosition = transform->GetWorldPosition();
 
-    Engine::Vector2Df direction = {playerPosition.x - enemyPosition.x,
-                                   playerPosition.y - enemyPosition.y};
+    Engine::Vector2Df directionToPlayer = {playerPosition.x - enemyPosition.x,
+                                           playerPosition.y - enemyPosition.y};
 
-    float distance = direction.GetLength();
+    float distanceToPlayer = directionToPlayer.GetLength();
 
-    if (distance < stopDistance)
+    if (distanceToPlayer < stopDistance)
     {
         rigidbody->SetLinearVelocity({0.f, 0.f});
 
@@ -92,6 +107,79 @@ void PlayerSearchComponent::Update(float deltaTime)
             currentAttackCooldown = attackCooldown;
         }
 
+        return;
+    }
+
+    if (currentPathUpdateCooldown <= 0.f)
+    {
+        UpdatePath();
+        currentPathUpdateCooldown = pathUpdateCooldown;
+    }
+
+    MoveByPath();
+}
+
+void PlayerSearchComponent::Render() {}
+
+void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer)
+{
+    player = newPlayer;
+}
+
+void PlayerSearchComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
+
+void PlayerSearchComponent::SetPlayerDetected(bool detected)
+{
+    isPlayerDetected = detected;
+
+    if (!isPlayerDetected)
+    {
+        path.clear();
+        currentPathIndex = 0;
+    }
+}
+
+void PlayerSearchComponent::UpdatePath()
+{
+    if (player == nullptr || transform == nullptr)
+    {
+        return;
+    }
+
+    Engine::TransformComponent* playerTransform =
+        player->GetComponent<Engine::TransformComponent>();
+
+    if (playerTransform == nullptr)
+    {
+        return;
+    }
+
+    path = MazeNavigation::Instance()->FindPath(
+        transform->GetWorldPosition(), playerTransform->GetWorldPosition());
+
+    currentPathIndex = 0;
+}
+
+void PlayerSearchComponent::MoveByPath()
+{
+    if (path.empty() || currentPathIndex >= static_cast<int>(path.size()))
+    {
+        rigidbody->SetLinearVelocity({0.f, 0.f});
+        return;
+    }
+
+    Engine::Vector2Df enemyPosition = transform->GetWorldPosition();
+
+    Engine::Vector2Df targetPosition = path[currentPathIndex];
+
+    Engine::Vector2Df direction = {targetPosition.x - enemyPosition.x,
+                                   targetPosition.y - enemyPosition.y};
+
+    float distance = direction.GetLength();
+
+    if (distance < 12.f)
+    {
+        currentPathIndex++;
         return;
     }
 
@@ -105,17 +193,5 @@ void PlayerSearchComponent::Update(float deltaTime)
     direction.y /= distance;
 
     rigidbody->SetLinearVelocity(direction * speed);
-}
-
-void PlayerSearchComponent::Render() {}
-
-void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer)
-{
-    player = newPlayer;
-}
-
-void PlayerSearchComponent::SetPlayerDetected(bool detected)
-{
-    isPlayerDetected = detected;
 }
 }  // namespace Roguelike
