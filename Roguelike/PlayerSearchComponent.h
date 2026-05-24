@@ -10,35 +10,35 @@
 
 namespace Engine
 {
-	class AttackComponent;
+class AttackComponent;
 }
 
 namespace Roguelike
 {
-	class PlayerSearchComponent : public Engine::Component
-	{
-	public:
-		PlayerSearchComponent(Engine::GameObject* gameObject);
+class PlayerSearchComponent : public Engine::Component
+{
+   public:
+    PlayerSearchComponent(Engine::GameObject* gameObject);
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetPlayer(Engine::GameObject* newPlayer);
-		void SetPlayerDetected(bool detected);
+    void SetPlayer(Engine::GameObject* newPlayer);
+    void SetPlayerDetected(bool detected);
 
-	private:
-		Engine::GameObject* player = nullptr;
+   private:
+    Engine::GameObject* player = nullptr;
 
-		Engine::TransformComponent* transform = nullptr;
-		Engine::RigidbodyComponent* rigidbody = nullptr;
-		Engine::AttackComponent* attack = nullptr;
+    Engine::TransformComponent* transform = nullptr;
+    Engine::RigidbodyComponent* rigidbody = nullptr;
+    Engine::AttackComponent* attack = nullptr;
 
-		bool isPlayerDetected = false;
+    bool isPlayerDetected = false;
 
-		float speed = 140.f;
-		float stopDistance = 58.f;
+    float speed = 140.f;
+    float stopDistance = 58.f;
 
-		float attackCooldown = 1.f;
-		float currentAttackCooldown = 0.f;
-	};
-}
+    float attackCooldown = 1.f;
+    float currentAttackCooldown = 0.f;
+};
+}  // namespace Roguelike

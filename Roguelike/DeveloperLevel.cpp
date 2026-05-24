@@ -16,65 +16,60 @@
 
 namespace Roguelike
 {
-	void DeveloperLevel::Start()
-	{
-		LOG_INFO("DeveloperLevel start.");
+void DeveloperLevel::Start()
+{
+    LOG_INFO("DeveloperLevel start.");
 
-		GameResourceLoader::Load();
+    GameResourceLoader::Load();
 
-		MazeGenerator mazeGenerator(21, 15);
-		mazeGenerator.Generate();
+    MazeGenerator mazeGenerator(21, 15);
+    mazeGenerator.Generate();
 
-		float tileSize = mazeGenerator.GetTileSize();
+    float tileSize = mazeGenerator.GetTileSize();
 
-		player = std::make_unique<Player>();
+    player = std::make_unique<Player>();
 
-		Engine::GameObject* playerObject = player->GetGameObject();
+    Engine::GameObject* playerObject = player->GetGameObject();
 
-		playerObject
-			->GetComponent<Engine::TransformComponent>()
-			->SetWorldPosition(tileSize, tileSize);
+    playerObject->GetComponent<Engine::TransformComponent>()->SetWorldPosition(
+        tileSize, tileSize);
 
-		enemy = std::make_unique<Enemy>(
-			playerObject,
-			tileSize * 19.f,
-			tileSize * 13.f
-		);
+    enemy =
+        std::make_unique<Enemy>(playerObject, tileSize * 19.f, tileSize * 13.f);
 
-		player->SetAttackTarget(enemy->GetGameObject());
+    player->SetAttackTarget(enemy->GetGameObject());
 
-		Engine::GameObject* musicObject =
-			Engine::GameWorld::Instance()->CreateGameObject("Music");
+    Engine::GameObject* musicObject =
+        Engine::GameWorld::Instance()->CreateGameObject("Music");
 
-		Engine::AudioComponent* music =
-			musicObject->AddComponent<Engine::AudioComponent>();
+    Engine::AudioComponent* music =
+        musicObject->AddComponent<Engine::AudioComponent>();
 
-		music->SetAudio(
-			*Engine::ResourceSystem::Instance()->GetSoundBufferShared("main_theme")
-		);
+    music->SetAudio(*Engine::ResourceSystem::Instance()->GetSoundBufferShared(
+        "main_theme"));
 
-		music->SetLoop(true);
-		music->SetVolume(40.f);
-		music->Play();
+    music->SetLoop(true);
+    music->SetVolume(40.f);
+    music->Play();
 
-		LOG_INFO("DeveloperLevel created successfully.");
-	}
-
-	void DeveloperLevel::Restart()
-	{
-		LOG_WARN("DeveloperLevel restart.");
-
-		Stop();
-		Start();
-	}
-
-	void DeveloperLevel::Stop()
-	{
-		LOG_INFO("DeveloperLevel stop.");
-
-		Engine::GameWorld::Instance()->Clear();
-
-		player = nullptr;
-		enemy = nullptr;
-	}
+    LOG_INFO("DeveloperLevel created successfully.");
 }
+
+void DeveloperLevel::Restart()
+{
+    LOG_WARN("DeveloperLevel restart.");
+
+    Stop();
+    Start();
+}
+
+void DeveloperLevel::Stop()
+{
+    LOG_INFO("DeveloperLevel stop.");
+
+    Engine::GameWorld::Instance()->Clear();
+
+    player = nullptr;
+    enemy = nullptr;
+}
+}  // namespace Roguelike

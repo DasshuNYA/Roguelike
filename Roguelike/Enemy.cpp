@@ -24,84 +24,75 @@
 
 namespace Roguelike
 {
-	Enemy::Enemy(Engine::GameObject* player, float x, float y)
-	{
-		gameObject =
-			Engine::GameWorld::Instance()->CreateGameObject("Enemy");
+Enemy::Enemy(Engine::GameObject* player, float x, float y)
+{
+    gameObject = Engine::GameWorld::Instance()->CreateGameObject("Enemy");
 
-		Engine::TransformComponent* transform =
-			gameObject->GetComponent<Engine::TransformComponent>();
+    Engine::TransformComponent* transform =
+        gameObject->GetComponent<Engine::TransformComponent>();
 
-		transform->SetWorldPosition(x, y);
+    transform->SetWorldPosition(x, y);
 
-		Engine::SpriteRendererComponent* renderer =
-			gameObject->AddComponent<Engine::SpriteRendererComponent>();
+    Engine::SpriteRendererComponent* renderer =
+        gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-		renderer->SetTexture(
-			*Engine::ResourceSystem::Instance()->GetTextureShared("enemy")
-		);
+    renderer->SetTexture(
+        *Engine::ResourceSystem::Instance()->GetTextureShared("enemy"));
 
-		renderer->SetPixelSize(48, 48);
+    renderer->SetPixelSize(48, 48);
 
-		gameObject->AddComponent<Engine::SpriteColliderComponent>();
+    gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
-		Engine::RigidbodyComponent* rigidbody =
-			gameObject->AddComponent<Engine::RigidbodyComponent>();
+    Engine::RigidbodyComponent* rigidbody =
+        gameObject->AddComponent<Engine::RigidbodyComponent>();
 
-		rigidbody->SetLinearDamping(1.f);
+    rigidbody->SetLinearDamping(1.f);
 
-		auto stats =
-			gameObject->AddComponent<Engine::StatsComponent>();
+    auto stats = gameObject->AddComponent<Engine::StatsComponent>();
 
-		stats->SetStats(100.f, 15.f);
+    stats->SetStats(100.f, 15.f);
 
-		gameObject->AddComponent<Engine::DeathComponent>();
+    gameObject->AddComponent<Engine::DeathComponent>();
 
-		auto attack =
-			gameObject->AddComponent<Engine::AttackComponent>();
+    auto attack = gameObject->AddComponent<Engine::AttackComponent>();
 
-		attack->SetAttackPower(25.f);
+    attack->SetAttackPower(25.f);
 
-		PlayerSearchComponent* search =
-			gameObject->AddComponent<PlayerSearchComponent>();
+    PlayerSearchComponent* search =
+        gameObject->AddComponent<PlayerSearchComponent>();
 
-		search->SetPlayer(player);
+    search->SetPlayer(player);
 
-		DetectionTriggerComponent* detectionTrigger =
-			gameObject->AddComponent<DetectionTriggerComponent>();
+    DetectionTriggerComponent* detectionTrigger =
+        gameObject->AddComponent<DetectionTriggerComponent>();
 
-		detectionTrigger->SetRadius(180.f);
-		detectionTrigger->SetShowDebug(true); // SetShowDebug
+    detectionTrigger->SetRadius(180.f);
+    detectionTrigger->SetShowDebug(true);  // SetShowDebug
 
-		detectionTrigger->SubscribeTriggerEnter(
-			[search, player](Engine::Trigger trigger)
-			{
-				if (trigger.HasGameObject(player))
-				{
-					search->SetPlayerDetected(true);
+    detectionTrigger->SubscribeTriggerEnter(
+        [search, player](Engine::Trigger trigger)
+        {
+            if (trigger.HasGameObject(player))
+            {
+                search->SetPlayerDetected(true);
 
-					LOG_INFO("Enemy detected player.");
-				}
-			}
-		);
+                LOG_INFO("Enemy detected player.");
+            }
+        });
 
-		detectionTrigger->SubscribeTriggerExit(
-			[search, player](Engine::Trigger trigger)
-			{
-				if (trigger.HasGameObject(player))
-				{
-					search->SetPlayerDetected(false);
+    detectionTrigger->SubscribeTriggerExit(
+        [search, player](Engine::Trigger trigger)
+        {
+            if (trigger.HasGameObject(player))
+            {
+                search->SetPlayerDetected(false);
 
-					LOG_INFO("Player left enemy detection radius.");
-				}
-			}
-		);
+                LOG_INFO("Player left enemy detection radius.");
+            }
+        });
 
-		LOG_INFO("Enemy created.");
-	}
-
-	Engine::GameObject* Enemy::GetGameObject() const
-	{
-		return gameObject;
-	}
+    LOG_INFO("Enemy created.");
 }
+
+Engine::GameObject* Enemy::GetGameObject() const { return gameObject; }
+}  // namespace Roguelike

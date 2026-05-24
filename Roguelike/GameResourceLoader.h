@@ -2,9 +2,9 @@
 
 namespace Roguelike
 {
-	class GameResourceLoader
-	{
-	public:
-		static void Load();
-	};
-}
+class GameResourceLoader
+{
+   public:
+    static void Load();
+};
+}  // namespace Roguelike

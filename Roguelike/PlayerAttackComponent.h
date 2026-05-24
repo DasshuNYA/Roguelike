@@ -6,31 +6,31 @@
 
 namespace Engine
 {
-	class GameObject;
-	class TransformComponent;
-	class AttackComponent;
-}
+class GameObject;
+class TransformComponent;
+class AttackComponent;
+}  // namespace Engine
 
 namespace Roguelike
 {
-	class PlayerAttackComponent : public Engine::Component
-	{
-	public:
-		PlayerAttackComponent(Engine::GameObject* gameObject);
+class PlayerAttackComponent : public Engine::Component
+{
+   public:
+    PlayerAttackComponent(Engine::GameObject* gameObject);
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetTarget(Engine::GameObject* newTarget);
+    void SetTarget(Engine::GameObject* newTarget);
 
-	private:
-		Engine::GameObject* target = nullptr;
+   private:
+    Engine::GameObject* target = nullptr;
 
-		Engine::TransformComponent* transform = nullptr;
-		Engine::AttackComponent* attack = nullptr;
+    Engine::TransformComponent* transform = nullptr;
+    Engine::AttackComponent* attack = nullptr;
 
-		float attackRange = 80.f;
+    float attackRange = 80.f;
 
-		bool wasLeftMousePressed = false;
-	};
-}
+    bool wasLeftMousePressed = false;
+};
+}  // namespace Roguelike

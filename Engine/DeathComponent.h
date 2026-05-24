@@ -6,18 +6,18 @@
 
 namespace Engine
 {
-	class StatsComponent;
+class StatsComponent;
 
-	class DeathComponent : public Component
-	{
-	public:
-		DeathComponent(GameObject* gameObject);
+class DeathComponent : public Component
+{
+   public:
+    DeathComponent(GameObject* gameObject);
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-	private:
-		StatsComponent* stats = nullptr;
-		bool isMarkedToDestroy = false;
-	};
-}
+   private:
+    StatsComponent* stats = nullptr;
+    bool isMarkedToDestroy = false;
+};
+}  // namespace Engine

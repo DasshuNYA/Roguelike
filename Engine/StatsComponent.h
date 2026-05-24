@@ -6,26 +6,26 @@
 
 namespace Engine
 {
-	class StatsComponent : public Component
-	{
-	public:
-		StatsComponent(GameObject* gameObject);
+class StatsComponent : public Component
+{
+   public:
+    StatsComponent(GameObject* gameObject);
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetStats(float health, float armor);
+    void SetStats(float health, float armor);
 
-		float GetHealth() const;
-		float GetArmor() const;
+    float GetHealth() const;
+    float GetArmor() const;
 
-		bool IsDead() const;
+    bool IsDead() const;
 
-		float TakeDamage(float damage);
+    float TakeDamage(float damage);
 
-	private:
-		float health = 100.f;
-		float armor = 0.f;
-		bool isDead = false;
-	};
-}
+   private:
+    float health = 100.f;
+    float armor = 0.f;
+    bool isDead = false;
+};
+}  // namespace Engine

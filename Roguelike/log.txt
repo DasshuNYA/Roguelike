@@ -70,3 +70,46 @@
 [INFO] GameObject destroyed: Enemy
 [INFO] DeveloperLevel stop.
 [INFO] Game closed.
+[INFO] Logger initialized.
+[INFO] Game started.
+[INFO] DeveloperLevel start.
+[INFO] Maze generation started.
+[INFO] Maze generation finished.
+[INFO] Player StatsComponent created.
+[INFO] Player stats initialized. HP: 100.000000, Armor: 0.000000
+[INFO] Player AttackComponent created.
+[INFO] Player attack power set to 25.000000
+[INFO] Player created.
+[INFO] Enemy StatsComponent created.
+[INFO] Enemy stats initialized. HP: 100.000000, Armor: 15.000000
+[INFO] Enemy AttackComponent created.
+[INFO] Enemy attack power set to 25.000000
+[INFO] Enemy created.
+[INFO] DeveloperLevel created successfully.
+[INFO] Enemy detected player.
+[INFO] Enemy attacked Player. Damage: 25.000000, target HP: 75.000000
+[INFO] Enemy attacked Player. Damage: 25.000000, target HP: 50.000000
+[INFO] Player attacked Enemy. Damage: 10.000000, target HP: 90.000000
+[INFO] Enemy attacked Player. Damage: 25.000000, target HP: 25.000000
+[ERROR] Player is dead.
+[INFO] Enemy attacked Player. Damage: 25.000000, target HP: 0.000000
+[INFO] GameObject marked to destroy: Player
+[INFO] GameObject destroyed: Player
+[INFO] Logger initialized.
+[INFO] Game started.
+[INFO] DeveloperLevel start.
+[INFO] Maze generation started.
+[INFO] Maze generation finished.
+[INFO] Player StatsComponent created.
+[INFO] Player stats initialized. HP: 100.000000, Armor: 0.000000
+[INFO] Player AttackComponent created.
+[INFO] Player attack power set to 25.000000
+[INFO] Player created.
+[INFO] Enemy StatsComponent created.
+[INFO] Enemy stats initialized. HP: 100.000000, Armor: 15.000000
+[INFO] Enemy AttackComponent created.
+[INFO] Enemy attack power set to 25.000000
+[INFO] Enemy created.
+[INFO] DeveloperLevel created successfully.
+[INFO] DeveloperLevel stop.
+[INFO] Game closed.

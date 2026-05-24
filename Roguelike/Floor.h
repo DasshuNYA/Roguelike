@@ -2,17 +2,17 @@
 
 namespace Engine
 {
-	class GameObject;
+class GameObject;
 }
 
 namespace Roguelike
 {
-	class Floor
-	{
-	public:
-		Floor(float x, float y);
+class Floor
+{
+   public:
+    Floor(float x, float y);
 
-	private:
-		Engine::GameObject* gameObject = nullptr;
-	};
-}
+   private:
+    Engine::GameObject* gameObject = nullptr;
+};
+}  // namespace Roguelike

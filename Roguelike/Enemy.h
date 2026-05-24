@@ -4,22 +4,22 @@
 
 namespace Engine
 {
-	class GameObject;
+class GameObject;
 }
 
 namespace Roguelike
 {
-	class Enemy
-	{
-	public:
-		Enemy(Engine::GameObject* player, float x, float y);
+class Enemy
+{
+   public:
+    Enemy(Engine::GameObject* player, float x, float y);
 
-		Enemy(const Enemy&) = delete;
-		Enemy& operator=(const Enemy&) = delete;
+    Enemy(const Enemy&) = delete;
+    Enemy& operator=(const Enemy&) = delete;
 
-		Engine::GameObject* GetGameObject() const;
+    Engine::GameObject* GetGameObject() const;
 
-	private:
-		Engine::GameObject* gameObject = nullptr;
-	};
-}
+   private:
+    Engine::GameObject* gameObject = nullptr;
+};
+}  // namespace Roguelike

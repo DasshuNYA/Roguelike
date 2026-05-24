@@ -12,28 +12,28 @@
 
 namespace Engine
 {
-	class PhysicsSystem
-	{
-	public:
-		static PhysicsSystem* Instance();
+class PhysicsSystem
+{
+   public:
+    static PhysicsSystem* Instance();
 
-		void Update();
+    void Update();
 
-		float GetFixedDeltaTime() const;
+    float GetFixedDeltaTime() const;
 
-		void Subscribe(ColliderComponent* collider);
-		void Unsubscribe(ColliderComponent* collider);
+    void Subscribe(ColliderComponent* collider);
+    void Unsubscribe(ColliderComponent* collider);
 
-	private:
-		PhysicsSystem() {}
-		~PhysicsSystem() {}
+   private:
+    PhysicsSystem() {}
+    ~PhysicsSystem() {}
 
-		PhysicsSystem(PhysicsSystem const&) = delete;
-		PhysicsSystem& operator= (PhysicsSystem const&) = delete;
+    PhysicsSystem(PhysicsSystem const&) = delete;
+    PhysicsSystem& operator=(PhysicsSystem const&) = delete;
 
-		std::vector<ColliderComponent*> colliders;
-		std::map<ColliderComponent*, ColliderComponent*> triggersEnteredPair;
+    std::vector<ColliderComponent*> colliders;
+    std::map<ColliderComponent*, ColliderComponent*> triggersEnteredPair;
 
-		float fixedDeltaTime = 0.02f;
-	};
-}
+    float fixedDeltaTime = 0.02f;
+};
+}  // namespace Engine

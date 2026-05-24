@@ -10,19 +10,19 @@
 
 namespace Engine
 {
-	class SpriteColliderComponent : public ColliderComponent
-	{
-	public:
-		SpriteColliderComponent(GameObject* gameObject);
-		~SpriteColliderComponent();
+class SpriteColliderComponent : public ColliderComponent
+{
+   public:
+    SpriteColliderComponent(GameObject* gameObject);
+    ~SpriteColliderComponent();
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetShowDebug(bool value);
+    void SetShowDebug(bool value);
 
-	private:
-		const sf::Sprite* sprite = nullptr;
-		bool showDebug = false;
-	};
-}
+   private:
+    const sf::Sprite* sprite = nullptr;
+    bool showDebug = false;
+};
+}  // namespace Engine

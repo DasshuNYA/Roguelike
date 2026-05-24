@@ -9,22 +9,22 @@
 
 namespace Engine
 {
-	class CameraComponent : public Component
-	{
-	public:
-		CameraComponent(GameObject* gameObject);
+class CameraComponent : public Component
+{
+   public:
+    CameraComponent(GameObject* gameObject);
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetWindow(sf::RenderWindow* newWindow);
-		void SetBaseResolution(float newBaseWidth, float newBaseHeight);
+    void SetWindow(sf::RenderWindow* newWindow);
+    void SetBaseResolution(float newBaseWidth, float newBaseHeight);
 
-	private:
-		TransformComponent* transform = nullptr;
-		sf::RenderWindow* window = nullptr;
+   private:
+    TransformComponent* transform = nullptr;
+    sf::RenderWindow* window = nullptr;
 
-		float baseWidth = 1280.f;
-		float baseHeight = 720.f;
-	};
-}
+    float baseWidth = 1280.f;
+    float baseHeight = 720.f;
+};
+}  // namespace Engine

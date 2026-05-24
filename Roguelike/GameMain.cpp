@@ -11,37 +11,35 @@
 
 void SetupLogger()
 {
-	auto logger = std::make_shared<Engine::Logger>();
+    auto logger = std::make_shared<Engine::Logger>();
 
-	logger->addSink(std::make_shared<Engine::ConsoleSink>());
-	logger->addSink(std::make_shared<Engine::FileSink>("log.txt"));
+    logger->addSink(std::make_shared<Engine::ConsoleSink>());
+    logger->addSink(std::make_shared<Engine::FileSink>("log.txt"));
 
-	Engine::LoggerRegistry::getInstance().registerLogger("global", logger);
-	Engine::LoggerRegistry::getInstance().setDefaultLogger(logger);
+    Engine::LoggerRegistry::getInstance().registerLogger("global", logger);
+    Engine::LoggerRegistry::getInstance().setDefaultLogger(logger);
 }
 
 int main()
 {
-	SetupLogger();
+    SetupLogger();
 
-	LOG_INFO("Logger initialized.");
-	LOG_INFO("Game started.");
+    LOG_INFO("Logger initialized.");
+    LOG_INFO("Game started.");
 
-	sf::RenderWindow* window = new sf::RenderWindow(
-		sf::VideoMode(1280, 720),
-		"Roguelike"
-	);
+    sf::RenderWindow* window =
+        new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike");
 
-	Engine::RenderSystem::Instance()->SetMainWindow(window);
+    Engine::RenderSystem::Instance()->SetMainWindow(window);
 
-	Roguelike::DeveloperLevel developerLevel;
+    Roguelike::DeveloperLevel developerLevel;
 
-	Engine::Engine::Instance()->SetScene(&developerLevel);
-	Engine::Engine::Instance()->Run();
+    Engine::Engine::Instance()->SetScene(&developerLevel);
+    Engine::Engine::Instance()->Run();
 
-	LOG_INFO("Game closed.");
+    LOG_INFO("Game closed.");
 
-	delete window;
+    delete window;
 
-	return 0;
+    return 0;
 }

@@ -11,16 +11,16 @@
 
 namespace Roguelike
 {
-	class Player
-	{
-	public:
-		Player();
+class Player
+{
+   public:
+    Player();
 
-		Engine::GameObject* GetGameObject();
+    Engine::GameObject* GetGameObject();
 
-		void SetAttackTarget(Engine::GameObject* target);
+    void SetAttackTarget(Engine::GameObject* target);
 
-	private:
-		Engine::GameObject* gameObject = nullptr;
-	};
-}
+   private:
+    Engine::GameObject* gameObject = nullptr;
+};
+}  // namespace Roguelike

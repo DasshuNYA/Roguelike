@@ -9,22 +9,21 @@
 
 namespace Roguelike
 {
-	Floor::Floor(float x, float y)
-	{
-		gameObject = Engine::GameWorld::Instance()->CreateGameObject("Floor");
+Floor::Floor(float x, float y)
+{
+    gameObject = Engine::GameWorld::Instance()->CreateGameObject("Floor");
 
-		Engine::TransformComponent* transform =
-			gameObject->GetComponent<Engine::TransformComponent>();
+    Engine::TransformComponent* transform =
+        gameObject->GetComponent<Engine::TransformComponent>();
 
-		transform->SetWorldPosition(x, y);
+    transform->SetWorldPosition(x, y);
 
-		Engine::SpriteRendererComponent* renderer =
-			gameObject->AddComponent<Engine::SpriteRendererComponent>();
+    Engine::SpriteRendererComponent* renderer =
+        gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-		renderer->SetTexture(
-			*Engine::ResourceSystem::Instance()->GetTextureShared("floor")
-		);
+    renderer->SetTexture(
+        *Engine::ResourceSystem::Instance()->GetTextureShared("floor"));
 
-		renderer->SetPixelSize(64, 64);
-	}
+    renderer->SetPixelSize(64, 64);
 }
+}  // namespace Roguelike

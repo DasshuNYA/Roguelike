@@ -6,27 +6,27 @@
 
 namespace Roguelike
 {
-	class MazeGenerator
-	{
-	public:
-		MazeGenerator(int width, int height);
+class MazeGenerator
+{
+   public:
+    MazeGenerator(int width, int height);
 
-		void Generate();
+    void Generate();
 
-		float GetTileSize() const;
+    float GetTileSize() const;
 
-	private:
-		int width = 0;
-		int height = 0;
+   private:
+    int width = 0;
+    int height = 0;
 
-		float tileSize = 64.f;
+    float tileSize = 64.f;
 
-		std::vector<std::vector<bool>> visited;
-		std::vector<std::vector<bool>> isWall;
+    std::vector<std::vector<bool>> visited;
+    std::vector<std::vector<bool>> isWall;
 
-		std::vector<std::pair<int, int>> GetAvailableDirections(int x, int y);
+    std::vector<std::pair<int, int>> GetAvailableDirections(int x, int y);
 
-		void CarvePath(int x1, int y1, int x2, int y2);
-		void BuildObjects();
-	};
-}
+    void CarvePath(int x1, int y1, int x2, int y2);
+    void BuildObjects();
+};
+}  // namespace Roguelike

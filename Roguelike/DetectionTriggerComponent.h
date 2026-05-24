@@ -7,22 +7,22 @@
 
 namespace Roguelike
 {
-	class DetectionTriggerComponent : public Engine::ColliderComponent
-	{
-	public:
-		DetectionTriggerComponent(Engine::GameObject* gameObject);
-		~DetectionTriggerComponent();
+class DetectionTriggerComponent : public Engine::ColliderComponent
+{
+   public:
+    DetectionTriggerComponent(Engine::GameObject* gameObject);
+    ~DetectionTriggerComponent();
 
-		void Update(float deltaTime) override;
-		void Render() override;
+    void Update(float deltaTime) override;
+    void Render() override;
 
-		void SetRadius(float newRadius);
-		void SetShowDebug(bool value);
+    void SetRadius(float newRadius);
+    void SetShowDebug(bool value);
 
-	private:
-		Engine::TransformComponent* transform = nullptr;
+   private:
+    Engine::TransformComponent* transform = nullptr;
 
-		float radius = 180.f;
-		bool showDebug = false;
-	};
-}
+    float radius = 180.f;
+    bool showDebug = false;
+};
+}  // namespace Roguelike

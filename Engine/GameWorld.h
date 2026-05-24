@@ -7,37 +7,37 @@
 
 namespace Engine
 {
-	class GameWorld
-	{
-	public:
-		static GameWorld* Instance();
+class GameWorld
+{
+   public:
+    static GameWorld* Instance();
 
-		void Update(float deltaTime);
-		void FixedUpdate(float deltaTime);
-		void Render();
-		void LateUpdate();
+    void Update(float deltaTime);
+    void FixedUpdate(float deltaTime);
+    void Render();
+    void LateUpdate();
 
-		GameObject* CreateGameObject();
-		GameObject* CreateGameObject(std::string name);
+    GameObject* CreateGameObject();
+    GameObject* CreateGameObject(std::string name);
 
-		void DestroyGameObject(GameObject* gameObject);
-		bool IsGameObjectAlive(GameObject* gameObject) const;
+    void DestroyGameObject(GameObject* gameObject);
+    bool IsGameObjectAlive(GameObject* gameObject) const;
 
-		void Clear();
-		void Print() const;
+    void Clear();
+    void Print() const;
 
-	private:
-		GameWorld() {}
-		~GameWorld() {}
+   private:
+    GameWorld() {}
+    ~GameWorld() {}
 
-		GameWorld(GameWorld const&) = delete;
-		GameWorld& operator=(GameWorld const&) = delete;
+    GameWorld(GameWorld const&) = delete;
+    GameWorld& operator=(GameWorld const&) = delete;
 
-		float fixedCounter = 0.f;
+    float fixedCounter = 0.f;
 
-		std::vector<GameObject*> gameObjects = {};
-		std::vector<GameObject*> markedToDestroyGameObjects = {};
+    std::vector<GameObject*> gameObjects = {};
+    std::vector<GameObject*> markedToDestroyGameObjects = {};
 
-		void DestroyGameObjectImmediate(GameObject* gameObject);
-	};
-}
+    void DestroyGameObjectImmediate(GameObject* gameObject);
+};
+}  // namespace Engine

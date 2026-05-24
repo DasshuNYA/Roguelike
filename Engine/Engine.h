@@ -10,23 +10,23 @@
 
 namespace Engine
 {
-	class Scene;
+class Scene;
 
-	class Engine
-	{
-	public:
-		Engine(const Engine& app) = delete;
-		Engine& operator=(const Engine&) = delete;
+class Engine
+{
+   public:
+    Engine(const Engine& app) = delete;
+    Engine& operator=(const Engine&) = delete;
 
-		static Engine* Instance();
+    static Engine* Instance();
 
-		void SetScene(Scene* newScene);
-		void Run();
+    void SetScene(Scene* newScene);
+    void Run();
 
-	private:
-		Engine();
-		~Engine() = default;
+   private:
+    Engine();
+    ~Engine() = default;
 
-		Scene* scene = nullptr;
-	};
-}
+    Scene* scene = nullptr;
+};
+}  // namespace Engine
