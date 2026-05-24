@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMovementComponent.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectionTriggerComponent.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSearchComponent.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Floor.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelBuilder.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="DeveloperLevel.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="GameResourceLoader.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMain.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAttackComponent.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeGenerator.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovementComponent.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectionTriggerComponent.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSearchComponent.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelBuilder.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="DeveloperLevel.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="GameResourceLoader.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAttackComponent.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeGenerator.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Player">
+      <UniqueIdentifier>{dec88a15-e100-441b-9d30-0c17ae13596a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{a9630d45-a37c-407f-b357-f2eb439afd72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{05202615-98b2-4869-8f65-ac57bc162c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{33bbd253-22af-42d4-aa21-b3f54c3f9892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{9b6cdd58-6024-4439-bbe3-3953a76a7e9f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

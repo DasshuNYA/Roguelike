@@ -4,14 +4,15 @@
 #include "DeveloperLevel.h"
 
 #include "AudioComponent.h"
+#include "Enemy.h"
 #include "GameObject.h"
 #include "GameResourceLoader.h"
 #include "GameWorld.h"
+#include "Logger.h"
+#include "MazeGenerator.h"
+#include "Player.h"
 #include "ResourceSystem.h"
 #include "TransformComponent.h"
-#include "Logger.h"
-
-#include "LevelBuilder.h"
 
 namespace Roguelike
 {
@@ -21,31 +22,23 @@ namespace Roguelike
 
 		GameResourceLoader::Load();
 
-		LevelBuilder levelBuilder(
-			256.f,
-			96.f,
-			64.f,
-			12,
-			8
-		);
+		MazeGenerator mazeGenerator(21, 15);
+		mazeGenerator.Generate();
 
-		levelBuilder.Build();
+		float tileSize = mazeGenerator.GetTileSize();
 
-		player = std::make_shared<Player>();
+		player = std::make_unique<Player>();
 
 		Engine::GameObject* playerObject = player->GetGameObject();
 
 		playerObject
 			->GetComponent<Engine::TransformComponent>()
-			->SetWorldPosition(
-				levelBuilder.GetPlayerSpawnX(),
-				levelBuilder.GetPlayerSpawnY()
-			);
+			->SetWorldPosition(tileSize, tileSize);
 
 		enemy = std::make_unique<Enemy>(
 			playerObject,
-			levelBuilder.GetEnemySpawnX(),
-			levelBuilder.GetEnemySpawnY()
+			tileSize * 19.f,
+			tileSize * 13.f
 		);
 
 		player->SetAttackTarget(enemy->GetGameObject());

@@ -167,6 +167,7 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="GameResourceLoader.cpp" />
     <ClCompile Include="LevelBuilder.cpp" />
+    <ClCompile Include="MazeGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAttackComponent.cpp" />
     <ClCompile Include="PlayerMovementComponent.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Floor.h" />
     <ClInclude Include="GameResourceLoader.h" />
     <ClInclude Include="LevelBuilder.h" />
+    <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerAttackComponent.h" />
     <ClInclude Include="PlayerMovementComponent.h" />

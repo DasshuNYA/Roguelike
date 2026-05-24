@@ -18,7 +18,7 @@ namespace Roguelike
 		void Stop() override;
 
 	private:
-		std::shared_ptr<Player> player;
+		std::unique_ptr<Player> player;
 		std::unique_ptr<Enemy> enemy;
 	};
 }
