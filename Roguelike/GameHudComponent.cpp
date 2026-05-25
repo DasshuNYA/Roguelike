@@ -10,8 +10,7 @@
 
 namespace Roguelike
 {
-GameHudComponent::GameHudComponent(Engine::GameObject* gameObject)
-    : Component(gameObject)
+GameHudComponent::GameHudComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     textRenderer = gameObject->GetComponent<Engine::TextRendererComponent>();
 }
@@ -43,11 +42,9 @@ void GameHudComponent::Update(float deltaTime)
 
     float playerHealth = 0.f;
 
-    if (player != nullptr &&
-        Engine::GameWorld::Instance()->IsGameObjectAlive(player))
+    if (player != nullptr && Engine::GameWorld::Instance()->IsGameObjectAlive(player))
     {
-        Engine::StatsComponent* stats =
-            player->GetComponent<Engine::StatsComponent>();
+        Engine::StatsComponent* stats = player->GetComponent<Engine::StatsComponent>();
 
         if (stats != nullptr)
         {
@@ -55,20 +52,15 @@ void GameHudComponent::Update(float deltaTime)
         }
     }
 
-    textRenderer->SetText(
-        "HP: " + std::to_string(static_cast<int>(playerHealth)) +
-        "\nEnemies left: " + std::to_string(GetAliveEnemiesCount()));
+    textRenderer->SetText("HP: " + std::to_string(static_cast<int>(playerHealth)) +
+                          "\nEnemies left: " + std::to_string(GetAliveEnemiesCount()));
 }
 
 void GameHudComponent::Render() {}
 
-void GameHudComponent::SetPlayer(Engine::GameObject* newPlayer)
-{
-    player = newPlayer;
-}
+void GameHudComponent::SetPlayer(Engine::GameObject* newPlayer) { player = newPlayer; }
 
-void GameHudComponent::SetEnemies(
-    const std::vector<std::unique_ptr<Character>>* newEnemies)
+void GameHudComponent::SetEnemies(const std::vector<std::unique_ptr<Character>>* newEnemies)
 {
     enemies = newEnemies;
 }
@@ -91,8 +83,7 @@ int GameHudComponent::GetAliveEnemiesCount() const
 
         Engine::GameObject* enemyObject = enemy->GetGameObject();
 
-        if (enemyObject != nullptr &&
-            Engine::GameWorld::Instance()->IsGameObjectAlive(enemyObject))
+        if (enemyObject != nullptr && Engine::GameWorld::Instance()->IsGameObjectAlive(enemyObject))
         {
             count++;
         }
@@ -113,8 +104,7 @@ bool GameHudComponent::IsPlayerDead() const
         return true;
     }
 
-    Engine::StatsComponent* stats =
-        player->GetComponent<Engine::StatsComponent>();
+    Engine::StatsComponent* stats = player->GetComponent<Engine::StatsComponent>();
 
     return stats != nullptr && stats->IsDead();
 }

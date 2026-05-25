@@ -5,6 +5,7 @@
 
 #include "DeveloperLevel.h"
 #include "Floor.h"
+#include "GameConfig.h"
 #include "Logger.h"
 #include "MazeNavigation.h"
 #include "Wall.h"
@@ -15,9 +16,8 @@
 
 namespace Roguelike
 {
-MazeGenerator::MazeGenerator(int newWidth, int newHeight,
-                             DeveloperLevel* newLevel)
-    : width(newWidth), height(newHeight), level(newLevel)
+MazeGenerator::MazeGenerator(int newWidth, int newHeight, DeveloperLevel* newLevel)
+    : width(newWidth), height(newHeight), tileSize(GameConfig::TileSize), level(newLevel)
 {
     if (width % 2 == 0)
     {
@@ -52,8 +52,7 @@ void MazeGenerator::Generate()
     {
         auto [x, y] = stack.top();
 
-        std::vector<std::pair<int, int>> directions =
-            GetAvailableDirections(x, y);
+        std::vector<std::pair<int, int>> directions = GetAvailableDirections(x, y);
 
         if (directions.empty())
         {
@@ -61,8 +60,7 @@ void MazeGenerator::Generate()
             continue;
         }
 
-        std::pair<int, int> direction =
-            directions[std::rand() % directions.size()];
+        std::pair<int, int> direction = directions[std::rand() % directions.size()];
 
         int nextX = x + direction.first;
         int nextY = y + direction.second;
@@ -86,11 +84,9 @@ const std::vector<Engine::Vector2Df>& MazeGenerator::GetFloorPositions() const
     return floorPositions;
 }
 
-std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x,
-                                                                       int y)
+std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x, int y)
 {
-    std::vector<std::pair<int, int>> directions = {
-        {0, -2}, {0, 2}, {-2, 0}, {2, 0}};
+    std::vector<std::pair<int, int>> directions = {{0, -2}, {0, 2}, {-2, 0}, {2, 0}};
 
     std::vector<std::pair<int, int>> available;
 
@@ -160,8 +156,7 @@ void MazeGenerator::BuildObjects()
     }
 
     // Builds a walkable grid for enemy pathfinding after maze generation.
-    std::vector<std::vector<bool>> walkableGrid(
-        height, std::vector<bool>(width, false));
+    std::vector<std::vector<bool>> walkableGrid(height, std::vector<bool>(width, false));
 
     for (int y = 0; y < height; y++)
     {

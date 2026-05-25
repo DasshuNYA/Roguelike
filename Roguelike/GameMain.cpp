@@ -27,8 +27,7 @@ int main()
     LOG_INFO("Logger initialized.");
     LOG_INFO("Game started.");
 
-    sf::RenderWindow* window =
-        new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike");
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike");
 
     Engine::RenderSystem::Instance()->SetMainWindow(window);
 

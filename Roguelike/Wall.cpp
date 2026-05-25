@@ -22,8 +22,7 @@ Wall::Wall(float x, float y)
 
     auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-    renderer->SetTexture(
-        *Engine::ResourceSystem::Instance()->GetTextureShared("wall"));
+    renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("wall"));
 
     renderer->SetPixelSize(64, 64);
 

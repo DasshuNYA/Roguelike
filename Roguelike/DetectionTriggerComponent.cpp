@@ -8,8 +8,7 @@
 
 namespace Roguelike
 {
-DetectionTriggerComponent::DetectionTriggerComponent(
-    Engine::GameObject* gameObject)
+DetectionTriggerComponent::DetectionTriggerComponent(Engine::GameObject* gameObject)
     : ColliderComponent(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
@@ -33,8 +32,7 @@ void DetectionTriggerComponent::Update(float deltaTime)
 
     Engine::Vector2Df position = transform->GetWorldPosition();
 
-    bounds = sf::FloatRect(position.x - radius, position.y - radius,
-                           radius * 2.f, radius * 2.f);
+    bounds = sf::FloatRect(position.x - radius, position.y - radius, radius * 2.f, radius * 2.f);
 }
 
 void DetectionTriggerComponent::Render()
@@ -57,10 +55,7 @@ void DetectionTriggerComponent::Render()
     Engine::RenderSystem::Instance()->Render(circle);
 }
 
-void DetectionTriggerComponent::SetRadius(float newRadius)
-{
-    radius = newRadius;
-}
+void DetectionTriggerComponent::SetRadius(float newRadius) { radius = newRadius; }
 
 void DetectionTriggerComponent::SetShowDebug(bool value) { showDebug = value; }
 }  // namespace Roguelike

@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -32,7 +33,6 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <string>
 
-
 namespace sf
 {
 class SoundFileWriter;
@@ -43,8 +43,7 @@ class SoundFileWriter;
 ////////////////////////////////////////////////////////////
 class SFML_AUDIO_API OutputSoundFile : NonCopyable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -71,7 +70,8 @@ public:
     /// \return True if the file was successfully opened
     ///
     ////////////////////////////////////////////////////////////
-    bool openFromFile(const std::string& filename, unsigned int sampleRate, unsigned int channelCount);
+    bool openFromFile(const std::string& filename, unsigned int sampleRate,
+                      unsigned int channelCount);
 
     ////////////////////////////////////////////////////////////
     /// \brief Write audio samples to the file
@@ -82,8 +82,7 @@ public:
     ////////////////////////////////////////////////////////////
     void write(const Int16* samples, Uint64 count);
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     /// \brief Close the current file
     ///
@@ -93,14 +92,13 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    SoundFileWriter* m_writer; ///< Writer that handles I/O on the file's format
+    SoundFileWriter*
+        m_writer;  ///< Writer that handles I/O on the file's format
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_OUTPUTSOUNDFILE_HPP
-
+#endif  // SFML_OUTPUTSOUNDFILE_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::OutputSoundFile

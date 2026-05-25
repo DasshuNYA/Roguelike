@@ -30,8 +30,7 @@ void AttackComponent::SetAttackPower(float newAttackPower)
 
     attackPower = newAttackPower;
 
-    LOG_INFO(gameObject->GetName() + " attack power set to " +
-             std::to_string(attackPower));
+    LOG_INFO(gameObject->GetName() + " attack power set to " + std::to_string(attackPower));
 }
 
 float AttackComponent::GetAttackPower() const { return attackPower; }
@@ -48,8 +47,7 @@ bool AttackComponent::Attack(GameObject* target)
 
     if (targetStats == nullptr)
     {
-        LOG_WARN(gameObject->GetName() +
-                 " attack skipped. Target has no StatsComponent.");
+        LOG_WARN(gameObject->GetName() + " attack skipped. Target has no StatsComponent.");
         return false;
     }
 

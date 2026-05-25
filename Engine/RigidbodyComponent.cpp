@@ -5,8 +5,7 @@
 
 namespace Engine
 {
-RigidbodyComponent::RigidbodyComponent(GameObject* gameObject)
-    : Component(gameObject)
+RigidbodyComponent::RigidbodyComponent(GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<TransformComponent>();
 }
@@ -52,20 +51,14 @@ void RigidbodyComponent::AddLinearVelocity(Vector2Df linearOffset)
     linearVelocity = linearVelocity + linearOffset;
 }
 
-Vector2Df RigidbodyComponent::GetLinearVelocity() const
-{
-    return linearVelocity;
-}
+Vector2Df RigidbodyComponent::GetLinearVelocity() const { return linearVelocity; }
 
 void RigidbodyComponent::SetAngleVelocity(float newAngleVelocity)
 {
     angleVelocity = newAngleVelocity;
 }
 
-void RigidbodyComponent::AddAngleVelocity(float angleOffset)
-{
-    angleVelocity += angleOffset;
-}
+void RigidbodyComponent::AddAngleVelocity(float angleOffset) { angleVelocity += angleOffset; }
 
 float RigidbodyComponent::GetAngleVelocity() const { return angleVelocity; }
 
@@ -76,17 +69,11 @@ void RigidbodyComponent::SetLinearDamping(float newLinearDamping)
 
 float RigidbodyComponent::GetLinearDamping() const { return linearDamping; }
 
-void RigidbodyComponent::SetAngleDamping(float newAngleDamping)
-{
-    angleDamping = newAngleDamping;
-}
+void RigidbodyComponent::SetAngleDamping(float newAngleDamping) { angleDamping = newAngleDamping; }
 
 float RigidbodyComponent::GetAngleDamping() const { return angleDamping; }
 
-void RigidbodyComponent::SetKinematic(bool newIsKinematic)
-{
-    isKinematic = newIsKinematic;
-}
+void RigidbodyComponent::SetKinematic(bool newIsKinematic) { isKinematic = newIsKinematic; }
 
 bool RigidbodyComponent::GetKinematic() const { return isKinematic; }
 }  // namespace Engine

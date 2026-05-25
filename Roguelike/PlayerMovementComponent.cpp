@@ -21,8 +21,7 @@ void PlayerMovementComponent::Update(float deltaTime)
         return;
     }
 
-    Engine::StatsComponent* stats =
-        gameObject->GetComponent<Engine::StatsComponent>();
+    Engine::StatsComponent* stats = gameObject->GetComponent<Engine::StatsComponent>();
 
     if (stats != nullptr && stats->IsDead())
     {
@@ -30,8 +29,7 @@ void PlayerMovementComponent::Update(float deltaTime)
         return;
     }
 
-    Engine::Vector2Df direction = {input->GetHorizontalAxis(),
-                                   input->GetVerticalAxis()};
+    Engine::Vector2Df direction = {input->GetHorizontalAxis(), input->GetVerticalAxis()};
 
     float length = direction.GetLength();
 

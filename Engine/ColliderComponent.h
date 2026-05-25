@@ -26,14 +26,11 @@ class ColliderComponent : public Component
     void SubscribeCollision(std::function<void(Collision)> onCollisionAction);
     void UnsubscribeCollision(std::function<void(Collision)> onCollisionAction);
 
-    void SubscribeTriggerEnter(
-        std::function<void(Trigger)> onTriggerEnterAction);
-    void UnsubscribeTriggerEnter(
-        std::function<void(Trigger)> onTriggerEnterAction);
+    void SubscribeTriggerEnter(std::function<void(Trigger)> onTriggerEnterAction);
+    void UnsubscribeTriggerEnter(std::function<void(Trigger)> onTriggerEnterAction);
 
     void SubscribeTriggerExit(std::function<void(Trigger)> onTriggerExitAction);
-    void UnsubscribeTriggerExit(
-        std::function<void(Trigger)> onTriggerExitAction);
+    void UnsubscribeTriggerExit(std::function<void(Trigger)> onTriggerExitAction);
 
     friend class PhysicsSystem;
 

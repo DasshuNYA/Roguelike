@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -33,7 +34,6 @@
 #include <SFML/System/Export.hpp>
 #include <cstdlib>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -42,8 +42,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_SYSTEM_API MemoryInputStream : public InputStream
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -94,26 +93,24 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Return the size of the stream
     ///
-    /// \return The total number of bytes available in the stream, or -1 on error
+    /// \return The total number of bytes available in the stream, or -1 on
+    /// error
     ///
     ////////////////////////////////////////////////////////////
     virtual Int64 getSize();
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    const char* m_data;   ///< Pointer to the data in memory
-    Int64       m_size;   ///< Total size of the data
-    Int64       m_offset; ///< Current reading position
+    const char* m_data;  ///< Pointer to the data in memory
+    Int64 m_size;        ///< Total size of the data
+    Int64 m_offset;      ///< Current reading position
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_MEMORYINPUTSTREAM_HPP
-
+#endif  // SFML_MEMORYINPUTSTREAM_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::MemoryInputStream

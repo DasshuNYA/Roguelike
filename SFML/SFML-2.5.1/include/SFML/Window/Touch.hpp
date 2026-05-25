@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -31,7 +32,6 @@
 #include <SFML/Window/Export.hpp>
 #include <SFML/System/Vector2.hpp>
 
-
 namespace sf
 {
 class Window;
@@ -42,14 +42,14 @@ class Window;
 ////////////////////////////////////////////////////////////
 class SFML_WINDOW_API Touch
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Check if a touch event is currently down
     ///
     /// \param finger Finger index
     ///
-    /// \return True if \a finger is currently touching the screen, false otherwise
+    /// \return True if \a finger is currently touching the screen, false
+    /// otherwise
     ///
     ////////////////////////////////////////////////////////////
     static bool isDown(unsigned int finger);
@@ -82,11 +82,9 @@ public:
     static Vector2i getPosition(unsigned int finger, const Window& relativeTo);
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_TOUCH_HPP
-
+#endif  // SFML_TOUCH_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Touch

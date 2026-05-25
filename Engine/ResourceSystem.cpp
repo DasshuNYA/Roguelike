@@ -11,8 +11,7 @@ ResourceSystem* ResourceSystem::Instance()
     return &resourceSystem;
 }
 
-void ResourceSystem::LoadTexture(const std::string& name,
-                                 std::string sourcePath, bool isSmooth)
+void ResourceSystem::LoadTexture(const std::string& name, std::string sourcePath, bool isSmooth)
 {
     if (textures.find(name) != textures.end())
     {
@@ -32,8 +31,7 @@ void ResourceSystem::LoadTexture(const std::string& name,
     }
 }
 
-const sf::Texture* ResourceSystem::GetTextureShared(
-    const std::string& name) const
+const sf::Texture* ResourceSystem::GetTextureShared(const std::string& name) const
 {
     return textures.find(name)->second;
 }
@@ -57,10 +55,8 @@ void ResourceSystem::DeleteSharedTexture(const std::string& name)
     delete deletingTexture;
 }
 
-void ResourceSystem::LoadTextureMap(const std::string& name,
-                                    std::string sourcePath,
-                                    sf::Vector2u elementPixelSize,
-                                    int totalElements, bool isSmooth)
+void ResourceSystem::LoadTextureMap(const std::string& name, std::string sourcePath,
+                                    sf::Vector2u elementPixelSize, int totalElements, bool isSmooth)
 {
     if (textureMaps.find(name) != textureMaps.end())
     {
@@ -76,8 +72,7 @@ void ResourceSystem::LoadTextureMap(const std::string& name,
         auto textureSize = textureMap.getSize();
         int loadedElements = 0;
 
-        for (int y = 0;
-             y <= static_cast<int>(textureSize.y - elementPixelSize.y);
+        for (int y = 0; y <= static_cast<int>(textureSize.y - elementPixelSize.y);
              y += elementPixelSize.y)
         {
             if (loadedElements == totalElements)
@@ -85,8 +80,7 @@ void ResourceSystem::LoadTextureMap(const std::string& name,
                 break;
             }
 
-            for (int x = 0;
-                 x <= static_cast<int>(textureSize.x - elementPixelSize.x);
+            for (int x = 0; x <= static_cast<int>(textureSize.x - elementPixelSize.x);
                  x += elementPixelSize.x)
             {
                 if (loadedElements == totalElements)
@@ -97,8 +91,7 @@ void ResourceSystem::LoadTextureMap(const std::string& name,
                 sf::Texture* newTextureMapElement = new sf::Texture();
 
                 if (newTextureMapElement->loadFromFile(
-                        sourcePath, sf::IntRect(x, y, elementPixelSize.x,
-                                                elementPixelSize.y)))
+                        sourcePath, sf::IntRect(x, y, elementPixelSize.x, elementPixelSize.y)))
                 {
                     newTextureMapElement->setSmooth(isSmooth);
                     textureMapElements.push_back(newTextureMapElement);
@@ -116,8 +109,8 @@ void ResourceSystem::LoadTextureMap(const std::string& name,
     }
 }
 
-const sf::Texture* ResourceSystem::GetTextureMapElementShared(
-    const std::string& name, int elementIndex) const
+const sf::Texture* ResourceSystem::GetTextureMapElementShared(const std::string& name,
+                                                              int elementIndex) const
 {
     return textureMaps.find(name)->second[elementIndex];
 }
@@ -150,8 +143,7 @@ void ResourceSystem::DeleteSharedTextureMap(const std::string& name)
     textureMaps.erase(textureMap);
 }
 
-void ResourceSystem::LoadSoundBuffer(const std::string& name,
-                                     std::string sourcePath)
+void ResourceSystem::LoadSoundBuffer(const std::string& name, std::string sourcePath)
 {
     if (soundBuffers.find(name) != soundBuffers.end())
     {
@@ -170,8 +162,7 @@ void ResourceSystem::LoadSoundBuffer(const std::string& name,
     }
 }
 
-const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(
-    const std::string& name) const
+const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(const std::string& name) const
 {
     return soundBuffers.find(name)->second;
 }

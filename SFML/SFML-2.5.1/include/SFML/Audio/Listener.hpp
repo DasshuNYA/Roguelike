@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -31,7 +32,6 @@
 #include <SFML/Audio/Export.hpp>
 #include <SFML/System/Vector3.hpp>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -41,8 +41,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_AUDIO_API Listener
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Change the global volume of all the sounds and musics
     ///
@@ -196,11 +195,9 @@ public:
     static Vector3f getUpVector();
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_LISTENER_HPP
-
+#endif  // SFML_LISTENER_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Listener

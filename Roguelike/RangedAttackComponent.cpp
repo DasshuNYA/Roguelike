@@ -15,8 +15,7 @@
 
 namespace Roguelike
 {
-RangedAttackComponent::RangedAttackComponent(Engine::GameObject* gameObject)
-    : Component(gameObject)
+RangedAttackComponent::RangedAttackComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
 }
@@ -51,14 +50,12 @@ void RangedAttackComponent::AddTarget(Engine::GameObject* target)
     }
 }
 
-void RangedAttackComponent::SetTargets(
-    const std::vector<Engine::GameObject*>& newTargets)
+void RangedAttackComponent::SetTargets(const std::vector<Engine::GameObject*>& newTargets)
 {
     targets = newTargets;
 }
 
-void RangedAttackComponent::SetObstacles(
-    const std::vector<Engine::GameObject*>& newObstacles)
+void RangedAttackComponent::SetObstacles(const std::vector<Engine::GameObject*>& newObstacles)
 {
     obstacles = newObstacles;
 }
@@ -70,13 +67,11 @@ void RangedAttackComponent::Shoot()
         return;
     }
 
-    sf::RenderWindow& window =
-        Engine::RenderSystem::Instance()->GetMainWindow();
+    sf::RenderWindow& window = Engine::RenderSystem::Instance()->GetMainWindow();
 
     sf::Vector2i mousePixelPosition = sf::Mouse::getPosition(window);
 
-    sf::Vector2f mouseWorldPosition =
-        window.mapPixelToCoords(mousePixelPosition);
+    sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(mousePixelPosition);
 
     Engine::Vector2Df playerPosition = transform->GetWorldPosition();
 
@@ -93,14 +88,12 @@ void RangedAttackComponent::Shoot()
     direction.x /= length;
     direction.y /= length;
 
-    Engine::GameObject* projectile =
-        Engine::GameWorld::Instance()->CreateGameObject("Projectile");
+    Engine::GameObject* projectile = Engine::GameWorld::Instance()->CreateGameObject("Projectile");
 
-    projectile->GetComponent<Engine::TransformComponent>()->SetWorldPosition(
-        playerPosition.x, playerPosition.y);
+    projectile->GetComponent<Engine::TransformComponent>()->SetWorldPosition(playerPosition.x,
+                                                                             playerPosition.y);
 
-    ProjectileComponent* projectileComponent =
-        projectile->AddComponent<ProjectileComponent>();
+    ProjectileComponent* projectileComponent = projectile->AddComponent<ProjectileComponent>();
 
     projectileComponent->SetDirection(direction);
     projectileComponent->SetDamage(GameConfig::PlayerAttackPower);

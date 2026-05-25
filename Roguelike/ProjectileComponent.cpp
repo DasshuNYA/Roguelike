@@ -13,8 +13,7 @@
 
 namespace Roguelike
 {
-ProjectileComponent::ProjectileComponent(Engine::GameObject* gameObject)
-    : Component(gameObject)
+ProjectileComponent::ProjectileComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
 }
@@ -34,8 +33,7 @@ void ProjectileComponent::Update(float deltaTime)
         return;
     }
 
-    transform->MoveBy(direction.x * speed * deltaTime,
-                      direction.y * speed * deltaTime);
+    transform->MoveBy(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
 
     if (CheckObstacles())
     {
@@ -74,19 +72,14 @@ void ProjectileComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
 
 void ProjectileComponent::SetRadius(float newRadius) { radius = newRadius; }
 
-void ProjectileComponent::SetLifeTime(float newLifeTime)
-{
-    lifeTime = newLifeTime;
-}
+void ProjectileComponent::SetLifeTime(float newLifeTime) { lifeTime = newLifeTime; }
 
-void ProjectileComponent::SetTargets(
-    const std::vector<Engine::GameObject*>& newTargets)
+void ProjectileComponent::SetTargets(const std::vector<Engine::GameObject*>& newTargets)
 {
     targets = newTargets;
 }
 
-void ProjectileComponent::SetObstacles(
-    const std::vector<Engine::GameObject*>& newObstacles)
+void ProjectileComponent::SetObstacles(const std::vector<Engine::GameObject*>& newObstacles)
 {
     obstacles = newObstacles;
 }
@@ -115,12 +108,10 @@ bool ProjectileComponent::CheckObstacles()
             continue;
         }
 
-        Engine::Vector2Df obstaclePosition =
-            obstacleTransform->GetWorldPosition();
+        Engine::Vector2Df obstaclePosition = obstacleTransform->GetWorldPosition();
 
-        Engine::Vector2Df difference = {
-            obstaclePosition.x - projectilePosition.x,
-            obstaclePosition.y - projectilePosition.y};
+        Engine::Vector2Df difference = {obstaclePosition.x - projectilePosition.x,
+                                        obstaclePosition.y - projectilePosition.y};
 
         if (difference.GetLength() <= 36.f)
         {
@@ -148,8 +139,7 @@ void ProjectileComponent::CheckTargets()
         Engine::TransformComponent* targetTransform =
             target->GetComponent<Engine::TransformComponent>();
 
-        Engine::StatsComponent* targetStats =
-            target->GetComponent<Engine::StatsComponent>();
+        Engine::StatsComponent* targetStats = target->GetComponent<Engine::StatsComponent>();
 
         if (targetTransform == nullptr || targetStats == nullptr)
         {
@@ -165,9 +155,8 @@ void ProjectileComponent::CheckTargets()
 
         Engine::Vector2Df targetPosition = targetTransform->GetWorldPosition();
 
-        Engine::Vector2Df difference = {
-            targetPosition.x - projectilePosition.x,
-            targetPosition.y - projectilePosition.y};
+        Engine::Vector2Df difference = {targetPosition.x - projectilePosition.x,
+                                        targetPosition.y - projectilePosition.y};
 
         if (difference.GetLength() <= 32.f)
         {

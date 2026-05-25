@@ -13,29 +13,23 @@ void InitSprite(sf::Sprite& sprite, float desiredWidth, float desiredHeight,
     SetSpriteSize(sprite, desiredWidth, desiredHeight);
 }
 
-void DrawSprite(const sf::Sprite& sprite, sf::RenderWindow& window)
-{
-    window.draw(sprite);
-}
+void DrawSprite(const sf::Sprite& sprite, sf::RenderWindow& window) { window.draw(sprite); }
 
-sf::Vector2f GetRandomSpritePositionInRectangle(const sf::Sprite& sprite,
-                                                const sf::FloatRect& rect)
+sf::Vector2f GetRandomSpritePositionInRectangle(const sf::Sprite& sprite, const sf::FloatRect& rect)
 {
     sf::Vector2f result;
     const auto spriteWidth = sprite.getGlobalBounds().width;
     const auto spriteHeight = sprite.getGlobalBounds().height;
-    result.x = rand() / (float)RAND_MAX * (rect.width - 2 * spriteWidth) +
-               rect.left + spriteWidth;
-    result.y = rand() / (float)RAND_MAX * (rect.height - 2 * spriteHeight) +
-               rect.top + spriteHeight;
+    result.x = rand() / (float)RAND_MAX * (rect.width - 2 * spriteWidth) + rect.left + spriteWidth;
+    result.y =
+        rand() / (float)RAND_MAX * (rect.height - 2 * spriteHeight) + rect.top + spriteHeight;
     return result;
 }
 
 void SetSpriteSize(sf::Sprite& sprite, float desiredWidth, float desiredHeight)
 {
     sf::FloatRect spriteRect = sprite.getGlobalBounds();
-    sf::Vector2f scale = {desiredWidth / spriteRect.width,
-                          desiredHeight / spriteRect.height};
+    sf::Vector2f scale = {desiredWidth / spriteRect.width, desiredHeight / spriteRect.height};
     sprite.setScale(scale);
 }
 
@@ -50,8 +44,7 @@ void SetSpriteRandomPosition(sf::Sprite& sprite, const sf::FloatRect& rect,
 {
 }
 
-bool CheckSpriteIntersection(const sf::Sprite& sprite1,
-                             const sf::Sprite& sprite2)
+bool CheckSpriteIntersection(const sf::Sprite& sprite1, const sf::Sprite& sprite2)
 {
     const auto distance = sprite1.getPosition() - sprite2.getPosition();
     if (sqrtf(distance.x * distance.x + distance.y * distance.y) * 2 <
@@ -62,15 +55,13 @@ bool CheckSpriteIntersection(const sf::Sprite& sprite1,
     return false;
 }
 
-sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom,
-                                     const sf::Sprite& spriteTo)
+sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo)
 {
     const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
     return result;
 }
 
-float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom,
-                                         const sf::Sprite& spriteTo)
+float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo)
 {
     const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
     return std::fabs(result.x) + std::fabs(result.y);

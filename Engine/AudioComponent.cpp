@@ -22,10 +22,7 @@ void AudioComponent::Update(float deltaTime) {}
 
 void AudioComponent::Render() {}
 
-void AudioComponent::SetAudio(const sf::SoundBuffer& audio)
-{
-    sound->setBuffer(audio);
-}
+void AudioComponent::SetAudio(const sf::SoundBuffer& audio) { sound->setBuffer(audio); }
 
 void AudioComponent::SetLoop(bool loop) { sound->setLoop(loop); }
 

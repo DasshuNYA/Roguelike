@@ -1,486 +1,354 @@
-\# Combat System Documentation
+# Combat System Documentation
 
+## Overview
 
+The combat system is built using a component-based architecture.
 
-\## Overview
-
-
-
-The combat system in the project is built using a component-based architecture.
-
-
-
-Characters use different gameplay components:
-
-\- StatsComponent
-
-\- AttackComponent
-
-\- DeathComponent
-
-\- PlayerAttackComponent
-
-\- PlayerSearchComponent
-
-
+Characters are assembled from reusable gameplay components instead of storing
+all logic inside one class.
 
 The system supports:
 
-\- player attacks;
+- melee enemy attacks;
+- ranged player attacks;
+- health and armor;
+- enemy AI;
+- enemy spawning;
+- death handling;
+- projectile collisions;
+- maze navigation.
 
-\- enemy attacks;
+---
 
-\- health and armor;
+# Character Hierarchy
 
-\- death handling;
-
-\- enemy spawning;
-
-\- target searching.
-
-
-
-\---
-
-
-
-\# Character Hierarchy
-
-
-
-\## Character
-
-
+## Character
 
 Base gameplay class for all living entities.
 
-
-
 Responsibilities:
 
-\- owns GameObject;
+- owns GameObject;
+- stores common gameplay logic;
+- used as parent class for Player and Enemy.
 
-\- stores common gameplay logic;
+---
 
-\- used as parent class for Player and Enemy.
-
-
-
-\---
-
-
-
-\## Player
-
-
+## Player
 
 Derived from Character.
 
-
-
 Responsibilities:
 
-\- player movement;
-
-\- searching enemies nearby;
-
-\- attacking enemies;
-
-\- receiving damage.
-
-
+- movement;
+- ranged attacks;
+- receiving damage;
+- interaction with enemies.
 
 Uses:
 
-\- PlayerMovementComponent
+- PlayerMovementComponent
+- RangedAttackComponent
+- StatsComponent
+- DeathComponent
 
-\- PlayerAttackComponent
+---
 
-\- PlayerSearchComponent
-
-\- StatsComponent
-
-\- DeathComponent
-
-
-
-\---
-
-
-
-\## Enemy
-
-
+## Enemy
 
 Derived from Character.
 
-
+Base class for all enemy types.
 
 Responsibilities:
 
-\- detecting player;
-
-\- moving to player;
-
-\- attacking player.
-
-
+- movement toward player;
+- attacking player;
+- enemy AI behavior.
 
 Uses:
 
-\- AttackComponent
+- PlayerSearchComponent
+- AttackComponent
+- DetectionTriggerComponent
+- StatsComponent
+- DeathComponent
 
-\- DetectionTriggerComponent
+Derived enemy types:
 
-\- StatsComponent
+- Creeper
+- Warrior
 
-\- DeathComponent
+---
 
-
-
-\---
-
-
-
-\## Creeper
-
-
+## Creeper
 
 Derived from Enemy.
 
+Fast aggressive enemy with lower health.
 
+Features:
 
-Special enemy type with:
+- high movement speed;
+- short detection radius;
+- aggressive chase behavior.
 
-\- custom stats;
+---
 
-\- custom detection radius;
+## Warrior
 
-\- aggressive behavior.
+Derived from Enemy.
 
+Balanced melee enemy.
 
+Features:
 
-\---
+- higher health;
+- increased armor;
+- slower movement speed.
 
+---
 
+# Components
 
-\# Components
-
-
-
-\## StatsComponent
-
-
+## StatsComponent
 
 Stores combat statistics.
 
-
-
 Responsibilities:
 
-\- health;
-
-\- armor;
-
-\- attack power;
-
-\- damage calculation.
-
-
+- health;
+- armor;
+- damage processing;
+- death state checks.
 
 Main methods:
 
-\- TakeDamage()
+- `TakeDamage()`
+- `IsDead()`
+- `GetHealth()`
 
-\- IsDead()
+Damage is reduced using armor values.
 
-\- GetHealth()
+---
 
+## AttackComponent
 
-
-Damage is reduced by armor value.
-
-
-
-\---
-
-
-
-\## AttackComponent
-
-
-
-Universal attack logic.
-
-
+Universal melee attack component.
 
 Responsibilities:
 
-\- deal damage;
-
-\- attack target;
-
-\- check cooldowns.
-
-
+- deal melee damage;
+- attack nearby targets;
+- process attack cooldowns.
 
 Used by enemies.
 
+---
 
+## RangedAttackComponent
 
-\---
-
-
-
-\## PlayerAttackComponent
-
-
-
-Handles player attacks.
-
-
+Handles player ranged attacks.
 
 Responsibilities:
 
-\- process left mouse button input;
+- create projectiles;
+- launch projectiles;
+- manage attack cooldown.
 
-\- attack nearby enemies;
+Attack flow:
 
-\- work with targets from PlayerSearchComponent.
+1. Player presses LMB.
+2. Projectile is created.
+3. Projectile moves toward mouse position.
+4. Projectile checks collisions.
+5. Damage is applied on hit.
+6. Projectile is destroyed.
 
+---
 
+## ProjectileComponent
 
-\---
-
-
-
-\## PlayerSearchComponent
-
-
-
-Searches nearby enemies.
-
-
-
-Responsibilities:
-
-\- detect enemies in radius;
-
-\- maintain target list;
-
-\- provide nearest enemy.
-
-
-
-Used by PlayerAttackComponent.
-
-
-
-\---
-
-
-
-\## DeathComponent
-
-
-
-Handles death state.
-
-
+Controls projectile behavior.
 
 Responsibilities:
 
-\- detect death;
+- projectile movement;
+- collision detection;
+- projectile lifetime;
+- damage delivery.
 
-\- destroy GameObject;
+Projectiles are destroyed when:
 
-\- print debug logs.
+- hitting enemy;
+- colliding with wall;
+- lifetime expires.
 
+Walls block projectiles, so enemies cannot be damaged through maze walls.
 
+---
+
+## DetectionTriggerComponent
+
+Detects nearby objects using trigger radius.
+
+Responsibilities:
+
+- detect player entering range;
+- detect player leaving range;
+- notify enemy AI.
+
+Used by enemies for player detection.
+
+---
+
+## PlayerSearchComponent
+
+Controls enemy search and navigation.
+
+Responsibilities:
+
+- search player position;
+- move toward player;
+- navigate around maze walls.
+
+Uses maze navigation system.
+
+---
+
+## DeathComponent
+
+Handles object destruction.
+
+Responsibilities:
+
+- detect death state;
+- mark object for destruction;
+- print debug logs.
 
 When health reaches zero:
 
-\- object becomes destroyed;
+- object becomes destroyed;
+- GameWorld removes object safely later.
 
-\- GameWorld removes object later.
+---
 
+# Enemy Spawning
 
-
-\---
-
-
-
-\# Enemy Spawning
-
-
-
-\## EnemySpawner
-
-
+## EnemySpawner
 
 Separate system responsible for enemy creation.
 
-
-
 Responsibilities:
 
-\- spawn enemies;
-
-\- configure enemy count;
-
-\- configure enemy types;
-
-\- configure spawn distance.
-
-
+- spawn enemies;
+- configure enemy count;
+- configure enemy type;
+- configure spawn distance.
 
 Supports:
 
-\- Creeper spawning;
+- Creeper spawning;
+- Warrior spawning;
+- random floor tile selection;
+- safe spawn distance from player.
 
-\- random floor tile selection;
+Example configurable settings:
 
-\- safe spawn distance from player.
+- enemy count;
+- minimum distance from player;
+- enemy type.
 
+---
 
+# Maze Navigation
 
-Example settings:
+## MazeNavigation
 
-\- enemy count;
-
-\- minimum distance from player;
-
-\- enemy type.
-
-
-
-\---
-
-
-
-\# Combat Flow
-
-
-
-\## Player Attack Flow
-
-
-
-1\. Player presses LMB.
-
-2\. PlayerAttackComponent requests targets.
-
-3\. PlayerSearchComponent returns nearby enemies.
-
-4\. AttackComponent deals damage.
-
-5\. StatsComponent reduces HP.
-
-6\. DeathComponent destroys enemy if HP <= 0.
-
-
-
-\---
-
-
-
-\## Enemy Attack Flow
-
-
-
-1\. Enemy detects player.
-
-2\. Enemy moves toward player.
-
-3\. Enemy attacks player.
-
-4\. Player receives damage.
-
-5\. Player dies when HP reaches zero.
-
-
-
-\---
-
-
-
-\# Maze Navigation
-
-
-
-Enemies use maze navigation.
-
-
+Tile-based navigation system for enemies.
 
 Responsibilities:
 
-\- avoid walls;
+- avoid walls;
+- move through maze corridors;
+- navigate generated labyrinth.
 
-\- move through corridors;
+Features:
 
-\- follow generated maze paths.
+- tile-based pathfinding;
+- walkable tile checks;
+- direction updates;
+- maze-aware enemy movement.
 
+---
 
+# HUD
 
-Implemented using:
-
-\- tile-based navigation;
-
-\- floor position checks;
-
-\- path direction updates.
-
-
-
-\---
-
-
-
-\# HUD
-
-
-
-\## GameHudComponent
-
-
+## GameHudComponent
 
 Displays gameplay information.
 
-
-
 Responsibilities:
 
-\- display player HP;
+- display player HP;
+- display enemies remaining;
+- display GAME OVER state;
+- display YOU WIN state.
 
-\- display enemy count;
+---
 
-\- show GAME OVER;
+# Logging
 
-\- show YOU WIN.
-
-
-
-\---
-
-
-
-\# Logging
-
-
-
-The system actively uses Logger.
-
-
+The project actively uses Logger for debugging.
 
 Examples:
 
-\- enemy detected player;
+- enemy detected player;
+- enemy attacked player;
+- projectile destroyed;
+- player died;
+- object destroyed;
+- maze generated successfully.
 
-\- enemy attacked player;
+---
 
-\- player died;
+# Combat Flow
 
-\- object destroyed.
+## Player Attack Flow
 
+1. Player presses LMB.
+2. RangedAttackComponent creates projectile.
+3. Projectile moves toward cursor.
+4. Projectile checks collisions.
+5. StatsComponent applies damage.
+6. DeathComponent destroys enemy if HP <= 0.
 
+---
 
+## Enemy Attack Flow
+
+1. Enemy detects player.
+2. Enemy navigates through maze.
+3. Enemy reaches attack distance.
+4. AttackComponent deals damage.
+5. Player receives damage.
+6. Player dies if HP reaches zero.
+
+---
+
+# Architecture Notes
+
+The project follows a modular architecture:
+
+- gameplay logic is split into reusable components;
+- enemies inherit from common base classes;
+- systems are configurable through GameConfig;
+- enemy spawning is fully data-driven;
+- gameplay systems are separated from rendering logic.
+
+This architecture makes the project easier to:
+
+- extend;
+- maintain;
+- debug;
+- scale with new enemy types and mechanics.

@@ -32,17 +32,13 @@ void DrawSprites(InputIt first, const InputIt last, sf::RenderWindow& window)
     }
 }
 
-sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom,
-                                     const sf::Sprite& spriteTo);
-float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom,
-                                         const sf::Sprite& spriteTo);
+sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo);
+float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo);
 
-bool CheckSpriteIntersection(const sf::Sprite& sprite1,
-                             const sf::Sprite& sprite2);
+bool CheckSpriteIntersection(const sf::Sprite& sprite1, const sf::Sprite& sprite2);
 
 template <class InputIt>
-bool FullCheckCollisions(InputIt first, const InputIt last,
-                         const sf::Sprite& sprite)
+bool FullCheckCollisions(InputIt first, const InputIt last, const sf::Sprite& sprite)
 {
     for (; first != last; ++first)
     {

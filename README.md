@@ -14,17 +14,19 @@ The project was created as part of a game development learning course and demons
 
 ---
 
-# Features
+## Gameplay Features
 
-## Gameplay
 - Procedural maze generation
 - Player movement
-- Enemy spawning
-- Enemy detection system
-- Melee combat
-- Health and armor system
-- Enemy AI navigation
-- Victory and death states
+- Ranged player attack
+- Projectiles blocked by walls
+- Creeper enemy
+- Warrior enemy
+- Configurable enemy spawning
+- Enemy pathfinding through maze corridors
+- HP and armor combat system
+- HUD with player HP and enemy count
+- Win and game over states
 
 ---
 

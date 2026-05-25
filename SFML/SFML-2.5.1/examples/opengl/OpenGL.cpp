@@ -9,7 +9,6 @@
 #define GL_SRGB8_ALPHA8 0x8C43
 #endif
 
-
 ////////////////////////////////////////////////////////////
 /// Entry point of application
 ///
@@ -29,7 +28,9 @@ int main()
         contextSettings.sRgbCapable = sRgb;
 
         // Create the main window
-        sf::RenderWindow window(sf::VideoMode(800, 600), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
+        sf::RenderWindow window(sf::VideoMode(800, 600),
+                                "SFML graphics with OpenGL", sf::Style::Default,
+                                contextSettings);
         window.setVerticalSyncEnabled(true);
 
         // Create a sprite for the background
@@ -41,10 +42,10 @@ int main()
 
         // Create some text to draw on top of our OpenGL object
         sf::Font font;
-        if (!font.loadFromFile("resources/sansation.ttf"))
-            return EXIT_FAILURE;
+        if (!font.loadFromFile("resources/sansation.ttf")) return EXIT_FAILURE;
         sf::Text text("SFML / OpenGL demo", font);
-        sf::Text sRgbInstructions("Press space to toggle sRGB conversion", font);
+        sf::Text sRgbInstructions("Press space to toggle sRGB conversion",
+                                  font);
         sf::Text mipmapInstructions("Press return to toggle mipmapping", font);
         text.setFillColor(sf::Color(255, 255, 255, 170));
         sRgbInstructions.setFillColor(sf::Color(255, 255, 255, 170));
@@ -55,8 +56,7 @@ int main()
 
         // Load a texture to apply to our 3D cube
         sf::Texture texture;
-        if (!texture.loadFromFile("resources/texture.jpg"))
-            return EXIT_FAILURE;
+        if (!texture.loadFromFile("resources/texture.jpg")) return EXIT_FAILURE;
 
         // Attempt to generate a mipmap for our cube texture
         // We don't check the return value here since
@@ -80,7 +80,8 @@ int main()
         // Setup a perspective projection
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        GLfloat ratio = static_cast<float>(window.getSize().x) / window.getSize().y;
+        GLfloat ratio =
+            static_cast<float>(window.getSize().x) / window.getSize().y;
         glFrustum(-ratio, ratio, -1.f, 1.f, 1.f, 500.f);
 
         // Bind the texture
@@ -88,51 +89,25 @@ int main()
         sf::Texture::bind(&texture);
 
         // Define a 3D cube (6 faces made of 2 triangles composed by 3 vertices)
-        static const GLfloat cube[] =
-        {
+        static const GLfloat cube[] = {
             // positions    // texture coordinates
-            -20, -20, -20,  0, 0,
-            -20,  20, -20,  1, 0,
-            -20, -20,  20,  0, 1,
-            -20, -20,  20,  0, 1,
-            -20,  20, -20,  1, 0,
-            -20,  20,  20,  1, 1,
+            -20, -20, -20, 0, 0, -20, 20,  -20, 1, 0, -20, -20, 20,  0, 1,
+            -20, -20, 20,  0, 1, -20, 20,  -20, 1, 0, -20, 20,  20,  1, 1,
 
-             20, -20, -20,  0, 0,
-             20,  20, -20,  1, 0,
-             20, -20,  20,  0, 1,
-             20, -20,  20,  0, 1,
-             20,  20, -20,  1, 0,
-             20,  20,  20,  1, 1,
+            20,  -20, -20, 0, 0, 20,  20,  -20, 1, 0, 20,  -20, 20,  0, 1,
+            20,  -20, 20,  0, 1, 20,  20,  -20, 1, 0, 20,  20,  20,  1, 1,
 
-            -20, -20, -20,  0, 0,
-             20, -20, -20,  1, 0,
-            -20, -20,  20,  0, 1,
-            -20, -20,  20,  0, 1,
-             20, -20, -20,  1, 0,
-             20, -20,  20,  1, 1,
+            -20, -20, -20, 0, 0, 20,  -20, -20, 1, 0, -20, -20, 20,  0, 1,
+            -20, -20, 20,  0, 1, 20,  -20, -20, 1, 0, 20,  -20, 20,  1, 1,
 
-            -20,  20, -20,  0, 0,
-             20,  20, -20,  1, 0,
-            -20,  20,  20,  0, 1,
-            -20,  20,  20,  0, 1,
-             20,  20, -20,  1, 0,
-             20,  20,  20,  1, 1,
+            -20, 20,  -20, 0, 0, 20,  20,  -20, 1, 0, -20, 20,  20,  0, 1,
+            -20, 20,  20,  0, 1, 20,  20,  -20, 1, 0, 20,  20,  20,  1, 1,
 
-            -20, -20, -20,  0, 0,
-             20, -20, -20,  1, 0,
-            -20,  20, -20,  0, 1,
-            -20,  20, -20,  0, 1,
-             20, -20, -20,  1, 0,
-             20,  20, -20,  1, 1,
+            -20, -20, -20, 0, 0, 20,  -20, -20, 1, 0, -20, 20,  -20, 0, 1,
+            -20, 20,  -20, 0, 1, 20,  -20, -20, 1, 0, 20,  20,  -20, 1, 1,
 
-            -20, -20,  20,  0, 0,
-             20, -20,  20,  1, 0,
-            -20,  20,  20,  0, 1,
-            -20,  20,  20,  0, 1,
-             20, -20,  20,  1, 0,
-             20,  20,  20,  1, 1
-        };
+            -20, -20, 20,  0, 0, 20,  -20, 20,  1, 0, -20, 20,  20,  0, 1,
+            -20, 20,  20,  0, 1, 20,  -20, 20,  1, 0, 20,  20,  20,  1, 1};
 
         // Enable position and texture coordinates vertex components
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -168,14 +143,16 @@ int main()
                 }
 
                 // Escape key: exit
-                if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                if ((event.type == sf::Event::KeyPressed) &&
+                    (event.key.code == sf::Keyboard::Escape))
                 {
                     exit = true;
                     window.close();
                 }
 
                 // Return key: toggle mipmapping
-                if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Enter))
+                if ((event.type == sf::Event::KeyPressed) &&
+                    (event.key.code == sf::Keyboard::Enter))
                 {
                     if (mipmapEnabled)
                     {
@@ -194,7 +171,8 @@ int main()
                 }
 
                 // Space key: toggle sRGB conversion
-                if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space))
+                if ((event.type == sf::Event::KeyPressed) &&
+                    (event.key.code == sf::Keyboard::Space))
                 {
                     sRgb = !sRgb;
                     window.close();
@@ -208,7 +186,8 @@ int main()
 
                     glViewport(0, 0, event.size.width, event.size.height);
 
-                    // Make the window no longer the active window for OpenGL calls
+                    // Make the window no longer the active window for OpenGL
+                    // calls
                     window.setActive(false);
                 }
             }
@@ -224,9 +203,14 @@ int main()
             // Clear the depth buffer
             glClear(GL_DEPTH_BUFFER_BIT);
 
-            // We get the position of the mouse cursor, so that we can move the box accordingly
-            float x =  sf::Mouse::getPosition(window).x * 200.f / window.getSize().x - 100.f;
-            float y = -sf::Mouse::getPosition(window).y * 200.f / window.getSize().y + 100.f;
+            // We get the position of the mouse cursor, so that we can move the
+            // box accordingly
+            float x =
+                sf::Mouse::getPosition(window).x * 200.f / window.getSize().x -
+                100.f;
+            float y =
+                -sf::Mouse::getPosition(window).y * 200.f / window.getSize().y +
+                100.f;
 
             // Apply some transformations
             glMatrixMode(GL_MODELVIEW);

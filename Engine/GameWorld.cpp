@@ -76,8 +76,8 @@ void GameWorld::DestroyGameObject(GameObject* gameObject)
         return;
     }
 
-    auto iterator = std::find(markedToDestroyGameObjects.begin(),
-                              markedToDestroyGameObjects.end(), gameObject);
+    auto iterator =
+        std::find(markedToDestroyGameObjects.begin(), markedToDestroyGameObjects.end(), gameObject);
 
     if (iterator == markedToDestroyGameObjects.end())
     {
@@ -92,8 +92,7 @@ bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
         return false;
     }
 
-    auto iterator =
-        std::find(gameObjects.begin(), gameObjects.end(), gameObject);
+    auto iterator = std::find(gameObjects.begin(), gameObjects.end(), gameObject);
 
     return iterator != gameObjects.end();
 }
@@ -120,8 +119,7 @@ void GameWorld::Print() const
 void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)
 {
     gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(),
-                                     [gameObject](GameObject* obj)
-                                     { return obj == gameObject; }),
+                                     [gameObject](GameObject* obj) { return obj == gameObject; }),
                       gameObjects.end());
 
     delete gameObject;

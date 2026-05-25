@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -32,7 +33,6 @@
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -41,22 +41,23 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_WINDOW_API Sensor
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Sensor type
     ///
     ////////////////////////////////////////////////////////////
     enum Type
     {
-        Accelerometer,    ///< Measures the raw acceleration (m/s^2)
-        Gyroscope,        ///< Measures the raw rotation rates (degrees/s)
-        Magnetometer,     ///< Measures the ambient magnetic field (micro-teslas)
-        Gravity,          ///< Measures the direction and intensity of gravity, independent of device acceleration (m/s^2)
-        UserAcceleration, ///< Measures the direction and intensity of device acceleration, independent of the gravity (m/s^2)
-        Orientation,      ///< Measures the absolute 3D orientation (degrees)
+        Accelerometer,  ///< Measures the raw acceleration (m/s^2)
+        Gyroscope,      ///< Measures the raw rotation rates (degrees/s)
+        Magnetometer,   ///< Measures the ambient magnetic field (micro-teslas)
+        Gravity,        ///< Measures the direction and intensity of gravity,
+                        ///< independent of device acceleration (m/s^2)
+        UserAcceleration,  ///< Measures the direction and intensity of device
+                           ///< acceleration, independent of the gravity (m/s^2)
+        Orientation,       ///< Measures the absolute 3D orientation (degrees)
 
-        Count             ///< Keep last -- the total number of sensor types
+        Count  ///< Keep last -- the total number of sensor types
     };
 
     ////////////////////////////////////////////////////////////
@@ -95,11 +96,9 @@ public:
     static Vector3f getValue(Type sensor);
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SENSOR_HPP
-
+#endif  // SFML_SENSOR_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Sensor

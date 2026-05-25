@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -34,7 +35,6 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-
 namespace sf
 {
 class Texture;
@@ -46,8 +46,7 @@ class Texture;
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API Sprite : public Drawable, public Transformable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -91,7 +90,8 @@ public:
     /// texture. If it is false, the texture rect is left unchanged.
     ///
     /// \param texture   New texture
-    /// \param resetRect Should the texture rect be reset to the size of the new texture?
+    /// \param resetRect Should the texture rect be reset to the size of the new
+    /// texture?
     ///
     /// \see getTexture, setTextureRect
     ///
@@ -189,8 +189,7 @@ public:
     ////////////////////////////////////////////////////////////
     FloatRect getGlobalBounds() const;
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     /// \brief Draw the sprite to a render target
     ///
@@ -215,16 +214,15 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Vertex         m_vertices[4]; ///< Vertices defining the sprite's geometry
-    const Texture* m_texture;     ///< Texture of the sprite
-    IntRect        m_textureRect; ///< Rectangle defining the area of the source texture to display
+    Vertex m_vertices[4];      ///< Vertices defining the sprite's geometry
+    const Texture* m_texture;  ///< Texture of the sprite
+    IntRect m_textureRect;     ///< Rectangle defining the area of the source
+                               ///< texture to display
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SPRITE_HPP
-
+#endif  // SFML_SPRITE_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Sprite
@@ -255,7 +253,8 @@ private:
 /// used by a sf::Sprite (i.e. never write a function that
 /// uses a local sf::Texture instance for creating a sprite).
 ///
-/// See also the note on coordinates and undistorted rendering in sf::Transformable.
+/// See also the note on coordinates and undistorted rendering in
+/// sf::Transformable.
 ///
 /// Usage example:
 /// \code

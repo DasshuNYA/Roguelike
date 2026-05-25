@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -30,7 +31,6 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Graphics/Export.hpp>
 
-
 namespace sf
 {
 
@@ -48,16 +48,16 @@ struct SFML_GRAPHICS_API BlendMode
     ////////////////////////////////////////////////////////
     enum Factor
     {
-        Zero,             ///< (0, 0, 0, 0)
-        One,              ///< (1, 1, 1, 1)
-        SrcColor,         ///< (src.r, src.g, src.b, src.a)
-        OneMinusSrcColor, ///< (1, 1, 1, 1) - (src.r, src.g, src.b, src.a)
-        DstColor,         ///< (dst.r, dst.g, dst.b, dst.a)
-        OneMinusDstColor, ///< (1, 1, 1, 1) - (dst.r, dst.g, dst.b, dst.a)
-        SrcAlpha,         ///< (src.a, src.a, src.a, src.a)
-        OneMinusSrcAlpha, ///< (1, 1, 1, 1) - (src.a, src.a, src.a, src.a)
-        DstAlpha,         ///< (dst.a, dst.a, dst.a, dst.a)
-        OneMinusDstAlpha  ///< (1, 1, 1, 1) - (dst.a, dst.a, dst.a, dst.a)
+        Zero,              ///< (0, 0, 0, 0)
+        One,               ///< (1, 1, 1, 1)
+        SrcColor,          ///< (src.r, src.g, src.b, src.a)
+        OneMinusSrcColor,  ///< (1, 1, 1, 1) - (src.r, src.g, src.b, src.a)
+        DstColor,          ///< (dst.r, dst.g, dst.b, dst.a)
+        OneMinusDstColor,  ///< (1, 1, 1, 1) - (dst.r, dst.g, dst.b, dst.a)
+        SrcAlpha,          ///< (src.a, src.a, src.a, src.a)
+        OneMinusSrcAlpha,  ///< (1, 1, 1, 1) - (src.a, src.a, src.a, src.a)
+        DstAlpha,          ///< (dst.a, dst.a, dst.a, dst.a)
+        OneMinusDstAlpha   ///< (1, 1, 1, 1) - (dst.a, dst.a, dst.a, dst.a)
     };
 
     ////////////////////////////////////////////////////////
@@ -68,9 +68,9 @@ struct SFML_GRAPHICS_API BlendMode
     ////////////////////////////////////////////////////////
     enum Equation
     {
-        Add,            ///< Pixel = Src * SrcFactor + Dst * DstFactor
-        Subtract,       ///< Pixel = Src * SrcFactor - Dst * DstFactor
-        ReverseSubtract ///< Pixel = Dst * DstFactor - Src * SrcFactor
+        Add,             ///< Pixel = Src * SrcFactor + Dst * DstFactor
+        Subtract,        ///< Pixel = Src * SrcFactor - Dst * DstFactor
+        ReverseSubtract  ///< Pixel = Dst * DstFactor - Src * SrcFactor
     };
 
     ////////////////////////////////////////////////////////////
@@ -87,22 +87,32 @@ struct SFML_GRAPHICS_API BlendMode
     /// This constructor uses the same factors and equation for both
     /// color and alpha components. It also defaults to the Add equation.
     ///
-    /// \param sourceFactor      Specifies how to compute the source factor for the color and alpha channels.
-    /// \param destinationFactor Specifies how to compute the destination factor for the color and alpha channels.
-    /// \param blendEquation     Specifies how to combine the source and destination colors and alpha.
+    /// \param sourceFactor      Specifies how to compute the source factor for
+    /// the color and alpha channels.
+    /// \param destinationFactor Specifies how to compute the destination factor
+    /// for the color and alpha channels.
+    /// \param blendEquation     Specifies how to combine the source and
+    /// destination colors and alpha.
     ///
     ////////////////////////////////////////////////////////////
-    BlendMode(Factor sourceFactor, Factor destinationFactor, Equation blendEquation = Add);
+    BlendMode(Factor sourceFactor, Factor destinationFactor,
+              Equation blendEquation = Add);
 
     ////////////////////////////////////////////////////////////
     /// \brief Construct the blend mode given the factors and equation.
     ///
-    /// \param colorSourceFactor      Specifies how to compute the source factor for the color channels.
-    /// \param colorDestinationFactor Specifies how to compute the destination factor for the color channels.
-    /// \param colorBlendEquation     Specifies how to combine the source and destination colors.
-    /// \param alphaSourceFactor      Specifies how to compute the source factor.
-    /// \param alphaDestinationFactor Specifies how to compute the destination factor.
-    /// \param alphaBlendEquation     Specifies how to combine the source and destination alphas.
+    /// \param colorSourceFactor      Specifies how to compute the source factor
+    /// for the color channels.
+    /// \param colorDestinationFactor Specifies how to compute the destination
+    /// factor for the color channels.
+    /// \param colorBlendEquation     Specifies how to combine the source and
+    /// destination colors.
+    /// \param alphaSourceFactor      Specifies how to compute the source
+    /// factor.
+    /// \param alphaDestinationFactor Specifies how to compute the destination
+    /// factor.
+    /// \param alphaBlendEquation     Specifies how to combine the source and
+    /// destination alphas.
     ///
     ////////////////////////////////////////////////////////////
     BlendMode(Factor colorSourceFactor, Factor colorDestinationFactor,
@@ -112,11 +122,13 @@ struct SFML_GRAPHICS_API BlendMode
     ////////////////////////////////////////////////////////////
     // Member Data
     ////////////////////////////////////////////////////////////
-    Factor   colorSrcFactor; ///< Source blending factor for the color channels
-    Factor   colorDstFactor; ///< Destination blending factor for the color channels
+    Factor colorSrcFactor;  ///< Source blending factor for the color channels
+    Factor
+        colorDstFactor;  ///< Destination blending factor for the color channels
     Equation colorEquation;  ///< Blending equation for the color channels
-    Factor   alphaSrcFactor; ///< Source blending factor for the alpha channel
-    Factor   alphaDstFactor; ///< Destination blending factor for the alpha channel
+    Factor alphaSrcFactor;   ///< Source blending factor for the alpha channel
+    Factor
+        alphaDstFactor;  ///< Destination blending factor for the alpha channel
     Equation alphaEquation;  ///< Blending equation for the alpha channel
 };
 
@@ -130,7 +142,8 @@ struct SFML_GRAPHICS_API BlendMode
 /// \return True if blending modes are equal, false if they are different
 ///
 ////////////////////////////////////////////////////////////
-SFML_GRAPHICS_API bool operator ==(const BlendMode& left, const BlendMode& right);
+SFML_GRAPHICS_API bool operator==(const BlendMode& left,
+                                  const BlendMode& right);
 
 ////////////////////////////////////////////////////////////
 /// \relates BlendMode
@@ -142,21 +155,23 @@ SFML_GRAPHICS_API bool operator ==(const BlendMode& left, const BlendMode& right
 /// \return True if blending modes are different, false if they are equal
 ///
 ////////////////////////////////////////////////////////////
-SFML_GRAPHICS_API bool operator !=(const BlendMode& left, const BlendMode& right);
+SFML_GRAPHICS_API bool operator!=(const BlendMode& left,
+                                  const BlendMode& right);
 
 ////////////////////////////////////////////////////////////
 // Commonly used blending modes
 ////////////////////////////////////////////////////////////
-SFML_GRAPHICS_API extern const BlendMode BlendAlpha;    ///< Blend source and dest according to dest alpha
-SFML_GRAPHICS_API extern const BlendMode BlendAdd;      ///< Add source to dest
-SFML_GRAPHICS_API extern const BlendMode BlendMultiply; ///< Multiply source and dest
-SFML_GRAPHICS_API extern const BlendMode BlendNone;     ///< Overwrite dest with source
+SFML_GRAPHICS_API extern const BlendMode
+    BlendAlpha;  ///< Blend source and dest according to dest alpha
+SFML_GRAPHICS_API extern const BlendMode BlendAdd;  ///< Add source to dest
+SFML_GRAPHICS_API extern const BlendMode
+    BlendMultiply;  ///< Multiply source and dest
+SFML_GRAPHICS_API extern const BlendMode
+    BlendNone;  ///< Overwrite dest with source
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_BLENDMODE_HPP
-
+#endif  // SFML_BLENDMODE_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::BlendMode

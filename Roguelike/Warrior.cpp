@@ -10,7 +10,7 @@ namespace Roguelike
 Warrior::Warrior(Engine::GameObject* player, float x, float y)
 {
     BuildEnemy(player, "Warrior", "enemy", x, y, GameConfig::WarriorHealth,
-               GameConfig::WarriorArmor, GameConfig::WarriorAttackPower,
-               GameConfig::WarriorSpeed, GameConfig::WarriorDetectionRadius);
+               GameConfig::WarriorArmor, GameConfig::WarriorAttackPower, GameConfig::WarriorSpeed,
+               GameConfig::WarriorDetectionRadius);
 }
 }  // namespace Roguelike

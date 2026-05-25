@@ -30,10 +30,7 @@ void CameraComponent::Update(float deltaTime)
 
 void CameraComponent::Render() {}
 
-void CameraComponent::SetWindow(sf::RenderWindow* newWindow)
-{
-    window = newWindow;
-}
+void CameraComponent::SetWindow(sf::RenderWindow* newWindow) { window = newWindow; }
 
 void CameraComponent::SetBaseResolution(float newBaseWidth, float newBaseHeight)
 {

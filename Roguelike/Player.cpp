@@ -18,11 +18,9 @@ Player::Player()
 {
     gameObject = Engine::GameWorld::Instance()->CreateGameObject("Player");
 
-    auto playerRenderer =
-        gameObject->AddComponent<Engine::SpriteRendererComponent>();
+    auto playerRenderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-    playerRenderer->SetTexture(
-        *Engine::ResourceSystem::Instance()->GetTextureShared("player"));
+    playerRenderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("player"));
 
     playerRenderer->SetPixelSize(48, 48);
 
@@ -51,8 +49,7 @@ Player::Player()
 
 void Player::AddAttackTarget(Engine::GameObject* target)
 {
-    RangedAttackComponent* attackComponent =
-        gameObject->GetComponent<RangedAttackComponent>();
+    RangedAttackComponent* attackComponent = gameObject->GetComponent<RangedAttackComponent>();
 
     if (attackComponent == nullptr)
     {
@@ -65,8 +62,7 @@ void Player::AddAttackTarget(Engine::GameObject* target)
 
 void Player::SetObstacles(const std::vector<Engine::GameObject*>& obstacles)
 {
-    RangedAttackComponent* attackComponent =
-        gameObject->GetComponent<RangedAttackComponent>();
+    RangedAttackComponent* attackComponent = gameObject->GetComponent<RangedAttackComponent>();
 
     if (attackComponent == nullptr)
     {

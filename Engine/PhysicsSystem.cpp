@@ -18,8 +18,7 @@ void PhysicsSystem::Update()
 {
     for (int i = 0; i < colliders.size(); i++)
     {
-        auto firstBody =
-            colliders[i]->GetGameObject()->GetComponent<RigidbodyComponent>();
+        auto firstBody = colliders[i]->GetGameObject()->GetComponent<RigidbodyComponent>();
 
         if (firstBody == nullptr || firstBody->GetKinematic())
         {
@@ -40,8 +39,7 @@ void PhysicsSystem::Update()
 
             sf::FloatRect intersection;
 
-            if (!colliders[i]->bounds.intersects(colliders[j]->bounds,
-                                                 intersection))
+            if (!colliders[i]->bounds.intersects(colliders[j]->bounds, intersection))
             {
                 continue;
             }
@@ -79,48 +77,37 @@ void PhysicsSystem::Update()
                 continue;
             }
 
-            auto secondBody = colliders[j]
-                                  ->GetGameObject()
-                                  ->GetComponent<RigidbodyComponent>();
+            auto secondBody = colliders[j]->GetGameObject()->GetComponent<RigidbodyComponent>();
 
             if (secondBody != nullptr && !secondBody->GetKinematic())
             {
                 continue;
             }
 
-            auto transform = colliders[i]
-                                 ->GetGameObject()
-                                 ->GetComponent<TransformComponent>();
+            auto transform = colliders[i]->GetGameObject()->GetComponent<TransformComponent>();
 
             Vector2Df velocity = firstBody->GetLinearVelocity();
 
-            float firstCenterX =
-                colliders[i]->bounds.left + colliders[i]->bounds.width * 0.5f;
+            float firstCenterX = colliders[i]->bounds.left + colliders[i]->bounds.width * 0.5f;
 
-            float firstCenterY =
-                colliders[i]->bounds.top + colliders[i]->bounds.height * 0.5f;
+            float firstCenterY = colliders[i]->bounds.top + colliders[i]->bounds.height * 0.5f;
 
-            float secondCenterX =
-                colliders[j]->bounds.left + colliders[j]->bounds.width * 0.5f;
+            float secondCenterX = colliders[j]->bounds.left + colliders[j]->bounds.width * 0.5f;
 
-            float secondCenterY =
-                colliders[j]->bounds.top + colliders[j]->bounds.height * 0.5f;
+            float secondCenterY = colliders[j]->bounds.top + colliders[j]->bounds.height * 0.5f;
 
             float offsetX = firstCenterX - secondCenterX;
             float offsetY = firstCenterY - secondCenterY;
 
             if (intersection.width < intersection.height)
             {
-                transform->MoveBy(
-                    offsetX < 0.f ? -intersection.width : intersection.width,
-                    0.f);
+                transform->MoveBy(offsetX < 0.f ? -intersection.width : intersection.width, 0.f);
 
                 velocity.x = 0.f;
             }
             else
             {
-                transform->MoveBy(0.f, offsetY < 0.f ? -intersection.height
-                                                     : intersection.height);
+                transform->MoveBy(0.f, offsetY < 0.f ? -intersection.height : intersection.height);
 
                 velocity.y = 0.f;
             }
@@ -134,15 +121,12 @@ void PhysicsSystem::Update()
         }
     }
 
-    for (auto triggeredPair = triggersEnteredPair.cbegin(),
-              nextTriggeredPair = triggeredPair;
-         triggeredPair != triggersEnteredPair.cend();
-         triggeredPair = nextTriggeredPair)
+    for (auto triggeredPair = triggersEnteredPair.cbegin(), nextTriggeredPair = triggeredPair;
+         triggeredPair != triggersEnteredPair.cend(); triggeredPair = nextTriggeredPair)
     {
         ++nextTriggeredPair;
 
-        if (!triggeredPair->first->bounds.intersects(
-                triggeredPair->second->bounds))
+        if (!triggeredPair->first->bounds.intersects(triggeredPair->second->bounds))
         {
             Trigger trigger(triggeredPair->first, triggeredPair->second);
 
@@ -172,19 +156,15 @@ void PhysicsSystem::Unsubscribe(ColliderComponent* collider)
     }
 
     colliders.erase(std::remove_if(colliders.begin(), colliders.end(),
-                                   [collider](ColliderComponent* obj)
-                                   { return obj == collider; }),
+                                   [collider](ColliderComponent* obj) { return obj == collider; }),
                     colliders.end());
 
-    for (auto triggeredPair = triggersEnteredPair.cbegin(),
-              nextTriggeredPair = triggeredPair;
-         triggeredPair != triggersEnteredPair.cend();
-         triggeredPair = nextTriggeredPair)
+    for (auto triggeredPair = triggersEnteredPair.cbegin(), nextTriggeredPair = triggeredPair;
+         triggeredPair != triggersEnteredPair.cend(); triggeredPair = nextTriggeredPair)
     {
         ++nextTriggeredPair;
 
-        if (triggeredPair->first == collider ||
-            triggeredPair->second == collider)
+        if (triggeredPair->first == collider || triggeredPair->second == collider)
         {
             triggersEnteredPair.erase(triggeredPair);
         }

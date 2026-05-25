@@ -11,15 +11,9 @@ RenderSystem* RenderSystem::Instance()
     return &render;
 }
 
-void RenderSystem::SetMainWindow(sf::RenderWindow* newWindow)
-{
-    window = newWindow;
-}
+void RenderSystem::SetMainWindow(sf::RenderWindow* newWindow) { window = newWindow; }
 
 sf::RenderWindow& RenderSystem::GetMainWindow() const { return *window; }
 
-void RenderSystem::Render(const sf::Drawable& drawable)
-{
-    window->draw(drawable);
-}
+void RenderSystem::Render(const sf::Drawable& drawable) { window->draw(drawable); }
 }  // namespace Engine

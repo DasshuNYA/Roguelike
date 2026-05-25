@@ -5,9 +5,7 @@
 
 namespace Engine
 {
-InputComponent::InputComponent(GameObject* gameObject) : Component(gameObject)
-{
-}
+InputComponent::InputComponent(GameObject* gameObject) : Component(gameObject) {}
 
 void InputComponent::Update(float deltaTime)
 {

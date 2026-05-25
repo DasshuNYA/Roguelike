@@ -16,8 +16,7 @@ DeathComponent::DeathComponent(GameObject* gameObject) : Component(gameObject)
 
     if (stats == nullptr)
     {
-        LOG_WARN(gameObject->GetName() +
-                 " DeathComponent created without StatsComponent.");
+        LOG_WARN(gameObject->GetName() + " DeathComponent created without StatsComponent.");
     }
 }
 

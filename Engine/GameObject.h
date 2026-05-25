@@ -52,8 +52,7 @@ class GameObject
     void RemoveComponent(Component* component)
     {
         components.erase(std::remove_if(components.begin(), components.end(),
-                                        [component](Component* obj)
-                                        { return obj == component; }),
+                                        [component](Component* obj) { return obj == component; }),
                          components.end());
         delete component;
         std::cout << "Deleted component";
@@ -118,8 +117,7 @@ class GameObject
 
         for (const auto& child : children)
         {
-            for (const auto& childComponent :
-                 child->GetComponentsInChildren<T>())
+            for (const auto& childComponent : child->GetComponentsInChildren<T>())
             {
                 result.push_back(childComponent);
             }

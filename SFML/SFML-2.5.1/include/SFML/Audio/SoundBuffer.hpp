@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -35,7 +36,6 @@
 #include <vector>
 #include <set>
 
-
 namespace sf
 {
 class Sound;
@@ -48,8 +48,7 @@ class InputStream;
 ////////////////////////////////////////////////////////////
 class SFML_AUDIO_API SoundBuffer : AlResource
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -132,7 +131,8 @@ public:
     /// \see loadFromFile, loadFromMemory, saveToFile
     ///
     ////////////////////////////////////////////////////////////
-    bool loadFromSamples(const Int16* samples, Uint64 sampleCount, unsigned int channelCount, unsigned int sampleRate);
+    bool loadFromSamples(const Int16* samples, Uint64 sampleCount,
+                         unsigned int channelCount, unsigned int sampleRate);
 
     ////////////////////////////////////////////////////////////
     /// \brief Save the sound buffer to an audio file
@@ -221,10 +221,9 @@ public:
     /// \return Reference to self
     ///
     ////////////////////////////////////////////////////////////
-    SoundBuffer& operator =(const SoundBuffer& right);
+    SoundBuffer& operator=(const SoundBuffer& right);
 
-private:
-
+   private:
     friend class Sound;
 
     ////////////////////////////////////////////////////////////
@@ -267,22 +266,20 @@ private:
     ////////////////////////////////////////////////////////////
     // Types
     ////////////////////////////////////////////////////////////
-    typedef std::set<Sound*> SoundList; ///< Set of unique sound instances
+    typedef std::set<Sound*> SoundList;  ///< Set of unique sound instances
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    unsigned int       m_buffer;   ///< OpenAL buffer identifier
+    unsigned int m_buffer;         ///< OpenAL buffer identifier
     std::vector<Int16> m_samples;  ///< Samples buffer
-    Time               m_duration; ///< Sound duration
-    mutable SoundList  m_sounds;   ///< List of sounds that are using this buffer
+    Time m_duration;               ///< Sound duration
+    mutable SoundList m_sounds;  ///< List of sounds that are using this buffer
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SOUNDBUFFER_HPP
-
+#endif  // SFML_SOUNDBUFFER_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::SoundBuffer

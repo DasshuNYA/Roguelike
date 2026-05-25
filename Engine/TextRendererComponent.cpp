@@ -8,8 +8,7 @@
 
 namespace Engine
 {
-TextRendererComponent::TextRendererComponent(GameObject* gameObject)
-    : Component(gameObject)
+TextRendererComponent::TextRendererComponent(GameObject* gameObject) : Component(gameObject)
 {
     text.setCharacterSize(24);
     text.setFillColor(sf::Color::White);
@@ -49,23 +48,11 @@ void TextRendererComponent::SetFont(const std::string& path)
     LOG_INFO("HUD font loaded.");
 }
 
-void TextRendererComponent::SetText(const std::string& value)
-{
-    text.setString(value);
-}
+void TextRendererComponent::SetText(const std::string& value) { text.setString(value); }
 
-void TextRendererComponent::SetCharacterSize(unsigned int size)
-{
-    text.setCharacterSize(size);
-}
+void TextRendererComponent::SetCharacterSize(unsigned int size) { text.setCharacterSize(size); }
 
-void TextRendererComponent::SetPosition(float x, float y)
-{
-    text.setPosition(x, y);
-}
+void TextRendererComponent::SetPosition(float x, float y) { text.setPosition(x, y); }
 
-void TextRendererComponent::SetColor(const sf::Color& color)
-{
-    text.setFillColor(color);
-}
+void TextRendererComponent::SetColor(const sf::Color& color) { text.setFillColor(color); }
 }  // namespace Engine

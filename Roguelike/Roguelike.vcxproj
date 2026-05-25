@@ -174,7 +174,6 @@
     <ClCompile Include="MazeGenerator.cpp" />
     <ClCompile Include="MazeNavigation.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerAttackComponent.cpp" />
     <ClCompile Include="PlayerMovementComponent.cpp" />
     <ClCompile Include="PlayerSearchComponent.cpp" />
     <ClCompile Include="GameMain.cpp" />
@@ -198,7 +197,6 @@
     <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="MazeNavigation.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerAttackComponent.h" />
     <ClInclude Include="PlayerMovementComponent.h" />
     <ClInclude Include="PlayerSearchComponent.h" />
     <ClInclude Include="ProjectileComponent.h" />

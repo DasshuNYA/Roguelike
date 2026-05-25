@@ -10,9 +10,7 @@ struct Collision
    public:
     Collision(ColliderComponent* newFirst, ColliderComponent* newSecond,
               sf::FloatRect newCollisionRect)
-        : first(newFirst),
-          second(newSecond),
-          collisionRect(newCollisionRect) {};
+        : first(newFirst), second(newSecond), collisionRect(newCollisionRect) {};
 
    private:
     ColliderComponent* first;

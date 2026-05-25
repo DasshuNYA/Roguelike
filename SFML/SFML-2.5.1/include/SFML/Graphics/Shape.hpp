@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -34,7 +35,6 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -43,8 +43,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API Shape : public Drawable, public Transformable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Virtual destructor
     ///
@@ -66,7 +65,8 @@ public:
     /// texture. If it is false, the texture rect is left unchanged.
     ///
     /// \param texture   New texture
-    /// \param resetRect Should the texture rect be reset to the size of the new texture?
+    /// \param resetRect Should the texture rect be reset to the size of the new
+    /// texture?
     ///
     /// \see getTexture, setTextureRect
     ///
@@ -203,7 +203,8 @@ public:
     /// not taken into account.
     /// The result is undefined if \a index is out of the valid range.
     ///
-    /// \param index Index of the point to get, in range [0 .. getPointCount() - 1]
+    /// \param index Index of the point to get, in range [0 .. getPointCount() -
+    /// 1]
     ///
     /// \return index-th point of the shape
     ///
@@ -247,8 +248,7 @@ public:
     ////////////////////////////////////////////////////////////
     FloatRect getGlobalBounds() const;
 
-protected:
-
+   protected:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -265,8 +265,7 @@ protected:
     ////////////////////////////////////////////////////////////
     void update();
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     /// \brief Draw the shape to a render target
     ///
@@ -300,27 +299,27 @@ private:
     ////////////////////////////////////////////////////////////
     void updateOutlineColors();
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    const Texture* m_texture;          ///< Texture of the shape
-    IntRect        m_textureRect;      ///< Rectangle defining the area of the source texture to display
-    Color          m_fillColor;        ///< Fill color
-    Color          m_outlineColor;     ///< Outline color
-    float          m_outlineThickness; ///< Thickness of the shape's outline
-    VertexArray    m_vertices;         ///< Vertex array containing the fill geometry
-    VertexArray    m_outlineVertices;  ///< Vertex array containing the outline geometry
-    FloatRect      m_insideBounds;     ///< Bounding rectangle of the inside (fill)
-    FloatRect      m_bounds;           ///< Bounding rectangle of the whole shape (outline + fill)
+    const Texture* m_texture;  ///< Texture of the shape
+    IntRect m_textureRect;     ///< Rectangle defining the area of the source
+                               ///< texture to display
+    Color m_fillColor;         ///< Fill color
+    Color m_outlineColor;      ///< Outline color
+    float m_outlineThickness;  ///< Thickness of the shape's outline
+    VertexArray m_vertices;    ///< Vertex array containing the fill geometry
+    VertexArray
+        m_outlineVertices;     ///< Vertex array containing the outline geometry
+    FloatRect m_insideBounds;  ///< Bounding rectangle of the inside (fill)
+    FloatRect
+        m_bounds;  ///< Bounding rectangle of the whole shape (outline + fill)
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SHAPE_HPP
-
+#endif  // SFML_SHAPE_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Shape

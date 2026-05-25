@@ -17,7 +17,6 @@ ColliderComponent* Trigger::GetSecond() const { return second; }
 
 bool Trigger::HasGameObject(GameObject* gameObject) const
 {
-    return first->GetGameObject() == gameObject ||
-           second->GetGameObject() == gameObject;
+    return first->GetGameObject() == gameObject || second->GetGameObject() == gameObject;
 }
 }  // namespace Engine

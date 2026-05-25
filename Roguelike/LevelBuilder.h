@@ -7,8 +7,7 @@ namespace Roguelike
 class LevelBuilder
 {
    public:
-    LevelBuilder(float startX, float startY, float tileSize, int width,
-                 int height);
+    LevelBuilder(float startX, float startY, float tileSize, int width, int height);
 
     void Build();
 

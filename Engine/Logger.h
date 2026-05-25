@@ -54,10 +54,7 @@ class ConsoleSink : public LogSink
 class FileSink : public LogSink
 {
    public:
-    FileSink(const std::string& filename)
-    {
-        logFile.open(filename, std::ios::app);
-    }
+    FileSink(const std::string& filename) { logFile.open(filename, std::ios::app); }
 
     void log(LogLevel level, const std::string& message) override
     {
@@ -141,10 +138,7 @@ class LoggerRegistry
         return defaultLogger;
     }
 
-    void setDefaultLogger(std::shared_ptr<Logger> logger)
-    {
-        defaultLogger = logger;
-    }
+    void setDefaultLogger(std::shared_ptr<Logger> logger) { defaultLogger = logger; }
 
     void registerLogger(const std::string& name, std::shared_ptr<Logger> logger)
     {
@@ -159,9 +153,7 @@ class LoggerRegistry
 };
 }  // namespace Engine
 
-#define LOG_INFO(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message)
-#define LOG_WARN(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message)
+#define LOG_INFO(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message)
+#define LOG_WARN(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message)
 #define LOG_ERROR(message) \
     ::Engine::LoggerRegistry::getInstance().getLogger("global")->error(message)

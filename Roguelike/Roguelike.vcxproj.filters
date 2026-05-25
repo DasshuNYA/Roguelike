@@ -34,9 +34,6 @@
     <ClCompile Include="GameMain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAttackComponent.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
     <ClCompile Include="MazeGenerator.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="GameResourceLoader.h">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerAttackComponent.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="MazeGenerator.h">
       <Filter>Systems</Filter>

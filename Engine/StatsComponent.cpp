@@ -31,8 +31,7 @@ void StatsComponent::SetStats(float newHealth, float newArmor)
 
     if (newArmor < 0.f)
     {
-        LOG_WARN(gameObject->GetName() +
-                 " armor was below zero. Armor was set to zero.");
+        LOG_WARN(gameObject->GetName() + " armor was below zero. Armor was set to zero.");
         newArmor = 0.f;
     }
 
@@ -40,8 +39,8 @@ void StatsComponent::SetStats(float newHealth, float newArmor)
     armor = newArmor;
     isDead = false;
 
-    LOG_INFO(gameObject->GetName() + " stats initialized. HP: " +
-             std::to_string(health) + ", Armor: " + std::to_string(armor));
+    LOG_INFO(gameObject->GetName() + " stats initialized. HP: " + std::to_string(health) +
+             ", Armor: " + std::to_string(armor));
 }
 
 float StatsComponent::GetHealth() const { return health; }

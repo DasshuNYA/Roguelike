@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -32,14 +33,13 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <cstdlib>
 
-
 namespace sf
 {
 namespace priv
 {
-    class ThreadImpl;
-    struct ThreadFunc;
-}
+class ThreadImpl;
+struct ThreadFunc;
+}  // namespace priv
 
 ////////////////////////////////////////////////////////////
 /// \brief Utility class to manipulate threads
@@ -47,8 +47,7 @@ namespace priv
 ////////////////////////////////////////////////////////////
 class SFML_SYSTEM_API Thread : NonCopyable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Construct the thread from a functor with no argument
     ///
@@ -68,7 +67,8 @@ public:
     /// \endcode
     /// Note: this does *not* run the thread, use launch().
     ///
-    /// \param function Functor or free function to use as the entry point of the thread
+    /// \param function Functor or free function to use as the entry point of
+    /// the thread
     ///
     ////////////////////////////////////////////////////////////
     template <typename F>
@@ -95,7 +95,8 @@ public:
     /// \endcode
     /// Note: this does *not* run the thread, use launch().
     ///
-    /// \param function Functor or free function to use as the entry point of the thread
+    /// \param function Functor or free function to use as the entry point of
+    /// the thread
     /// \param argument argument to forward to the function
     ///
     ////////////////////////////////////////////////////////////
@@ -123,7 +124,7 @@ public:
     ///
     ////////////////////////////////////////////////////////////
     template <typename C>
-    Thread(void(C::*function)(), C* object);
+    Thread(void (C::*function)(), C* object);
 
     ////////////////////////////////////////////////////////////
     /// \brief Destructor
@@ -171,8 +172,7 @@ public:
     ////////////////////////////////////////////////////////////
     void terminate();
 
-private:
-
+   private:
     friend class priv::ThreadImpl;
 
     ////////////////////////////////////////////////////////////
@@ -186,16 +186,15 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    priv::ThreadImpl* m_impl;       ///< OS-specific implementation of the thread
-    priv::ThreadFunc* m_entryPoint; ///< Abstraction of the function to run
+    priv::ThreadImpl* m_impl;  ///< OS-specific implementation of the thread
+    priv::ThreadFunc* m_entryPoint;  ///< Abstraction of the function to run
 };
 
 #include <SFML/System/Thread.inl>
 
-} // namespace sf
+}  // namespace sf
 
-#endif // SFML_THREAD_HPP
-
+#endif  // SFML_THREAD_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Thread
@@ -212,7 +211,8 @@ private:
 /// that you can use several types of entry points:
 /// \li non-member functions with no argument
 /// \li non-member functions with one argument of any type
-/// \li functors with no argument (this one is particularly useful for compatibility with boost/std::%bind)
+/// \li functors with no argument (this one is particularly useful for
+/// compatibility with boost/std::%bind)
 /// \li functors with one argument of any type
 /// \li member functions from any class with no argument
 ///
@@ -268,7 +268,8 @@ private:
 /// };
 ///
 /// sf::Thread thread(Task());
-/// thread.launch(); // start the thread (internally calls operator() on the Task instance)
+/// thread.launch(); // start the thread (internally calls operator() on the
+/// Task instance)
 /// \endcode
 ///
 /// Creating parallel threads of execution can be dangerous:

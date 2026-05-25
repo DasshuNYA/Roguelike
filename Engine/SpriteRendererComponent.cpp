@@ -7,8 +7,7 @@
 
 namespace Engine
 {
-SpriteRendererComponent::SpriteRendererComponent(GameObject* gameObject)
-    : Component(gameObject)
+SpriteRendererComponent::SpriteRendererComponent(GameObject* gameObject) : Component(gameObject)
 {
     sprite = new sf::Sprite();
 
@@ -32,16 +31,13 @@ void SpriteRendererComponent::Render()
 {
     if (sprite != nullptr)
     {
-        sprite->setPosition(
-            Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
+        sprite->setPosition(Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
 
         sprite->setRotation(transform->GetWorldRotation());
 
-        auto transformScale =
-            Convert<sf::Vector2f, Vector2Df>(transform->GetWorldScale());
+        auto transformScale = Convert<sf::Vector2f, Vector2Df>(transform->GetWorldScale());
 
-        sprite->setScale(
-            {scale.x * transformScale.x, scale.y * transformScale.y});
+        sprite->setScale({scale.x * transformScale.x, scale.y * transformScale.y});
 
         RenderSystem::Instance()->Render(*sprite);
     }
@@ -62,8 +58,7 @@ void SpriteRendererComponent::SetPixelSize(int newWidth, int newHeight)
 {
     auto originalSize = sprite->getTexture()->getSize();
 
-    scale = {(float)newWidth / (float)originalSize.x,
-             (float)newHeight / (float)originalSize.y};
+    scale = {(float)newWidth / (float)originalSize.x, (float)newHeight / (float)originalSize.y};
 }
 
 void SpriteRendererComponent::FlipX(bool flip)

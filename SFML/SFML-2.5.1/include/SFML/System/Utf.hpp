@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -34,7 +35,6 @@
 #include <string>
 #include <cstdlib>
 
-
 namespace sf
 {
 template <unsigned int N>
@@ -47,20 +47,22 @@ class Utf;
 template <>
 class Utf<8>
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Decode a single UTF-8 character
     ///
     /// Decoding a character means finding its unique 32-bits
     /// code (called the codepoint) in the Unicode standard.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
     /// \param output      Codepoint of the decoded UTF-8 character
-    /// \param replacement Replacement character to use in case the UTF-8 sequence is invalid
+    /// \param replacement Replacement character to use in case the UTF-8
+    /// sequence is invalid
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -73,10 +75,13 @@ public:
     /// code (called the codepoint) in the target encoding, UTF-8.
     ///
     /// \param input       Codepoint to encode as UTF-8
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to UTF-8 (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to UTF-8
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename Out>
@@ -91,7 +96,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -107,7 +113,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -124,11 +131,13 @@ public:
     /// \param output Iterator pointing to the beginning of the output sequence
     /// \param locale Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out fromAnsi(In begin, In end, Out output, const std::locale& locale = std::locale());
+    static Out fromAnsi(In begin, In end, Out output,
+                        const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert a wide characters range to UTF-8
@@ -137,7 +146,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -150,7 +160,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -162,41 +173,55 @@ public:
     /// The current global locale will be used by default, unless you
     /// pass a custom one in the \a locale parameter.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to ANSI (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to ANSI
+    /// (use 0 to skip them)
     /// \param locale      Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out toAnsi(In begin, In end, Out output, char replacement = 0, const std::locale& locale = std::locale());
+    static Out toAnsi(In begin, In end, Out output, char replacement = 0,
+                      const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert an UTF-8 characters range to wide characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
     static Out toWide(In begin, In end, Out output, wchar_t replacement = 0);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert an UTF-8 characters range to latin-1 (ISO-5589-1) characters
+    /// \brief Convert an UTF-8 characters range to latin-1 (ISO-5589-1)
+    /// characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -214,7 +239,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -227,7 +253,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -240,7 +267,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -254,20 +282,22 @@ public:
 template <>
 class Utf<16>
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Decode a single UTF-16 character
     ///
     /// Decoding a character means finding its unique 32-bits
     /// code (called the codepoint) in the Unicode standard.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
     /// \param output      Codepoint of the decoded UTF-16 character
-    /// \param replacement Replacement character to use in case the UTF-8 sequence is invalid
+    /// \param replacement Replacement character to use in case the UTF-8
+    /// sequence is invalid
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -280,10 +310,13 @@ public:
     /// code (called the codepoint) in the target encoding, UTF-16.
     ///
     /// \param input       Codepoint to encode as UTF-16
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to UTF-16 (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to UTF-16
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename Out>
@@ -298,7 +331,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -314,7 +348,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -331,11 +366,13 @@ public:
     /// \param output Iterator pointing to the beginning of the output sequence
     /// \param locale Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out fromAnsi(In begin, In end, Out output, const std::locale& locale = std::locale());
+    static Out fromAnsi(In begin, In end, Out output,
+                        const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert a wide characters range to UTF-16
@@ -344,7 +381,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -357,7 +395,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -369,41 +408,55 @@ public:
     /// The current global locale will be used by default, unless you
     /// pass a custom one in the \a locale parameter.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to ANSI (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to ANSI
+    /// (use 0 to skip them)
     /// \param locale      Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out toAnsi(In begin, In end, Out output, char replacement = 0, const std::locale& locale = std::locale());
+    static Out toAnsi(In begin, In end, Out output, char replacement = 0,
+                      const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert an UTF-16 characters range to wide characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
     static Out toWide(In begin, In end, Out output, wchar_t replacement = 0);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert an UTF-16 characters range to latin-1 (ISO-5589-1) characters
+    /// \brief Convert an UTF-16 characters range to latin-1 (ISO-5589-1)
+    /// characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -416,7 +469,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -434,7 +488,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -447,7 +502,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -461,8 +517,7 @@ public:
 template <>
 class Utf<32>
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Decode a single UTF-32 character
     ///
@@ -470,12 +525,15 @@ public:
     /// code (called the codepoint) in the Unicode standard.
     /// For UTF-32, the character value is the same as the codepoint.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
     /// \param output      Codepoint of the decoded UTF-32 character
-    /// \param replacement Replacement character to use in case the UTF-8 sequence is invalid
+    /// \param replacement Replacement character to use in case the UTF-8
+    /// sequence is invalid
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -489,10 +547,13 @@ public:
     /// For UTF-32, the codepoint is the same as the character value.
     ///
     /// \param input       Codepoint to encode as UTF-32
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to UTF-32 (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to UTF-32
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename Out>
@@ -507,7 +568,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -522,7 +584,8 @@ public:
     /// \param begin Iterator pointing to the beginning of the input sequence
     /// \param end   Iterator pointing to the end of the input sequence
     ///
-    /// \return Iterator pointing to one past the last read element of the input sequence
+    /// \return Iterator pointing to one past the last read element of the input
+    /// sequence
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
@@ -539,11 +602,13 @@ public:
     /// \param output Iterator pointing to the beginning of the output sequence
     /// \param locale Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out fromAnsi(In begin, In end, Out output, const std::locale& locale = std::locale());
+    static Out fromAnsi(In begin, In end, Out output,
+                        const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert a wide characters range to UTF-32
@@ -552,7 +617,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -565,7 +631,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -577,41 +644,55 @@ public:
     /// The current global locale will be used by default, unless you
     /// pass a custom one in the \a locale parameter.
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to ANSI (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to ANSI
+    /// (use 0 to skip them)
     /// \param locale      Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
-    static Out toAnsi(In begin, In end, Out output, char replacement = 0, const std::locale& locale = std::locale());
+    static Out toAnsi(In begin, In end, Out output, char replacement = 0,
+                      const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Convert an UTF-32 characters range to wide characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
     static Out toWide(In begin, In end, Out output, wchar_t replacement = 0);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert an UTF-16 characters range to latin-1 (ISO-5589-1) characters
+    /// \brief Convert an UTF-16 characters range to latin-1 (ISO-5589-1)
+    /// characters
     ///
-    /// \param begin       Iterator pointing to the beginning of the input sequence
+    /// \param begin       Iterator pointing to the beginning of the input
+    /// sequence
     /// \param end         Iterator pointing to the end of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement for characters not convertible to wide (use 0 to skip them)
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement for characters not convertible to wide
+    /// (use 0 to skip them)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -624,7 +705,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -637,7 +719,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -655,7 +738,8 @@ public:
     /// \param end    Iterator pointing to the end of the input sequence
     /// \param output Iterator pointing to the beginning of the output sequence
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename In, typename Out>
@@ -675,7 +759,8 @@ public:
     ///
     ////////////////////////////////////////////////////////////
     template <typename In>
-    static Uint32 decodeAnsi(In input, const std::locale& locale = std::locale());
+    static Uint32 decodeAnsi(In input,
+                             const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Decode a single wide character to UTF-32
@@ -699,16 +784,21 @@ public:
     /// of sf::Utf<>, it is defined for convenience (it is used by
     /// several other conversion functions).
     ///
-    /// \param codepoint   Iterator pointing to the beginning of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement if the input character is not convertible to ANSI (use 0 to skip it)
+    /// \param codepoint   Iterator pointing to the beginning of the input
+    /// sequence
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement if the input character is not convertible
+    /// to ANSI (use 0 to skip it)
     /// \param locale      Locale to use for conversion
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename Out>
-    static Out encodeAnsi(Uint32 codepoint, Out output, char replacement = 0, const std::locale& locale = std::locale());
+    static Out encodeAnsi(Uint32 codepoint, Out output, char replacement = 0,
+                          const std::locale& locale = std::locale());
 
     ////////////////////////////////////////////////////////////
     /// \brief Encode a single UTF-32 character to wide
@@ -717,29 +807,32 @@ public:
     /// of sf::Utf<>, it is defined for convenience (it is used by
     /// several other conversion functions).
     ///
-    /// \param codepoint   Iterator pointing to the beginning of the input sequence
-    /// \param output      Iterator pointing to the beginning of the output sequence
-    /// \param replacement Replacement if the input character is not convertible to wide (use 0 to skip it)
+    /// \param codepoint   Iterator pointing to the beginning of the input
+    /// sequence
+    /// \param output      Iterator pointing to the beginning of the output
+    /// sequence
+    /// \param replacement Replacement if the input character is not convertible
+    /// to wide (use 0 to skip it)
     ///
-    /// \return Iterator to the end of the output sequence which has been written
+    /// \return Iterator to the end of the output sequence which has been
+    /// written
     ///
     ////////////////////////////////////////////////////////////
     template <typename Out>
-    static Out encodeWide(Uint32 codepoint, Out output, wchar_t replacement = 0);
+    static Out encodeWide(Uint32 codepoint, Out output,
+                          wchar_t replacement = 0);
 };
 
 #include <SFML/System/Utf.inl>
 
 // Make typedefs to get rid of the template syntax
-typedef Utf<8>  Utf8;
+typedef Utf<8> Utf8;
 typedef Utf<16> Utf16;
 typedef Utf<32> Utf32;
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_UTF_HPP
-
+#endif  // SFML_UTF_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Utf

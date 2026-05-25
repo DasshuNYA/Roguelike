@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -35,7 +36,6 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <vector>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -44,8 +44,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API VertexArray : public Drawable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -55,7 +54,8 @@ public:
     VertexArray();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Construct the vertex array with a type and an initial number of vertices
+    /// \brief Construct the vertex array with a type and an initial number of
+    /// vertices
     ///
     /// \param type        Type of primitives
     /// \param vertexCount Initial number of vertices in the array
@@ -85,7 +85,7 @@ public:
     /// \see getVertexCount
     ///
     ////////////////////////////////////////////////////////////
-    Vertex& operator [](std::size_t index);
+    Vertex& operator[](std::size_t index);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get a read-only access to a vertex by its index
@@ -101,7 +101,7 @@ public:
     /// \see getVertexCount
     ///
     ////////////////////////////////////////////////////////////
-    const Vertex& operator [](std::size_t index) const;
+    const Vertex& operator[](std::size_t index) const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Clear the vertex array
@@ -171,8 +171,7 @@ public:
     ////////////////////////////////////////////////////////////
     FloatRect getBounds() const;
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     /// \brief Draw the vertex array to a render target
     ///
@@ -182,20 +181,17 @@ private:
     ////////////////////////////////////////////////////////////
     virtual void draw(RenderTarget& target, RenderStates states) const;
 
-private:
-
+   private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    std::vector<Vertex> m_vertices;      ///< Vertices contained in the array
-    PrimitiveType       m_primitiveType; ///< Type of primitives to draw
+    std::vector<Vertex> m_vertices;  ///< Vertices contained in the array
+    PrimitiveType m_primitiveType;   ///< Type of primitives to draw
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_VERTEXARRAY_HPP
-
+#endif  // SFML_VERTEXARRAY_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::VertexArray

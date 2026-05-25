@@ -42,8 +42,7 @@ class GameWorld
     const unsigned int BLOCKS_COUNT_IN_ROW = 15;
     const unsigned int BLOCK_SHIFT = 5;
     const unsigned int BLOCK_WIDTH =
-        (SCREEN_WIDTH - (BLOCKS_COUNT_IN_ROW + 1) * BLOCK_SHIFT) /
-        BLOCKS_COUNT_IN_ROW;
+        (SCREEN_WIDTH - (BLOCKS_COUNT_IN_ROW + 1) * BLOCK_SHIFT) / BLOCKS_COUNT_IN_ROW;
     const unsigned int BLOCK_HEIGHT = 20;
 
     const int MAX_RECORDS_TABLE_SIZE = 5;

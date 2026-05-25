@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -32,7 +33,6 @@
 #include <SFML/Audio/AlResource.hpp>
 #include <SFML/System/Vector3.hpp>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -41,17 +41,16 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_AUDIO_API SoundSource : AlResource
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Enumeration of the sound source states
     ///
     ////////////////////////////////////////////////////////////
     enum Status
     {
-        Stopped, ///< Sound is not playing
-        Paused,  ///< Sound is paused
-        Playing  ///< Sound is playing
+        Stopped,  ///< Sound is not playing
+        Paused,   ///< Sound is paused
+        Playing   ///< Sound is playing
     };
 
     ////////////////////////////////////////////////////////////
@@ -136,7 +135,8 @@ public:
     /// produced by the listener, or sounds attached to it.
     /// The default value is false (position is absolute).
     ///
-    /// \param relative True to set the position relative, false to set it absolute
+    /// \param relative True to set the position relative, false to set it
+    /// absolute
     ///
     /// \see isRelativeToListener
     ///
@@ -248,7 +248,7 @@ public:
     /// \return Reference to self
     ///
     ////////////////////////////////////////////////////////////
-    SoundSource& operator =(const SoundSource& right);
+    SoundSource& operator=(const SoundSource& right);
 
     ////////////////////////////////////////////////////////////
     /// \brief Start or resume playing the sound source
@@ -293,8 +293,7 @@ public:
     ////////////////////////////////////////////////////////////
     virtual Status getStatus() const;
 
-protected:
-
+   protected:
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
@@ -306,14 +305,12 @@ protected:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    unsigned int m_source; ///< OpenAL source identifier
+    unsigned int m_source;  ///< OpenAL source identifier
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SOUNDSOURCE_HPP
-
+#endif  // SFML_SOUNDSOURCE_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::SoundSource

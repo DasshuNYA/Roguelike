@@ -10,10 +10,7 @@ class IObserver;
 class IObservable : public std::enable_shared_from_this<IObservable>
 {
    public:
-    void AddObserver(std::weak_ptr<IObserver> observer)
-    {
-        observers.push_back(observer);
-    }
+    void AddObserver(std::weak_ptr<IObserver> observer) { observers.push_back(observer); }
 
    protected:
     virtual void Emit()

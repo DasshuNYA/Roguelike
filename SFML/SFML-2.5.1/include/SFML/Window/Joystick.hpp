@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -31,7 +32,6 @@
 #include <SFML/Window/Export.hpp>
 #include <SFML/System/String.hpp>
 
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -40,17 +40,16 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_WINDOW_API Joystick
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Constants related to joysticks capabilities
     ///
     ////////////////////////////////////////////////////////////
     enum
     {
-        Count       = 8,  ///< Maximum number of supported joysticks
-        ButtonCount = 32, ///< Maximum number of supported buttons
-        AxisCount   = 8   ///< Maximum number of supported axes
+        Count = 8,         ///< Maximum number of supported joysticks
+        ButtonCount = 32,  ///< Maximum number of supported buttons
+        AxisCount = 8      ///< Maximum number of supported axes
     };
 
     ////////////////////////////////////////////////////////////
@@ -59,14 +58,14 @@ public:
     ////////////////////////////////////////////////////////////
     enum Axis
     {
-        X,    ///< The X axis
-        Y,    ///< The Y axis
-        Z,    ///< The Z axis
-        R,    ///< The R axis
-        U,    ///< The U axis
-        V,    ///< The V axis
-        PovX, ///< The X axis of the point-of-view hat
-        PovY  ///< The Y axis of the point-of-view hat
+        X,     ///< The X axis
+        Y,     ///< The Y axis
+        Z,     ///< The Z axis
+        R,     ///< The R axis
+        U,     ///< The U axis
+        V,     ///< The V axis
+        PovX,  ///< The X axis of the point-of-view hat
+        PovY   ///< The Y axis of the point-of-view hat
     };
 
     ////////////////////////////////////////////////////////////
@@ -77,9 +76,9 @@ public:
     {
         Identification();
 
-        String       name;      ///< Name of the joystick
-        unsigned int vendorId;  ///< Manufacturer identifier
-        unsigned int productId; ///< Product identifier
+        String name;             ///< Name of the joystick
+        unsigned int vendorId;   ///< Manufacturer identifier
+        unsigned int productId;  ///< Product identifier
     };
 
     ////////////////////////////////////////////////////////////
@@ -165,11 +164,9 @@ public:
     static void update();
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_JOYSTICK_HPP
-
+#endif  // SFML_JOYSTICK_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Joystick

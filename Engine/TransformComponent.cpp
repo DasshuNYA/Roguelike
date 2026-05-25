@@ -8,10 +8,7 @@
 
 namespace Engine
 {
-TransformComponent::TransformComponent(GameObject* gameObject)
-    : Component(gameObject)
-{
-}
+TransformComponent::TransformComponent(GameObject* gameObject) : Component(gameObject) {}
 
 void TransformComponent::Update(float deltaTime) {}
 
@@ -49,8 +46,7 @@ void TransformComponent::SetWorldPosition(float positionX, float positionY)
         Matrix2D newWorldTransform =
             createTransform(newPosition, GetWorldRotation(), GetWorldScale());
 
-        localTransform =
-            parent->GetWorldTransform().GetInversed() * newWorldTransform;
+        localTransform = parent->GetWorldTransform().GetInversed() * newWorldTransform;
 
         setLocalInfoFrom(localTransform);
 
@@ -97,11 +93,9 @@ void TransformComponent::SetWorldRotation(float angle)
     }
     else
     {
-        Matrix2D newWorldTransform =
-            createTransform(GetWorldPosition(), angle, GetWorldScale());
+        Matrix2D newWorldTransform = createTransform(GetWorldPosition(), angle, GetWorldScale());
 
-        localTransform =
-            parent->GetWorldTransform().GetInversed() * newWorldTransform;
+        localTransform = parent->GetWorldTransform().GetInversed() * newWorldTransform;
 
         setLocalInfoFrom(localTransform);
 
@@ -159,8 +153,7 @@ void TransformComponent::SetWorldScale(float scaleX, float scaleY)
         Matrix2D newWorldTransform =
             createTransform(GetWorldPosition(), GetWorldRotation(), newScale);
 
-        localTransform =
-            parent->GetWorldTransform().GetInversed() * newWorldTransform;
+        localTransform = parent->GetWorldTransform().GetInversed() * newWorldTransform;
 
         setLocalInfoFrom(localTransform);
 
@@ -244,8 +237,7 @@ void TransformComponent::SetParent(TransformComponent* newParent)
     if (parent == nullptr && newParent != nullptr)
     {
         newParent->gameObject->AddChild(gameObject);
-        localTransform =
-            newParent->GetWorldTransform().GetInversed() * localTransform;
+        localTransform = newParent->GetWorldTransform().GetInversed() * localTransform;
     }
     else if (parent != nullptr && newParent == nullptr)
     {
@@ -286,20 +278,18 @@ void TransformComponent::Print() const
     std::cout << "Transform name : " << gameObject->GetName() << std::endl;
 
     std::cout << "Position" << std::endl;
-    std::cout << "  World: (" << GetWorldPosition().x << ", "
-              << GetWorldPosition().y << ")" << std::endl;
-    std::cout << "  Local: (" << GetLocalPosition().x << ", "
-              << GetLocalPosition().y << ")" << std::endl;
+    std::cout << "  World: (" << GetWorldPosition().x << ", " << GetWorldPosition().y << ")"
+              << std::endl;
+    std::cout << "  Local: (" << GetLocalPosition().x << ", " << GetLocalPosition().y << ")"
+              << std::endl;
 
     std::cout << "Rotation" << std::endl;
     std::cout << "  World: " << GetWorldRotation() << std::endl;
     std::cout << "  Local: " << GetLocalRotation() << std::endl;
 
     std::cout << "Scale" << std::endl;
-    std::cout << "  World: (" << GetWorldScale().x << ", " << GetWorldScale().y
-              << ")" << std::endl;
-    std::cout << "  Local: (" << GetLocalScale().x << ", " << GetLocalScale().y
-              << ")" << std::endl;
+    std::cout << "  World: (" << GetWorldScale().x << ", " << GetWorldScale().y << ")" << std::endl;
+    std::cout << "  Local: (" << GetLocalScale().x << ", " << GetLocalScale().y << ")" << std::endl;
 }
 
 void TransformComponent::setWorldInfoFrom(const Matrix2D& transform) const
@@ -307,17 +297,14 @@ void TransformComponent::setWorldInfoFrom(const Matrix2D& transform) const
     position.x = transform.GetMatrix()[0][2];
     position.y = transform.GetMatrix()[1][2];
 
-    scale.x =
-        std::sqrtf(transform.GetMatrix()[0][0] * transform.GetMatrix()[0][0] +
-                   transform.GetMatrix()[1][0] * transform.GetMatrix()[1][0]);
+    scale.x = std::sqrtf(transform.GetMatrix()[0][0] * transform.GetMatrix()[0][0] +
+                         transform.GetMatrix()[1][0] * transform.GetMatrix()[1][0]);
 
-    scale.y =
-        std::sqrtf(transform.GetMatrix()[0][1] * transform.GetMatrix()[0][1] +
-                   transform.GetMatrix()[1][1] * transform.GetMatrix()[1][1]);
+    scale.y = std::sqrtf(transform.GetMatrix()[0][1] * transform.GetMatrix()[0][1] +
+                         transform.GetMatrix()[1][1] * transform.GetMatrix()[1][1]);
 
     rotation =
-        std::atan2f(transform.GetMatrix()[0][1], transform.GetMatrix()[0][0]) *
-        180.f / 3.14159265f;
+        std::atan2f(transform.GetMatrix()[0][1], transform.GetMatrix()[0][0]) * 180.f / 3.14159265f;
 }
 
 void TransformComponent::setLocalInfoFrom(const Matrix2D& transform) const
@@ -325,31 +312,26 @@ void TransformComponent::setLocalInfoFrom(const Matrix2D& transform) const
     localPosition.x = transform.GetMatrix()[0][2];
     localPosition.y = transform.GetMatrix()[1][2];
 
-    localScale.x =
-        std::sqrtf(transform.GetMatrix()[0][0] * transform.GetMatrix()[0][0] +
-                   transform.GetMatrix()[1][0] * transform.GetMatrix()[1][0]);
+    localScale.x = std::sqrtf(transform.GetMatrix()[0][0] * transform.GetMatrix()[0][0] +
+                              transform.GetMatrix()[1][0] * transform.GetMatrix()[1][0]);
 
-    localScale.y =
-        std::sqrtf(transform.GetMatrix()[0][1] * transform.GetMatrix()[0][1] +
-                   transform.GetMatrix()[1][1] * transform.GetMatrix()[1][1]);
+    localScale.y = std::sqrtf(transform.GetMatrix()[0][1] * transform.GetMatrix()[0][1] +
+                              transform.GetMatrix()[1][1] * transform.GetMatrix()[1][1]);
 
     localRotation =
-        std::atan2f(transform.GetMatrix()[0][1], transform.GetMatrix()[0][0]) *
-        180.f / 3.14159265f;
+        std::atan2f(transform.GetMatrix()[0][1], transform.GetMatrix()[0][0]) * 180.f / 3.14159265f;
 }
 
 void TransformComponent::updateLocalTransform() const
 {
     if (!isUpdated)
     {
-        localTransform =
-            createTransform(localPosition, localRotation, localScale);
+        localTransform = createTransform(localPosition, localRotation, localScale);
         isUpdated = true;
     }
 }
 
-void TransformComponent::updateLocalTransform(const Vector2Df& position,
-                                              float rotation,
+void TransformComponent::updateLocalTransform(const Vector2Df& position, float rotation,
                                               const Vector2Df& scale) const
 {
     if (!isUpdated)
@@ -359,8 +341,7 @@ void TransformComponent::updateLocalTransform(const Vector2Df& position,
     }
 }
 
-Matrix2D TransformComponent::createTransform(const Vector2Df& position,
-                                             float rotation,
+Matrix2D TransformComponent::createTransform(const Vector2Df& position, float rotation,
                                              const Vector2Df& scale) const
 {
     return Matrix2D(position, rotation, scale);

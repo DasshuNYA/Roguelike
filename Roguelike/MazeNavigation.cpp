@@ -15,8 +15,8 @@ MazeNavigation* MazeNavigation::Instance()
     return &navigation;
 }
 
-void MazeNavigation::SetMap(
-    const std::vector<std::vector<bool>>& newWalkableGrid, float newTileSize)
+void MazeNavigation::SetMap(const std::vector<std::vector<bool>>& newWalkableGrid,
+                            float newTileSize)
 {
     walkableGrid = newWalkableGrid;
     tileSize = newTileSize;
@@ -26,8 +26,7 @@ void MazeNavigation::SetMap(
 }
 
 std::vector<Engine::Vector2Df> MazeNavigation::FindPath(
-    const Engine::Vector2Df& startWorldPosition,
-    const Engine::Vector2Df& targetWorldPosition)
+    const Engine::Vector2Df& startWorldPosition, const Engine::Vector2Df& targetWorldPosition)
 {
     std::vector<Engine::Vector2Df> result;
 
@@ -39,8 +38,7 @@ std::vector<Engine::Vector2Df> MazeNavigation::FindPath(
     auto start = WorldToCell(startWorldPosition);
     auto target = WorldToCell(targetWorldPosition);
 
-    if (!IsWalkable(start.first, start.second) ||
-        !IsWalkable(target.first, target.second))
+    if (!IsWalkable(start.first, start.second) || !IsWalkable(target.first, target.second))
     {
         return result;
     }
@@ -52,8 +50,7 @@ std::vector<Engine::Vector2Df> MazeNavigation::FindPath(
 
     std::queue<std::pair<int, int>> queue;
 
-    std::vector<std::vector<bool>> visited(height,
-                                           std::vector<bool>(width, false));
+    std::vector<std::vector<bool>> visited(height, std::vector<bool>(width, false));
 
     std::vector<std::vector<std::pair<int, int>>> parent(
         height, std::vector<std::pair<int, int>>(width, {-1, -1}));
@@ -61,8 +58,7 @@ std::vector<Engine::Vector2Df> MazeNavigation::FindPath(
     queue.push(start);
     visited[start.second][start.first] = true;
 
-    std::vector<std::pair<int, int>> directions = {
-        {0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
     while (!queue.empty())
     {
@@ -124,18 +120,14 @@ bool MazeNavigation::IsInside(int x, int y) const
     return x >= 0 && x < width && y >= 0 && y < height;
 }
 
-bool MazeNavigation::IsWalkable(int x, int y) const
-{
-    return IsInside(x, y) && walkableGrid[y][x];
-}
+bool MazeNavigation::IsWalkable(int x, int y) const { return IsInside(x, y) && walkableGrid[y][x]; }
 
 Engine::Vector2Df MazeNavigation::CellToWorld(int x, int y) const
 {
     return {x * tileSize, y * tileSize};
 }
 
-std::pair<int, int> MazeNavigation::WorldToCell(
-    const Engine::Vector2Df& position) const
+std::pair<int, int> MazeNavigation::WorldToCell(const Engine::Vector2Df& position) const
 {
     return {static_cast<int>(std::round(position.x / tileSize)),
             static_cast<int>(std::round(position.y / tileSize))};

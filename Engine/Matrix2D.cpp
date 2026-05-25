@@ -20,8 +20,8 @@ Matrix2D::Matrix2D()
     m[2][2] = 1.f;
 }
 
-Matrix2D::Matrix2D(float a00, float a01, float a02, float a10, float a11,
-                   float a12, float a20, float a21, float a22)
+Matrix2D::Matrix2D(float a00, float a01, float a02, float a10, float a11, float a12, float a20,
+                   float a21, float a22)
 {
     m[0][0] = a00;
     m[0][1] = a01;
@@ -58,26 +58,21 @@ Matrix2D Matrix2D::operator*(const Matrix2D& other) const
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[row][0] * other.m[0][col] +
-                                 m[row][1] * other.m[1][col] +
+            result.m[row][col] = m[row][0] * other.m[0][col] + m[row][1] * other.m[1][col] +
                                  m[row][2] * other.m[2][col];
         }
     }
     return result;
 }
 
-const std::array<std::array<float, 3>, 3>& Matrix2D::GetMatrix() const
-{
-    return m;
-}
+const std::array<std::array<float, 3>, 3>& Matrix2D::GetMatrix() const { return m; }
 
 Matrix2D Matrix2D::GetInversed() const
 {
     Matrix2D result;
-    float determinant =
-        m[0][0] * m[1][1] * m[2][2] - m[0][0] * m[1][2] * m[2][1] -
-        m[0][1] * m[1][0] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +
-        m[0][2] * m[1][0] * m[2][1] - m[0][2] * m[1][1] * m[2][0];
+    float determinant = m[0][0] * m[1][1] * m[2][2] - m[0][0] * m[1][2] * m[2][1] -
+                        m[0][1] * m[1][0] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +
+                        m[0][2] * m[1][0] * m[2][1] - m[0][2] * m[1][1] * m[2][0];
 
     float inversedDeterminant = 1.0f / determinant;
 
@@ -115,12 +110,11 @@ Matrix2D Matrix2D::GetInversed() const
             }
 
             // M[i][j] = |submatrix|
-            minor.m[row][column] = submatrix[0][0] * submatrix[1][1] -
-                                   submatrix[0][1] * submatrix[1][0];
+            minor.m[row][column] =
+                submatrix[0][0] * submatrix[1][1] - submatrix[0][1] * submatrix[1][0];
             if ((row + column) % 2 == 1)
             {
-                minor.m[row][column] =
-                    -minor.m[row][column];  // M[i][j] = -M[i][j] {i+j % 2 == 1}
+                minor.m[row][column] = -minor.m[row][column];  // M[i][j] = -M[i][j] {i+j % 2 == 1}
             }
         }
     }
@@ -130,8 +124,7 @@ Matrix2D Matrix2D::GetInversed() const
     {
         for (int j = 0; j < 3; j++)
         {
-            result.m[i][j] =
-                inversedDeterminant * minor.m[j][i];  //[i][j] = [j][i]
+            result.m[i][j] = inversedDeterminant * minor.m[j][i];  //[i][j] = [j][i]
         }
     }
 

@@ -36,8 +36,7 @@ void GameObject::Print(int depth) const
 
     for (auto& component : components)
     {
-        std::cout << std::string(depth * 2, ' ') << "::" << component
-                  << std::endl;
+        std::cout << std::string(depth * 2, ' ') << "::" << component << std::endl;
     }
 
     for (GameObject* child : children)
@@ -66,9 +65,8 @@ void GameObject::AddChild(GameObject* child) { children.push_back(child); }
 
 void GameObject::RemoveChild(GameObject* child)
 {
-    children.erase(
-        std::remove_if(children.begin(), children.end(),
-                       [child](GameObject* obj) { return obj == child; }),
-        children.end());
+    children.erase(std::remove_if(children.begin(), children.end(),
+                                  [child](GameObject* obj) { return obj == child; }),
+                   children.end());
 }
 }  // namespace Engine

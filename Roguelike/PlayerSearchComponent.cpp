@@ -10,8 +10,7 @@
 
 namespace Roguelike
 {
-PlayerSearchComponent::PlayerSearchComponent(Engine::GameObject* gameObject)
-    : Component(gameObject)
+PlayerSearchComponent::PlayerSearchComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
     rigidbody = gameObject->GetComponent<Engine::RigidbodyComponent>();
@@ -35,8 +34,7 @@ void PlayerSearchComponent::Update(float deltaTime)
         return;
     }
 
-    if (player == nullptr ||
-        !Engine::GameWorld::Instance()->IsGameObjectAlive(player))
+    if (player == nullptr || !Engine::GameWorld::Instance()->IsGameObjectAlive(player))
     {
         rigidbody->SetLinearVelocity({0.f, 0.f});
         player = nullptr;
@@ -46,8 +44,7 @@ void PlayerSearchComponent::Update(float deltaTime)
         return;
     }
 
-    Engine::StatsComponent* selfStats =
-        gameObject->GetComponent<Engine::StatsComponent>();
+    Engine::StatsComponent* selfStats = gameObject->GetComponent<Engine::StatsComponent>();
 
     if (selfStats != nullptr && selfStats->IsDead())
     {
@@ -57,8 +54,7 @@ void PlayerSearchComponent::Update(float deltaTime)
         return;
     }
 
-    Engine::StatsComponent* playerStats =
-        player->GetComponent<Engine::StatsComponent>();
+    Engine::StatsComponent* playerStats = player->GetComponent<Engine::StatsComponent>();
 
     if (playerStats != nullptr && playerStats->IsDead())
     {
@@ -121,10 +117,7 @@ void PlayerSearchComponent::Update(float deltaTime)
 
 void PlayerSearchComponent::Render() {}
 
-void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer)
-{
-    player = newPlayer;
-}
+void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer) { player = newPlayer; }
 
 void PlayerSearchComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
 
@@ -154,8 +147,8 @@ void PlayerSearchComponent::UpdatePath()
         return;
     }
 
-    path = MazeNavigation::Instance()->FindPath(
-        transform->GetWorldPosition(), playerTransform->GetWorldPosition());
+    path = MazeNavigation::Instance()->FindPath(transform->GetWorldPosition(),
+                                                playerTransform->GetWorldPosition());
 
     currentPathIndex = 0;
 }

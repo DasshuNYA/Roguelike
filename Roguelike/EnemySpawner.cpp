@@ -16,8 +16,7 @@
 namespace Roguelike
 {
 std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
-    const EnemySpawnSettings& settings,
-    const std::vector<Engine::Vector2Df>& floorPositions,
+    const EnemySpawnSettings& settings, const std::vector<Engine::Vector2Df>& floorPositions,
     Engine::GameObject* player)
 {
     std::vector<std::unique_ptr<Character>> spawnedEnemies;
@@ -50,11 +49,9 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
     {
         attempts++;
 
-        const Engine::Vector2Df& position =
-            floorPositions[std::rand() % floorPositions.size()];
+        const Engine::Vector2Df& position = floorPositions[std::rand() % floorPositions.size()];
 
-        if (!IsPositionFarEnoughFromPlayer(position, player,
-                                           settings.minDistanceFromPlayer))
+        if (!IsPositionFarEnoughFromPlayer(position, player, settings.minDistanceFromPlayer))
         {
             continue;
         }
@@ -62,13 +59,11 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
         switch (settings.enemyType)
         {
             case EnemyType::Creeper:
-                spawnedEnemies.push_back(
-                    std::make_unique<Creeper>(player, position.x, position.y));
+                spawnedEnemies.push_back(std::make_unique<Creeper>(player, position.x, position.y));
                 break;
 
             case EnemyType::Warrior:
-                spawnedEnemies.push_back(
-                    std::make_unique<Warrior>(player, position.x, position.y));
+                spawnedEnemies.push_back(std::make_unique<Warrior>(player, position.x, position.y));
                 break;
 
             default:
@@ -84,9 +79,9 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
     return spawnedEnemies;
 }
 
-bool EnemySpawner::IsPositionFarEnoughFromPlayer(
-    const Engine::Vector2Df& position, Engine::GameObject* player,
-    float minDistance) const
+bool EnemySpawner::IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& position,
+                                                 Engine::GameObject* player,
+                                                 float minDistance) const
 {
     Engine::TransformComponent* playerTransform =
         player->GetComponent<Engine::TransformComponent>();
@@ -99,8 +94,7 @@ bool EnemySpawner::IsPositionFarEnoughFromPlayer(
 
     Engine::Vector2Df playerPosition = playerTransform->GetWorldPosition();
 
-    Engine::Vector2Df direction = {position.x - playerPosition.x,
-                                   position.y - playerPosition.y};
+    Engine::Vector2Df direction = {position.x - playerPosition.x, position.y - playerPosition.y};
 
     return direction.GetLength() >= minDistance;
 }

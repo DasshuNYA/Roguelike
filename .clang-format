@@ -1,7 +1,5 @@
 BasedOnStyle: Google
-
 IndentWidth: 4
-ColumnLimit: 80
-SortIncludes: false
-
+ColumnLimit: 100
 BreakBeforeBraces: Allman
+SortIncludes: false

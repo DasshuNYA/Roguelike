@@ -13,12 +13,10 @@ class MazeNavigation
    public:
     static MazeNavigation* Instance();
 
-    void SetMap(const std::vector<std::vector<bool>>& walkableGrid,
-                float tileSize);
+    void SetMap(const std::vector<std::vector<bool>>& walkableGrid, float tileSize);
 
-    std::vector<Engine::Vector2Df> FindPath(
-        const Engine::Vector2Df& startWorldPosition,
-        const Engine::Vector2Df& targetWorldPosition);
+    std::vector<Engine::Vector2Df> FindPath(const Engine::Vector2Df& startWorldPosition,
+                                            const Engine::Vector2Df& targetWorldPosition);
 
    private:
     MazeNavigation() = default;

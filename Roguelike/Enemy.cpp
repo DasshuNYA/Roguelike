@@ -21,9 +21,8 @@
 namespace Roguelike
 {
 void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
-                       const std::string& textureKey, float x, float y,
-                       float health, float armor, float attackPower,
-                       float speed, float detectionRadius)
+                       const std::string& textureKey, float x, float y, float health, float armor,
+                       float attackPower, float speed, float detectionRadius)
 {
     gameObject = Engine::GameWorld::Instance()->CreateGameObject(name);
 
@@ -33,8 +32,7 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
 
     auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-    renderer->SetTexture(
-        *Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
+    renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
 
     renderer->SetPixelSize(48, 48);
 
@@ -56,8 +54,7 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
     search->SetPlayer(player);
     search->SetSpeed(speed);
 
-    auto detectionTrigger =
-        gameObject->AddComponent<DetectionTriggerComponent>();
+    auto detectionTrigger = gameObject->AddComponent<DetectionTriggerComponent>();
 
     detectionTrigger->SetRadius(detectionRadius);
     detectionTrigger->SetShowDebug(false);

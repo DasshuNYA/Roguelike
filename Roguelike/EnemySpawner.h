@@ -34,13 +34,11 @@ class EnemySpawner
 {
    public:
     std::vector<std::unique_ptr<Character>> Spawn(
-        const EnemySpawnSettings& settings,
-        const std::vector<Engine::Vector2Df>& floorPositions,
+        const EnemySpawnSettings& settings, const std::vector<Engine::Vector2Df>& floorPositions,
         Engine::GameObject* player);
 
    private:
     bool IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& position,
-                                       Engine::GameObject* player,
-                                       float minDistance) const;
+                                       Engine::GameObject* player, float minDistance) const;
 };
 }  // namespace Roguelike

@@ -8,8 +8,7 @@
 
 namespace Roguelike
 {
-LevelBuilder::LevelBuilder(float startX, float startY, float tileSize,
-                           int width, int height)
+LevelBuilder::LevelBuilder(float startX, float startY, float tileSize, int width, int height)
 {
     this->startX = startX;
     this->startY = startY;

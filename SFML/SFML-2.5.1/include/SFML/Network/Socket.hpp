@@ -4,11 +4,12 @@
 // Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
-// subject to the following restrictions:
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
 //    you must not claim that you wrote the original software.
@@ -33,7 +34,6 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <vector>
 
-
 namespace sf
 {
 class SocketSelector;
@@ -44,19 +44,18 @@ class SocketSelector;
 ////////////////////////////////////////////////////////////
 class SFML_NETWORK_API Socket : NonCopyable
 {
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Status codes that may be returned by socket functions
     ///
     ////////////////////////////////////////////////////////////
     enum Status
     {
-        Done,         ///< The socket has sent / received the data
-        NotReady,     ///< The socket is not ready to send / receive data yet
-        Partial,      ///< The socket sent a part of the data
-        Disconnected, ///< The TCP socket has been disconnected
-        Error         ///< An unexpected error happened
+        Done,          ///< The socket has sent / received the data
+        NotReady,      ///< The socket is not ready to send / receive data yet
+        Partial,       ///< The socket sent a part of the data
+        Disconnected,  ///< The TCP socket has been disconnected
+        Error          ///< An unexpected error happened
     };
 
     ////////////////////////////////////////////////////////////
@@ -65,11 +64,11 @@ public:
     ////////////////////////////////////////////////////////////
     enum
     {
-        AnyPort = 0 ///< Special value that tells the system to pick any available port
+        AnyPort = 0  ///< Special value that tells the system to pick any
+                     ///< available port
     };
 
-public:
-
+   public:
     ////////////////////////////////////////////////////////////
     /// \brief Destructor
     ///
@@ -88,7 +87,8 @@ public:
     /// available or not.
     /// By default, all sockets are blocking.
     ///
-    /// \param blocking True to set the socket as blocking, false for non-blocking
+    /// \param blocking True to set the socket as blocking, false for
+    /// non-blocking
     ///
     /// \see isBlocking
     ///
@@ -105,16 +105,15 @@ public:
     ////////////////////////////////////////////////////////////
     bool isBlocking() const;
 
-protected:
-
+   protected:
     ////////////////////////////////////////////////////////////
     /// \brief Types of protocols that the socket can use
     ///
     ////////////////////////////////////////////////////////////
     enum Type
     {
-        Tcp, ///< TCP protocol
-        Udp  ///< UDP protocol
+        Tcp,  ///< TCP protocol
+        Udp   ///< UDP protocol
     };
 
     ////////////////////////////////////////////////////////////
@@ -166,23 +165,20 @@ protected:
     ////////////////////////////////////////////////////////////
     void close();
 
-private:
-
+   private:
     friend class SocketSelector;
 
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Type         m_type;       ///< Type of the socket (TCP or UDP)
-    SocketHandle m_socket;     ///< Socket descriptor
-    bool         m_isBlocking; ///< Current blocking mode of the socket
+    Type m_type;            ///< Type of the socket (TCP or UDP)
+    SocketHandle m_socket;  ///< Socket descriptor
+    bool m_isBlocking;      ///< Current blocking mode of the socket
 };
 
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SOCKET_HPP
-
+#endif  // SFML_SOCKET_HPP
 
 ////////////////////////////////////////////////////////////
 /// \class sf::Socket

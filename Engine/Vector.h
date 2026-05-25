@@ -25,10 +25,7 @@ struct Vector2D
 
     float GetLength() { return sqrtf(x * x + y * y); }
 
-    float DotProduct(const Vector2D<T>& vector)
-    {
-        return x * vector.x + y * vector.y;
-    }
+    float DotProduct(const Vector2D<T>& vector) { return x * vector.x + y * vector.y; }
 };
 
 using Vector2Df = Vector2D<float>;
