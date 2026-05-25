@@ -1,88 +1,119 @@
 # Roguelike
 
-A small component-based roguelike prototype written in C++ using SFML.
-
-The project was created as part of a game development learning course and demonstrates:
-- component architecture;
-- procedural maze generation;
-- player and enemy combat;
-- enemy AI;
-- scene and object systems;
-- resource management;
-- HUD rendering;
-- pathfinding and navigation.
+Small roguelike prototype built with a custom C++ component-based engine and SFML.
 
 ---
 
-## Gameplay Features
+# Features
 
 - Procedural maze generation
-- Player movement
-- Ranged player attack
-- Projectiles blocked by walls
-- Creeper enemy
-- Warrior enemy
+- Component-based architecture
+- Character inheritance hierarchy
+- Enemy AI
+- Ranged combat system
+- Projectile collisions with walls
 - Configurable enemy spawning
-- Enemy pathfinding through maze corridors
-- HP and armor combat system
-- HUD with player HP and enemy count
-- Win and game over states
+- HUD system
+- Logging system
+- Modular gameplay systems
 
 ---
 
-# Architecture
+# Character Hierarchy
 
-The project uses:
-- component-based architecture;
-- inheritance for gameplay entities;
-- scene-based world management.
+```text
+Character
+├── Player
+└── Enemy
+    ├── Creeper
+    └── Warrior
+```
 
 ---
 
 # Main Systems
 
 ## Character System
+
 Base Character class used for:
+
 - Player
 - Enemy
+
+Enemy class is used as base class for:
+
 - Creeper
+- Warrior
 
 ---
 
 ## Combat System
-Includes:
-- StatsComponent
-- AttackComponent
-- PlayerAttackComponent
-- DeathComponent
 
-Supports:
-- damage;
-- armor;
-- death handling;
-- attack cooldowns.
+The combat system supports:
 
-Detailed documentation:
-- `docs/combat-system.md`
+- enemy melee attacks;
+- ranged player attacks;
+- projectiles;
+- HP and armor;
+- death handling.
+
+Player uses ranged attacks with projectiles.
+
+Projectiles:
+- move toward enemies;
+- collide with walls;
+- disappear on hit;
+- have configurable speed and lifetime.
+
+---
+
+## Enemy AI
+
+Enemies:
+
+- detect player in radius;
+- navigate through maze;
+- avoid walls;
+- move toward player;
+- attack player.
 
 ---
 
 ## Enemy Spawner
+
 EnemySpawner is responsible for:
+
 - enemy creation;
 - configurable enemy count;
-- configurable spawn rules;
-- safe spawn distance from player.
+- configurable enemy types;
+- safe spawn positions.
+
+Spawner supports:
+- Creeper spawning;
+- Warrior spawning;
+- random floor tile selection;
+- minimum distance from player.
 
 ---
 
-## Maze Generation
-MazeGenerator creates:
-- floor tiles;
-- walls;
-- navigation layout.
+## HUD
 
-Enemies use maze navigation to avoid walls and move through corridors.
+HUD displays:
+
+- player HP;
+- enemy count;
+- GAME OVER state;
+- YOU WIN state.
+
+---
+
+## Logging
+
+The project uses a logger system with:
+
+- console logs;
+- file logs;
+- Saved/Logs directory.
 
 ---
 
@@ -90,44 +121,50 @@ Enemies use maze navigation to avoid walls and move through corridors.
 
 - C++
 - SFML
-- Visual Studio 2022
-
----
-
-# Build
-
-## Requirements
-- Visual Studio 2022
-- SFML
-- Windows x64
-
----
-
-## Build Steps
-
-1. Open `Game.sln`
-2. Select:
-   - Debug x64
-   - or Release x64
-3. Build solution
-
----
-
-# Code Style
-
-The project uses `clang-format`.
-
-Formatting configuration:
-- Allman braces
-- 4 spaces indentation
-- 80 column limit
+- Custom component-based engine
+- clang-format
 
 ---
 
 # Project Structure
 
 ```text
-Engine/         -> engine systems
-Roguelike/      -> gameplay code
-Resources/      -> textures, fonts, sounds
-docs/           -> documentation
+Engine/
+├── Core/
+├── Components/
+├── Physics/
+├── Rendering/
+├── Resources/
+└── Math/
+
+Roguelike/
+├── Characters/
+├── Components/
+├── Gameplay/
+├── Config/
+├── Resources/
+└── Saved/
+```
+
+---
+
+# Build
+
+Requirements:
+
+- Visual Studio 2022
+- SFML 2.5.1
+- Windows x64
+
+---
+
+# Controls
+
+- WASD — movement
+- Left Mouse Button — ranged attack
+
+---
+
+# Author
+
+Educational project created for gameplay architecture and combat system practice.
