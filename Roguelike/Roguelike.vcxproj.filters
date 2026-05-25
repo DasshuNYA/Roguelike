@@ -1,147 +1,162 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
+    <ClCompile Include="GameMain.cpp" />
+    <ClCompile Include="GameStateData.cpp" />
+    <ClCompile Include="Characters\Character.cpp">
+      <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerMovementComponent.cpp">
-      <Filter>Player</Filter>
+    <ClCompile Include="Characters\Creeper.cpp">
+      <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="DetectionTriggerComponent.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Characters\Enemy.cpp">
+      <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSearchComponent.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Characters\Player.cpp">
+      <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Characters\Warrior.cpp">
+      <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="Floor.cpp">
-      <Filter>World</Filter>
+    <ClCompile Include="Components\AttackComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>World</Filter>
+    <ClCompile Include="Components\DeathComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="LevelBuilder.cpp">
-      <Filter>World</Filter>
+    <ClCompile Include="Components\DetectionTriggerComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="DeveloperLevel.cpp">
-      <Filter>World</Filter>
+    <ClCompile Include="Components\GameHudComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="GameResourceLoader.cpp">
-      <Filter>Systems</Filter>
+    <ClCompile Include="Components\PlayerMovementComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="GameMain.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="Components\PlayerSearchComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="MazeGenerator.cpp">
-      <Filter>Systems</Filter>
+    <ClCompile Include="Components\ProjectileComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Player</Filter>
+    <ClCompile Include="Components\RangedAttackComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="MazeNavigation.cpp">
-      <Filter>Systems</Filter>
+    <ClCompile Include="Components\StatsComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySpawner.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Gameplay\DeveloperLevel.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="GameHudComponent.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Gameplay\EnemySpawner.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="Creeper.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Gameplay\Floor.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="Warrior.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="Gameplay\GameResourceLoader.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectileComponent.cpp">
-      <Filter>Systems</Filter>
+    <ClCompile Include="Gameplay\LevelBuilder.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="RangedAttackComponent.cpp">
-      <Filter>Systems</Filter>
+    <ClCompile Include="Gameplay\MazeGenerator.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameplay\MazeNavigation.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameplay\Wall.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
+    <ClInclude Include="GameStateData.h" />
+    <ClInclude Include="Config\GameConfig.h">
+      <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerMovementComponent.h">
-      <Filter>Player</Filter>
+    <ClInclude Include="Config\GameSettings.h">
+      <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="DetectionTriggerComponent.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Characters\Character.h">
+      <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerSearchComponent.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Characters\Creeper.h">
+      <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Characters\Enemy.h">
+      <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="Floor.h">
-      <Filter>World</Filter>
+    <ClInclude Include="Characters\Player.h">
+      <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>World</Filter>
+    <ClInclude Include="Characters\Warrior.h">
+      <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="LevelBuilder.h">
-      <Filter>World</Filter>
+    <ClInclude Include="Components\AttackComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="DeveloperLevel.h">
-      <Filter>World</Filter>
+    <ClInclude Include="Components\DeathComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameResourceLoader.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Components\DetectionTriggerComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="MazeGenerator.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Components\GameHudComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>Player</Filter>
+    <ClInclude Include="Components\PlayerMovementComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="MazeNavigation.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Components\PlayerSearchComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySpawner.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Components\ProjectileComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameConfig.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="Components\RangedAttackComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameHudComponent.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Components\StatsComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Creeper.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Gameplay\DeveloperLevel.h">
+      <Filter>Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Warrior.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="Gameplay\EnemySpawner.h">
+      <Filter>Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileComponent.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Gameplay\Floor.h">
+      <Filter>Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="RangedAttackComponent.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Gameplay\GameResourceLoader.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\LevelBuilder.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\MazeGenerator.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\MazeNavigation.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\Wall.h">
+      <Filter>Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Player">
-      <UniqueIdentifier>{dec88a15-e100-441b-9d30-0c17ae13596a}</UniqueIdentifier>
+    <Filter Include="Config">
+      <UniqueIdentifier>{a4d7ce24-7e2d-4844-9265-e43b208b2326}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemy">
-      <UniqueIdentifier>{a9630d45-a37c-407f-b357-f2eb439afd72}</UniqueIdentifier>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{8c18aaa5-db95-4361-afb3-d6abed2fb485}</UniqueIdentifier>
     </Filter>
-    <Filter Include="World">
-      <UniqueIdentifier>{05202615-98b2-4869-8f65-ac57bc162c42}</UniqueIdentifier>
+    <Filter Include="Components">
+      <UniqueIdentifier>{d0589a78-d302-4604-ad1f-7b21024c0e83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{33bbd253-22af-42d4-aa21-b3f54c3f9892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{9b6cdd58-6024-4439-bbe3-3953a76a7e9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{9da9e5c2-f85f-4167-992d-f580c8fe3fa6}</UniqueIdentifier>
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{f236597c-6f14-46ef-bd06-843acae5b67a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

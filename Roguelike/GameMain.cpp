@@ -9,12 +9,12 @@
 #include "Logger.h"
 #include "DeveloperLevel.h"
 
-void SetupLogger()
+static void SetupLogger()
 {
     auto logger = std::make_shared<Engine::Logger>();
 
     logger->addSink(std::make_shared<Engine::ConsoleSink>());
-    logger->addSink(std::make_shared<Engine::FileSink>("log.txt"));
+    logger->addSink(std::make_shared<Engine::FileSink>("Saved/Logs/log.txt"));
 
     Engine::LoggerRegistry::getInstance().registerLogger("global", logger);
     Engine::LoggerRegistry::getInstance().setDefaultLogger(logger);

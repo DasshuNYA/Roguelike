@@ -1,51 +1,31 @@
-# =========================
 # Visual Studio
-# =========================
-
 .vs/
-*.user
 *.vcxproj.user
+*.user
+*.suo
 
-# =========================
 # Build folders
-# =========================
-
 x64/
-x86/
+Debug/
+Release/
 bin/
 obj/
 
-# =========================
-# Temporary / debug files
-# =========================
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
 
-*.pdb
-*.ilk
-*.tlog
-*.tmp
-*.temp
-
-# =========================
-# Test results
-# =========================
-
-*.xml
-*.gta.testdurations
-
-# =========================
-# NuGet / packages
-# =========================
-
-packages/
-
-# =========================
-# Generated executables
-# =========================
-
-*.exe
-
-# =========================
 # Logs
-# =========================
+Saved/Logs/*.txt
 
-log.txt
+# Temporary files
+*.tmp
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# SFML / package caches
+packages/

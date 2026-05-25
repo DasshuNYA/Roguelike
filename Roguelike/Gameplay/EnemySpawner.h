@@ -29,7 +29,9 @@ struct EnemySpawnSettings
     EnemyType enemyType = EnemyType::Creeper;
 };
 
-// Spawns enemies on generated floor tiles using configurable spawn settings.
+// Creates enemies on generated floor tiles.
+// The spawner avoids player spawn area and prevents enemies from spawning
+// on the same tile.
 class EnemySpawner
 {
    public:
@@ -40,5 +42,11 @@ class EnemySpawner
    private:
     bool IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& position,
                                        Engine::GameObject* player, float minDistance) const;
+
+    bool IsPositionAlreadyUsed(const Engine::Vector2Df& position,
+                               const std::vector<Engine::Vector2Df>& usedPositions) const;
+
+    std::unique_ptr<Character> CreateEnemy(EnemyType enemyType, Engine::GameObject* player,
+                                           const Engine::Vector2Df& position) const;
 };
 }  // namespace Roguelike

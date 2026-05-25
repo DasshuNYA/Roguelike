@@ -15,6 +15,7 @@ class TransformComponent;
 
 namespace Roguelike
 {
+// Moves projectile forward, applies damage to enemies and destroys it on walls.
 class ProjectileComponent : public Engine::Component
 {
    public:

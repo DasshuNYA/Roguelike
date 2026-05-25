@@ -2,13 +2,14 @@
 
 #pragma once
 
-#include <iostream>
+#include <filesystem>
 #include <fstream>
-#include <string>
-#include <vector>
-#include <mutex>
-#include <unordered_map>
+#include <iostream>
 #include <memory>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace Engine
 {
@@ -22,8 +23,27 @@ enum class LogLevel
 class LogSink
 {
    public:
-    virtual void log(LogLevel level, const std::string& message) = 0;
     virtual ~LogSink() = default;
+    virtual void log(LogLevel level, const std::string& message) = 0;
+};
+
+class LogFormatter
+{
+   public:
+    static std::string ToString(LogLevel level)
+    {
+        switch (level)
+        {
+            case LogLevel::INFO:
+                return "[INFO]";
+            case LogLevel::WARNING:
+                return "[WARNING]";
+            case LogLevel::ERROR:
+                return "[ERROR]";
+            default:
+                return "[UNKNOWN]";
+        }
+    }
 };
 
 class ConsoleSink : public LogSink
@@ -31,40 +51,22 @@ class ConsoleSink : public LogSink
    public:
     void log(LogLevel level, const std::string& message) override
     {
-        std::cout << logLevelToString(level) << " " << message << std::endl;
-    }
-
-   private:
-    std::string logLevelToString(LogLevel level)
-    {
-        switch (level)
-        {
-            case LogLevel::INFO:
-                return "[INFO]";
-            case LogLevel::WARNING:
-                return "[WARNING]";
-            case LogLevel::ERROR:
-                return "[ERROR]";
-            default:
-                return "[UNKNOWN]";
-        }
+        std::cout << LogFormatter::ToString(level) << " " << message << std::endl;
     }
 };
 
 class FileSink : public LogSink
 {
    public:
-    FileSink(const std::string& filename) { logFile.open(filename, std::ios::app); }
-
-    void log(LogLevel level, const std::string& message) override
+    explicit FileSink(const std::string& filename)
     {
-        if (logFile)
-        {
-            logFile << logLevelToString(level) << " " << message << std::endl;
-        }
+        std::filesystem::path logPath(filename);
+        std::filesystem::create_directories(logPath.parent_path());
+
+        logFile.open(filename, std::ios::app);
     }
 
-    ~FileSink()
+    ~FileSink() override
     {
         if (logFile.is_open())
         {
@@ -72,23 +74,18 @@ class FileSink : public LogSink
         }
     }
 
+    void log(LogLevel level, const std::string& message) override
+    {
+        if (!logFile)
+        {
+            return;
+        }
+
+        logFile << LogFormatter::ToString(level) << " " << message << std::endl;
+    }
+
    private:
     std::ofstream logFile;
-
-    std::string logLevelToString(LogLevel level)
-    {
-        switch (level)
-        {
-            case LogLevel::INFO:
-                return "[INFO]";
-            case LogLevel::WARNING:
-                return "[WARNING]";
-            case LogLevel::ERROR:
-                return "[ERROR]";
-            default:
-                return "[UNKNOWN]";
-        }
-    }
 };
 
 class Logger
@@ -154,6 +151,8 @@ class LoggerRegistry
 }  // namespace Engine
 
 #define LOG_INFO(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message)
+
 #define LOG_WARN(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message)
+
 #define LOG_ERROR(message) \
     ::Engine::LoggerRegistry::getInstance().getLogger("global")->error(message)

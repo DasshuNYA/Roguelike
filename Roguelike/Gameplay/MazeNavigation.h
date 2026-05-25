@@ -8,6 +8,7 @@
 
 namespace Roguelike
 {
+// Stores generated maze navigation data and builds paths through walkable tiles.
 class MazeNavigation
 {
    public:

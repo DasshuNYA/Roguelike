@@ -2,165 +2,149 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Engine.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GameWorld.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="ColliderComponent.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Trigger.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="RigidbodyComponent.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteColliderComponent.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteRendererComponent.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformComponent.cpp">
-      <Filter>Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="InputComponent.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix2D.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceSystem.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioComponent.cpp">
+    <ClCompile Include="Audio\AudioComponent.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AttackComponent.cpp">
-      <Filter>Gameplay</Filter>
+    <ClCompile Include="Core\Component.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="StatsComponent.cpp">
-      <Filter>Gameplay</Filter>
+    <ClCompile Include="Core\Engine.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="DeathComponent.cpp">
-      <Filter>Gameplay</Filter>
+    <ClCompile Include="Core\GameObject.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="TextRendererComponent.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Core\GameWorld.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Matrix2D.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ColliderComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collision.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsSystem.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Trigger.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\CameraComponent.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderSystem.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Sprite.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\ResourceSystem.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\InputComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RigidbodyComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SpriteColliderComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SpriteRendererComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TextRendererComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TransformComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Engine.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="GameWorld.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSystem.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="ColliderComponent.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Trigger.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="RigidbodyComponent.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteColliderComponent.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteRendererComponent.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformComponent.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="InputComponent.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix2D.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="randomizer.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="IDelayedAction.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="IObserver.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceSystem.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioComponent.h">
+    <ClInclude Include="Audio\AudioComponent.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Utility</Filter>
+    <ClInclude Include="Core\Component.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="AttackComponent.h">
-      <Filter>Gameplay</Filter>
+    <ClInclude Include="Core\Engine.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="StatsComponent.h">
-      <Filter>Gameplay</Filter>
+    <ClInclude Include="Core\framework.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="DeathComponent.h">
-      <Filter>Gameplay</Filter>
+    <ClInclude Include="Core\GameObject.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="TextRendererComponent.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Core\GameWorld.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IDelayedAction.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IObserver.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Logger.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Matrix2D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\randomizer.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ColliderComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collision.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Trigger.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\CameraComponent.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderSystem.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Sprite.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceSystem.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\InputComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RigidbodyComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\SpriteColliderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\SpriteRendererComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TextRendererComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TransformComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,26 +160,14 @@
     <Filter Include="Rendering">
       <UniqueIdentifier>{e1625407-e24a-4d09-8f78-499baf65ee0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Transform">
-      <UniqueIdentifier>{86314452-1c7d-40ae-b1c3-a342285b7c7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{369bcb97-f4b7-4adb-9418-30723bcbbb75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{be7def90-46bd-44db-ac98-9510c3c88dd2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{fa7570b1-319b-4344-8dc8-176bc82382fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{bf30fab0-33bc-434d-b95b-1e7db20c77a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gameplay">
-      <UniqueIdentifier>{54522e4f-6907-4292-8a97-9d22a3b76dc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{1e9f8bcc-ae42-4f1c-b0d1-e2eecc41d1a7}</UniqueIdentifier>
+    <Filter Include="Components">
+      <UniqueIdentifier>{bfbd43db-2917-4179-b066-177114122b12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

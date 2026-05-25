@@ -152,7 +152,6 @@ void ProjectileComponent::CheckTargets()
         }
 
         Engine::Vector2Df projectilePosition = transform->GetWorldPosition();
-
         Engine::Vector2Df targetPosition = targetTransform->GetWorldPosition();
 
         Engine::Vector2Df difference = {targetPosition.x - projectilePosition.x,
