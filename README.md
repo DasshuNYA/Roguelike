@@ -1,170 +1,80 @@
 # Roguelike
 
-Small roguelike prototype built with a custom C++ component-based engine and SFML.
+Small roguelike project made with C++ and SFML.
+
+The project uses a custom component-based architecture.
 
 ---
 
-# Features
+## Features
 
-- Procedural maze generation
-- Component-based architecture
-- Character inheritance hierarchy
-- Enemy AI
-- Ranged combat system
-- Projectile collisions with walls
-- Configurable enemy spawning
-- HUD system
-- Logging system
-- Modular gameplay systems
+- procedural maze generation;
+- enemy AI;
+- ranged combat;
+- projectile system;
+- enemy spawning;
+- HUD;
+- logger system;
+- combat documentation;
+- clang-format support.
 
 ---
 
-# Character Hierarchy
+## Character Hierarchy
 
-```text
 Character
-├── Player
-└── Enemy
-    ├── Creeper
-    └── Warrior
-```
-
----
-
-# Main Systems
-
-## Character System
-
-Base Character class used for:
-
 - Player
 - Enemy
-
-Enemy class is used as base class for:
-
-- Creeper
-- Warrior
+  - Creeper
+  - Warrior
 
 ---
 
-## Combat System
-
-The combat system supports:
-
-- enemy melee attacks;
-- ranged player attacks;
-- projectiles;
-- HP and armor;
-- death handling.
-
-Player uses ranged attacks with projectiles.
-
-Projectiles:
-- move toward enemies;
-- collide with walls;
-- disappear on hit;
-- have configurable speed and lifetime.
-
----
-
-## Enemy AI
-
-Enemies:
-
-- detect player in radius;
-- navigate through maze;
-- avoid walls;
-- move toward player;
-- attack player.
-
----
-
-## Enemy Spawner
-
-EnemySpawner is responsible for:
-
-- enemy creation;
-- configurable enemy count;
-- configurable enemy types;
-- safe spawn positions.
-
-Spawner supports:
-- Creeper spawning;
-- Warrior spawning;
-- random floor tile selection;
-- minimum distance from player.
-
----
-
-## HUD
-
-HUD displays:
-
-- player HP;
-- enemy count;
-- GAME OVER state;
-- YOU WIN state.
-
----
-
-## Logging
-
-The project uses a logger system with:
-
-- console logs;
-- file logs;
-- Saved/Logs directory.
-
----
-
-# Technologies
-
-- C++
-- SFML
-- Custom component-based engine
-- clang-format
-
----
-
-# Project Structure
-
-```text
-Engine/
-├── Core/
-├── Components/
-├── Physics/
-├── Rendering/
-├── Resources/
-└── Math/
-
-Roguelike/
-├── Characters/
-├── Components/
-├── Gameplay/
-├── Config/
-├── Resources/
-└── Saved/
-```
-
----
-
-# Build
-
-Requirements:
-
-- Visual Studio 2022
-- SFML 2.5.1
-- Windows x64
-
----
-
-# Controls
+## Controls
 
 - WASD — movement
 - Left Mouse Button — ranged attack
 
 ---
 
-# Author
+## Main Systems
 
-Educational project created for gameplay architecture and combat system practice.
+### Combat System
+
+Player uses projectile attacks.
+
+Projectiles:
+- move toward enemies;
+- collide with walls;
+- deal damage;
+- disappear after hit.
+
+### Enemy AI
+
+Enemies:
+- detect player;
+- move through maze;
+- avoid walls;
+- attack player.
+
+### EnemySpawner
+
+Spawner supports:
+- enemy type setup;
+- enemy count setup;
+- spawn distance setup.
+
+---
+
+## Technologies
+
+- C++
+- SFML
+- Visual Studio 2022
+
+---
+
+## Logs
+
+Logs are stored in:
+Saved/Logs
