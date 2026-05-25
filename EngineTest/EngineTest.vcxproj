@@ -42,7 +42,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -58,7 +58,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -73,7 +73,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -90,7 +90,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
