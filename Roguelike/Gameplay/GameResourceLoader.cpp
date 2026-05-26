@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "GameResourceLoader.h"
 
+#include "GameConfig.h"
 #include "ResourceSystem.h"
 
 namespace Roguelike
@@ -19,7 +20,9 @@ void GameResourceLoader::Load()
 
     Engine::ResourceSystem::Instance()->LoadTexture("floor", "Resources/Textures/Floor.png");
 
-    Engine::ResourceSystem::Instance()->LoadSoundBuffer("main_theme",
-                                                        "Resources/Sounds/backgroundMusic.wav");
+    for (const GameConfig::BackgroundTrackConfig& track : GameConfig::BackgroundTracks)
+    {
+        Engine::ResourceSystem::Instance()->LoadSoundBuffer(track.name, track.path);
+    }
 }
 }  // namespace Roguelike

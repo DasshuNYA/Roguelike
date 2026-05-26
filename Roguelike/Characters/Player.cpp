@@ -5,6 +5,7 @@
 
 #include "DeathComponent.h"
 #include "GameConfig.h"
+#include "InventoryComponent.h"
 #include "Logger.h"
 #include "PlayerMovementComponent.h"
 #include "RangedAttackComponent.h"
@@ -22,7 +23,7 @@ Player::Player()
 
     playerRenderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("player"));
 
-    playerRenderer->SetPixelSize(48, 48);
+    playerRenderer->SetPixelSize(GameConfig::CharacterPixelSize, GameConfig::CharacterPixelSize);
 
     auto playerCamera = gameObject->AddComponent<Engine::CameraComponent>();
 
@@ -37,6 +38,7 @@ Player::Player()
 
     gameObject->AddComponent<PlayerMovementComponent>();
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
+    gameObject->AddComponent<InventoryComponent>();
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
     stats->SetStats(GameConfig::PlayerHealth, GameConfig::PlayerArmor);

@@ -6,6 +6,7 @@
 #include "AttackComponent.h"
 #include "DeathComponent.h"
 #include "DetectionTriggerComponent.h"
+#include "GameConfig.h"
 #include "GameObject.h"
 #include "GameWorld.h"
 #include "Logger.h"
@@ -34,7 +35,7 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
 
     renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
 
-    renderer->SetPixelSize(48, 48);
+    renderer->SetPixelSize(GameConfig::CharacterPixelSize, GameConfig::CharacterPixelSize);
 
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
 

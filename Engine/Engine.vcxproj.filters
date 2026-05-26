@@ -56,11 +56,20 @@
     <ClCompile Include="Components\SpriteRendererComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\TextRendererComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Components\TransformComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIAnimation.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIElement.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIManager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIProgressBar.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,12 +92,6 @@
     <ClInclude Include="Core\GameWorld.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IDelayedAction.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\IObserver.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Logger.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -96,9 +99,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Math\Matrix2D.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\randomizer.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Physics\ColliderComponent.h">
@@ -137,14 +137,23 @@
     <ClInclude Include="Components\SpriteRendererComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Components\TextRendererComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Components\TransformComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIAnimation.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIProgressBar.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +177,9 @@
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{bfbd43db-2917-4179-b066-177114122b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{80013f13-d9d1-4e65-81db-e7c5ac1f0d85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

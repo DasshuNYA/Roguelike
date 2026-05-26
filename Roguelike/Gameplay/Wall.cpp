@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "Wall.h"
 
+#include "GameConfig.h"
 #include "GameObject.h"
 #include "GameWorld.h"
 #include "ResourceSystem.h"
@@ -24,7 +25,7 @@ Wall::Wall(float x, float y)
 
     renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("wall"));
 
-    renderer->SetPixelSize(64, 64);
+    renderer->SetPixelSize(GameConfig::TilePixelSize, GameConfig::TilePixelSize);
 
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
 }

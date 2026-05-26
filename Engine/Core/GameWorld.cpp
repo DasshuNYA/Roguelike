@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "GameWorld.h"
 
+#include <algorithm>
+
 namespace Engine
 {
 GameWorld* GameWorld::Instance()
@@ -15,12 +17,20 @@ void GameWorld::Update(float deltaTime)
 {
     for (size_t i = 0; i < gameObjects.size(); i++)
     {
-        gameObjects[i]->Update(deltaTime);
+        if (ShouldUpdateGameObject(gameObjects[i]))
+        {
+            gameObjects[i]->Update(deltaTime);
+        }
     }
 }
 
 void GameWorld::FixedUpdate(float deltaTime)
 {
+    if (isPaused)
+    {
+        return;
+    }
+
     fixedCounter += deltaTime;
 
     while (fixedCounter >= PhysicsSystem::Instance()->GetFixedDeltaTime())
@@ -97,6 +107,33 @@ bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
     return iterator != gameObjects.end();
 }
 
+void GameWorld::SetPaused(bool value) { isPaused = value; }
+
+bool GameWorld::IsPaused() const { return isPaused; }
+
+void GameWorld::AddPauseIgnoredGameObject(GameObject* gameObject)
+{
+    if (gameObject == nullptr)
+    {
+        return;
+    }
+
+    auto iterator =
+        std::find(pauseIgnoredGameObjects.begin(), pauseIgnoredGameObjects.end(), gameObject);
+
+    if (iterator == pauseIgnoredGameObjects.end())
+    {
+        pauseIgnoredGameObjects.push_back(gameObject);
+    }
+}
+
+void GameWorld::RemovePauseIgnoredGameObject(GameObject* gameObject)
+{
+    pauseIgnoredGameObjects.erase(
+        std::remove(pauseIgnoredGameObjects.begin(), pauseIgnoredGameObjects.end(), gameObject),
+        pauseIgnoredGameObjects.end());
+}
+
 void GameWorld::Clear()
 {
     for (size_t i = 0; i < gameObjects.size(); i++)
@@ -106,6 +143,10 @@ void GameWorld::Clear()
 
     gameObjects.clear();
     markedToDestroyGameObjects.clear();
+    pauseIgnoredGameObjects.clear();
+
+    isPaused = false;
+    fixedCounter = 0.0f;
 }
 
 void GameWorld::Print() const
@@ -114,6 +155,24 @@ void GameWorld::Print() const
     {
         gameObjects[i]->Print();
     }
+}
+
+bool GameWorld::ShouldUpdateGameObject(GameObject* gameObject) const
+{
+    if (!isPaused)
+    {
+        return true;
+    }
+
+    return IsPauseIgnored(gameObject);
+}
+
+bool GameWorld::IsPauseIgnored(GameObject* gameObject) const
+{
+    auto iterator =
+        std::find(pauseIgnoredGameObjects.begin(), pauseIgnoredGameObjects.end(), gameObject);
+
+    return iterator != pauseIgnoredGameObjects.end();
 }
 
 void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)

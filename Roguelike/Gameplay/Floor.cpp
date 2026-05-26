@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Floor.h"
 
+#include "GameConfig.h"
 #include "GameWorld.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
@@ -22,6 +23,6 @@ Floor::Floor(float x, float y)
 
     renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("floor"));
 
-    renderer->SetPixelSize(64, 64);
+    renderer->SetPixelSize(GameConfig::TilePixelSize, GameConfig::TilePixelSize);
 }
 }  // namespace Roguelike

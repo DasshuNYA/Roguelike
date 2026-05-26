@@ -29,6 +29,7 @@ class ResourceSystem
     void DeleteSharedTextureMap(const std::string& name);
 
     void LoadSoundBuffer(const std::string& name, std::string sourcePath);
+    bool HasSoundBuffer(const std::string& name) const;
     const sf::SoundBuffer* GetSoundBufferShared(const std::string& name) const;
     void DeleteSharedSoundBuffer(const std::string& name);
 

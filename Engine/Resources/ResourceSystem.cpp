@@ -162,6 +162,11 @@ void ResourceSystem::LoadSoundBuffer(const std::string& name, std::string source
     }
 }
 
+bool ResourceSystem::HasSoundBuffer(const std::string& name) const
+{
+    return soundBuffers.find(name) != soundBuffers.end();
+}
+
 const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(const std::string& name) const
 {
     return soundBuffers.find(name)->second;

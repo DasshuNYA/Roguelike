@@ -2,11 +2,26 @@
 
 #pragma once
 
+#include "ItemData.h"
+
+#include <array>
+
 namespace Roguelike
 {
 namespace GameConfig
 {
-inline constexpr float MusicVolume = 10.f;
+struct BackgroundTrackConfig
+{
+    const char* name;
+    const char* path;
+};
+
+inline constexpr float MusicVolume = 25.f;
+inline constexpr std::array<BackgroundTrackConfig, 4> BackgroundTracks = {
+    {{"bg_level_1", "Resources/Sounds/background_1.ogg"},
+     {"bg_level_2", "Resources/Sounds/background_2.ogg"},
+     {"bg_level_3", "Resources/Sounds/background_3.ogg"},
+     {"bg_level_4", "Resources/Sounds/background_4.ogg"}}};
 
 inline constexpr float TileSize = 64.f;
 
@@ -42,10 +57,28 @@ inline constexpr int CreeperSpawnCount = 1;
 inline constexpr int WarriorSpawnCount = 4;
 inline constexpr float EnemyMinSpawnDistanceFromPlayer = 300.f;
 
-inline constexpr float HudPositionX = 20.f;
-inline constexpr float HudPositionY = 20.f;
-inline constexpr unsigned int HudFontSize = 24;
+inline constexpr int ItemSpawnCount = 18;
+inline constexpr float ItemMinSpawnDistanceFromPlayer = 180.f;
+inline constexpr float ItemPickupRadius = 28.f;
+inline constexpr float ItemIconSize = 30.f;
+inline constexpr int InventoryColumns = 4;
+inline constexpr int InventoryRows = 2;
+inline constexpr int InventoryPages = 4;
+inline constexpr int InventorySlotCount = InventoryColumns * InventoryRows * InventoryPages;
 
-inline constexpr const char* HudFontPath = "Resources/Fonts/Roboto-Regular.ttf";
+inline constexpr std::array<ItemData, 6> Items = {
+    {{"Armor", "A worn breastplate. Heavy, honest protection.", ItemTag::Equipment,
+      EquipmentSlotType::Armor, 1, 135, 150, 170},
+     {"Helmet", "A dented helmet that still knows its job.", ItemTag::Equipment,
+      EquipmentSlotType::Head, 1, 185, 180, 150},
+     {"Speed Potion", "A bright draught that makes every step lighter.", ItemTag::Consumable,
+      EquipmentSlotType::None, 1, 80, 190, 235},
+     {"Health Potion", "A warm red potion with a reassuring glow.", ItemTag::Consumable,
+      EquipmentSlotType::None, 1, 205, 55, 75},
+     {"Attack Potion", "A sharp bitter brew that wakes up your weapon hand.", ItemTag::Consumable,
+      EquipmentSlotType::None, 1, 220, 105, 50},
+     {"Boots", "Soft leather boots made for quick exits.", ItemTag::Equipment,
+      EquipmentSlotType::Boots, 1, 150, 95, 55}}};
+
 }  // namespace GameConfig
 }  // namespace Roguelike

@@ -95,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio;$(ProjectDir)UI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio;$(ProjectDir)UI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio;$(ProjectDir)UI</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -153,7 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Components;$(ProjectDir)Physics;$(ProjectDir)Rendering;$(ProjectDir)Resources;$(ProjectDir)Math;$(ProjectDir)Audio;$(ProjectDir)UI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -170,19 +170,15 @@
     <ClInclude Include="Components\RigidbodyComponent.h" />
     <ClInclude Include="Components\SpriteColliderComponent.h" />
     <ClInclude Include="Components\SpriteRendererComponent.h" />
-    <ClInclude Include="Components\TextRendererComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\framework.h" />
     <ClInclude Include="Core\GameObject.h" />
     <ClInclude Include="Core\GameWorld.h" />
-    <ClInclude Include="Core\IDelayedAction.h" />
-    <ClInclude Include="Core\IObserver.h" />
     <ClInclude Include="Core\Logger.h" />
     <ClInclude Include="Core\Scene.h" />
     <ClInclude Include="Math\Matrix2D.h" />
-    <ClInclude Include="Math\randomizer.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Physics\ColliderComponent.h" />
@@ -193,6 +189,10 @@
     <ClInclude Include="Rendering\RenderSystem.h" />
     <ClInclude Include="Rendering\Sprite.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
+    <ClInclude Include="UI\UIAnimation.h" />
+    <ClInclude Include="UI\UIElement.h" />
+    <ClInclude Include="UI\UIManager.h" />
+    <ClInclude Include="UI\UIProgressBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioComponent.cpp" />
@@ -200,7 +200,6 @@
     <ClCompile Include="Components\RigidbodyComponent.cpp" />
     <ClCompile Include="Components\SpriteColliderComponent.cpp" />
     <ClCompile Include="Components\SpriteRendererComponent.cpp" />
-    <ClCompile Include="Components\TextRendererComponent.cpp" />
     <ClCompile Include="Components\TransformComponent.cpp" />
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
@@ -221,6 +220,10 @@
     <ClCompile Include="Rendering\RenderSystem.cpp" />
     <ClCompile Include="Rendering\Sprite.cpp" />
     <ClCompile Include="Resources\ResourceSystem.cpp" />
+    <ClCompile Include="UI\UIAnimation.cpp" />
+    <ClCompile Include="UI\UIElement.cpp" />
+    <ClCompile Include="UI\UIManager.cpp" />
+    <ClCompile Include="UI\UIProgressBar.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

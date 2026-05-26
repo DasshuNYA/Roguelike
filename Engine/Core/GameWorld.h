@@ -5,6 +5,9 @@
 #include "GameObject.h"
 #include "PhysicsSystem.h"
 
+#include <string>
+#include <vector>
+
 namespace Engine
 {
 class GameWorld
@@ -23,6 +26,12 @@ class GameWorld
     void DestroyGameObject(GameObject* gameObject);
     bool IsGameObjectAlive(GameObject* gameObject) const;
 
+    void SetPaused(bool value);
+    bool IsPaused() const;
+
+    void AddPauseIgnoredGameObject(GameObject* gameObject);
+    void RemovePauseIgnoredGameObject(GameObject* gameObject);
+
     void Clear();
     void Print() const;
 
@@ -33,11 +42,18 @@ class GameWorld
     GameWorld(GameWorld const&) = delete;
     GameWorld& operator=(GameWorld const&) = delete;
 
-    float fixedCounter = 0.f;
+    bool ShouldUpdateGameObject(GameObject* gameObject) const;
+    bool IsPauseIgnored(GameObject* gameObject) const;
+
+    void DestroyGameObjectImmediate(GameObject* gameObject);
+
+   private:
+    bool isPaused = false;
+
+    float fixedCounter = 0.0f;
 
     std::vector<GameObject*> gameObjects = {};
     std::vector<GameObject*> markedToDestroyGameObjects = {};
-
-    void DestroyGameObjectImmediate(GameObject* gameObject);
+    std::vector<GameObject*> pauseIgnoredGameObjects = {};
 };
 }  // namespace Engine

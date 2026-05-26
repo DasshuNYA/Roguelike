@@ -9,23 +9,25 @@ namespace Engine
 class StatsComponent : public Component
 {
    public:
-    StatsComponent(GameObject* gameObject);
+    explicit StatsComponent(GameObject* gameObject);
 
     void Update(float deltaTime) override;
     void Render() override;
 
-    void SetStats(float health, float armor);
-
-    float GetHealth() const;
-    float GetArmor() const;
-
-    bool IsDead() const;
+    void SetStats(float newHealth, float newArmor);
+    void SetAttackPower(float newAttackPower);
 
     float TakeDamage(float damage);
 
+    float GetHealth() const;
+    float GetArmor() const;
+    float GetAttackPower() const;
+
+    bool IsDead() const;
+
    private:
-    float health = 100.f;
-    float armor = 0.f;
-    bool isDead = false;
+    float health = 100.0f;
+    float armor = 0.0f;
+    float attackPower = 10.0f;
 };
 }  // namespace Engine

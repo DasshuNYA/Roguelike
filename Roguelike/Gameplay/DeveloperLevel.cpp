@@ -6,30 +6,37 @@
 #include "AudioComponent.h"
 #include "EnemySpawner.h"
 #include "GameConfig.h"
-#include "GameHudComponent.h"
 #include "GameObject.h"
 #include "GameResourceLoader.h"
+#include "GameUIComponent.h"
 #include "GameWorld.h"
+#include "ItemSpawner.h"
+#include "LevelProgress.h"
 #include "Logger.h"
 #include "MazeGenerator.h"
 #include "ResourceSystem.h"
-#include "TextRendererComponent.h"
 #include "TransformComponent.h"
+
+#include <cstdlib>
+#include <vector>
 
 namespace Roguelike
 {
 void DeveloperLevel::Start()
 {
+    Engine::GameWorld::Instance()->SetPaused(true);
+
     LOG_INFO("DeveloperLevel start.");
 
     LoadResources();
     GenerateMaze();
     CreatePlayer();
     SpawnEnemies();
+    SpawnItems();
     RegisterPlayerTargets();
     RegisterProjectileObstacles();
-    CreateHud();
     CreateMusic();
+    CreateUI();
 
     LOG_INFO("DeveloperLevel created successfully.");
 }
@@ -82,9 +89,10 @@ void DeveloperLevel::CreatePlayer()
 void DeveloperLevel::SpawnEnemies()
 {
     EnemySpawner enemySpawner;
+    int extraEnemies = LevelProgress::GetLevel() - 1;
 
     EnemySpawnSettings creeperSettings;
-    creeperSettings.count = GameConfig::CreeperSpawnCount;
+    creeperSettings.count = GameConfig::CreeperSpawnCount + extraEnemies / 2;
     creeperSettings.minDistanceFromPlayer = GameConfig::EnemyMinSpawnDistanceFromPlayer;
     creeperSettings.enemyType = EnemyType::Creeper;
 
@@ -92,7 +100,7 @@ void DeveloperLevel::SpawnEnemies()
         enemySpawner.Spawn(creeperSettings, floorPositions, playerObject);
 
     EnemySpawnSettings warriorSettings;
-    warriorSettings.count = GameConfig::WarriorSpawnCount;
+    warriorSettings.count = GameConfig::WarriorSpawnCount + extraEnemies;
     warriorSettings.minDistanceFromPlayer = GameConfig::EnemyMinSpawnDistanceFromPlayer;
     warriorSettings.enemyType = EnemyType::Warrior;
 
@@ -110,8 +118,19 @@ void DeveloperLevel::SpawnEnemies()
     }
 }
 
+void DeveloperLevel::SpawnItems()
+{
+    ItemSpawner itemSpawner;
+    itemSpawner.Spawn(floorPositions, playerObject);
+}
+
 void DeveloperLevel::RegisterPlayerTargets()
 {
+    if (player == nullptr)
+    {
+        return;
+    }
+
     for (const auto& enemy : enemies)
     {
         player->AddAttackTarget(enemy->GetGameObject());
@@ -120,6 +139,11 @@ void DeveloperLevel::RegisterPlayerTargets()
 
 void DeveloperLevel::RegisterProjectileObstacles()
 {
+    if (player == nullptr)
+    {
+        return;
+    }
+
     std::vector<Engine::GameObject*> wallObjects;
 
     for (const auto& wall : walls)
@@ -130,34 +154,77 @@ void DeveloperLevel::RegisterProjectileObstacles()
     player->SetObstacles(wallObjects);
 }
 
-void DeveloperLevel::CreateHud()
-{
-    Engine::GameObject* hudObject = Engine::GameWorld::Instance()->CreateGameObject("HUD");
-
-    Engine::TextRendererComponent* textRenderer =
-        hudObject->AddComponent<Engine::TextRendererComponent>();
-
-    textRenderer->SetFont(GameConfig::HudFontPath);
-    textRenderer->SetPosition(GameConfig::HudPositionX, GameConfig::HudPositionY);
-    textRenderer->SetCharacterSize(GameConfig::HudFontSize);
-    textRenderer->SetColor(sf::Color::White);
-
-    GameHudComponent* hud = hudObject->AddComponent<GameHudComponent>();
-
-    hud->SetPlayer(playerObject);
-    hud->SetEnemies(&enemies);
-}
-
 void DeveloperLevel::CreateMusic()
 {
+    const char* trackName = ChooseBackgroundTrack();
+
+    if (trackName == nullptr)
+    {
+        LOG_WARN("No background music loaded.");
+        return;
+    }
+
     Engine::GameObject* musicObject = Engine::GameWorld::Instance()->CreateGameObject("Music");
 
     Engine::AudioComponent* music = musicObject->AddComponent<Engine::AudioComponent>();
 
-    music->SetAudio(*Engine::ResourceSystem::Instance()->GetSoundBufferShared("main_theme"));
+    music->SetAudio(*Engine::ResourceSystem::Instance()->GetSoundBufferShared(trackName));
 
     music->SetLoop(true);
     music->SetVolume(GameConfig::MusicVolume);
     music->Play();
+}
+
+const char* DeveloperLevel::ChooseBackgroundTrack() const
+{
+    static int lastTrackIndex = -1;
+    std::vector<int> loadedTrackIndexes;
+
+    for (int i = 0; i < static_cast<int>(GameConfig::BackgroundTracks.size()); ++i)
+    {
+        const GameConfig::BackgroundTrackConfig& track = GameConfig::BackgroundTracks[i];
+
+        if (Engine::ResourceSystem::Instance()->HasSoundBuffer(track.name))
+        {
+            loadedTrackIndexes.push_back(i);
+        }
+    }
+
+    if (loadedTrackIndexes.empty())
+    {
+        return nullptr;
+    }
+
+    int chosenIndex = loadedTrackIndexes[std::rand() % loadedTrackIndexes.size()];
+
+    if (loadedTrackIndexes.size() > 1)
+    {
+        while (chosenIndex == lastTrackIndex)
+        {
+            chosenIndex = loadedTrackIndexes[std::rand() % loadedTrackIndexes.size()];
+        }
+    }
+
+    lastTrackIndex = chosenIndex;
+    return GameConfig::BackgroundTracks[chosenIndex].name;
+}
+
+void DeveloperLevel::CreateUI()
+{
+    Engine::GameObject* uiObject = Engine::GameWorld::Instance()->CreateGameObject("UI");
+
+    GameUIComponent* gameUI = uiObject->AddComponent<GameUIComponent>();
+
+    gameUI->SetPlayer(playerObject);
+
+    std::vector<Engine::GameObject*> enemyObjects;
+    for (const auto& enemy : enemies)
+    {
+        enemyObjects.push_back(enemy->GetGameObject());
+    }
+
+    gameUI->SetLevelObjective(enemyObjects, LevelProgress::GetLevel());
+
+    Engine::GameWorld::Instance()->AddPauseIgnoredGameObject(uiObject);
 }
 }  // namespace Roguelike
