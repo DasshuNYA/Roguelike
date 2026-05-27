@@ -7,13 +7,13 @@ namespace Roguelike
 {
 FramedPanel::FramedPanel(const sf::Font& uiFont) : font(uiFont)
 {
-    background.setFillColor(sf::Color(28, 22, 20, 230));
-    background.setOutlineColor(sf::Color(145, 105, 70, 255));
+    background.setFillColor(sf::Color(38, 54, 38, 236));
+    background.setOutlineColor(sf::Color(145, 142, 86, 255));
     background.setOutlineThickness(3.0f);
 
     titleText.setFont(font);
-    titleText.setCharacterSize(24);
-    titleText.setFillColor(sf::Color::White);
+    titleText.setCharacterSize(26);
+    titleText.setFillColor(sf::Color(226, 210, 132));
 
     GetAnimation().SetAlpha(0.0f);
     Hide();
@@ -32,9 +32,9 @@ void FramedPanel::DrawFrame(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
 
-    background.setFillColor(sf::Color(28, 22, 20, alpha));
-    background.setOutlineColor(sf::Color(145, 105, 70, alpha));
-    titleText.setFillColor(sf::Color(255, 255, 255, alpha));
+    background.setFillColor(sf::Color(38, 54, 38, alpha));
+    background.setOutlineColor(sf::Color(145, 142, 86, alpha));
+    titleText.setFillColor(sf::Color(226, 210, 132, alpha));
 
     window.draw(background);
     window.draw(titleText);

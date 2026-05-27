@@ -31,8 +31,8 @@ void DeveloperLevel::Start()
     LoadResources();
     GenerateMaze();
     CreatePlayer();
-    SpawnEnemies();
     SpawnItems();
+    SpawnEnemies();
     RegisterPlayerTargets();
     RegisterProjectileObstacles();
     CreateMusic();

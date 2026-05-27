@@ -1404,3 +1404,71 @@
 [INFO] DeveloperLevel created successfully.
 [INFO] DeveloperLevel stop.
 [INFO] Game closed.
+[INFO] Logger initialized.
+[INFO] Game started.
+[INFO] DeveloperLevel start.
+[INFO] Maze generation started.
+[INFO] Maze objects created. Floors: 315, walls: 176
+[INFO] Maze generation finished.
+[INFO] Player created.
+[INFO] ItemSpawner spawned items: 18
+[INFO] Creeper AttackComponent created.
+[INFO] Creeper attack power set to 30.000000
+[INFO] Creeper created.
+[INFO] EnemySpawner spawned enemies: 1
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] EnemySpawner spawned enemies: 4
+[INFO] DeveloperLevel created successfully.
+[INFO] GameObject marked to destroy: Creeper
+[INFO] Warrior attacked Player. Damage: 0.000000, target HP: 100.000000
+[INFO] GameObject marked to destroy: Warrior
+[INFO] Warrior attacked Player. Damage: 0.000000, target HP: 100.000000
+[INFO] GameObject marked to destroy: Warrior
+[INFO] GameObject marked to destroy: Warrior
+[INFO] Warrior attacked Player. Damage: 0.000000, target HP: 100.000000
+[INFO] GameObject marked to destroy: Warrior
+[WARNING] DeveloperLevel restart.
+[INFO] DeveloperLevel stop.
+[INFO] DeveloperLevel start.
+[INFO] Maze generation started.
+[INFO] Maze objects created. Floors: 315, walls: 176
+[INFO] Maze generation finished.
+[INFO] Player created.
+[INFO] ItemSpawner spawned items: 18
+[INFO] Creeper AttackComponent created.
+[INFO] Creeper attack power set to 30.000000
+[INFO] Creeper created.
+[INFO] EnemySpawner spawned enemies: 1
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] Warrior AttackComponent created.
+[INFO] Warrior attack power set to 15.000000
+[INFO] Warrior created.
+[INFO] EnemySpawner spawned enemies: 5
+[INFO] DeveloperLevel created successfully.
+[INFO] GameObject marked to destroy: Warrior
+[INFO] Warrior attacked Player. Damage: 0.000000, target HP: 100.000000
+[INFO] GameObject marked to destroy: Warrior
+[INFO] DeveloperLevel stop.
+[INFO] Game closed.

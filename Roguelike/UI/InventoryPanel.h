@@ -45,10 +45,10 @@ class InventoryPanel : public FramedPanel
 
     bool isOpen = false;
 
-    sf::Vector2f position = {360.0f, 160.0f};
-    sf::Vector2f size = {420.0f, 300.0f};
+    sf::Vector2f position = {580.0f, 370.0f};
+    sf::Vector2f size = {760.0f, 350.0f};
 
-    float slotSize = 64.0f;
-    float gap = 24.0f;
+    float slotSize = 92.0f;
+    float gap = 18.0f;
 };
 }  // namespace Roguelike

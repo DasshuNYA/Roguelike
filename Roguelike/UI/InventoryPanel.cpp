@@ -4,11 +4,30 @@
 #include "InventoryPanel.h"
 
 #include "GameConfig.h"
+#include "UITextureUtils.h"
 
 #include <algorithm>
 
 namespace Roguelike
 {
+namespace
+{
+// Inventory title position inside the inventory panel.
+const sf::Vector2f InventoryTitlePosition = {120.0f, 36.0f};
+
+// Pager positions inside the inventory panel. Change x/y directly to move each text part.
+const sf::Vector2f PagerPreviousPosition = {590.0f, 52.0f};
+const sf::Vector2f PagerTextPosition = {628.0f, 52.0f};
+const sf::Vector2f PagerNextPosition = {690.0f, 52.0f};
+
+// Pager click areas inside the inventory panel. Move these together with the arrows.
+const sf::FloatRect PagerPreviousClickBounds = {580.0f, 48.0f, 42.0f, 36.0f};
+const sf::FloatRect PagerNextClickBounds = {682.0f, 48.0f, 42.0f, 36.0f};
+
+// Inventory grid layout inside the inventory panel.
+const float InventoryGridTop = 94.0f;
+}  // namespace
+
 InventoryPanel::InventoryPanel(const sf::Font& uiFont) : FramedPanel(uiFont), font(uiFont)
 {
     SetupFrame(position, size, "Inventory");
@@ -102,7 +121,24 @@ std::optional<UIItemView> InventoryPanel::TryPickItem(sf::Vector2f mousePosition
 void InventoryPanel::Draw(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
-    DrawFrame(window);
+
+    if (!UITextureUtils::DrawTexture(window, "ui_inventory_menu_grid",
+                                     {position.x, position.y, size.x, size.y}, alpha))
+    {
+        DrawFrame(window);
+    }
+    else
+    {
+        sf::Text titleText;
+        titleText.setFont(font);
+        titleText.setCharacterSize(26);
+        titleText.setString("Inventory");
+        titleText.setFillColor(sf::Color(226, 210, 132, alpha));
+        titleText.setPosition(position + InventoryTitlePosition);
+
+        window.draw(titleText);
+    }
+
     DrawPageControls(window);
 
     for (int localIndex = 0; localIndex < GetPageCapacity(); ++localIndex)
@@ -116,8 +152,8 @@ void InventoryPanel::Draw(sf::RenderWindow& window)
         emptyText.setFont(font);
         emptyText.setCharacterSize(18);
         emptyText.setString("No items yet");
-        emptyText.setFillColor(sf::Color(210, 200, 180, alpha));
-        emptyText.setPosition({position.x + 32.0f, position.y + size.y - 44.0f});
+        emptyText.setFillColor(sf::Color(205, 198, 130, alpha));
+        emptyText.setPosition({position.x + 68.0f, position.y + size.y - 56.0f});
 
         window.draw(emptyText);
         return;
@@ -142,23 +178,22 @@ void InventoryPanel::DrawPageControls(sf::RenderWindow& window)
     pageText.setCharacterSize(16);
     pageText.setString(std::to_string(currentPage + 1) + "/" +
                        std::to_string(GameConfig::InventoryPages));
-    pageText.setFillColor(sf::Color(220, 210, 190, alpha));
-    pageText.setPosition({position.x + size.x - 76.0f, position.y + 22.0f});
+    pageText.setFillColor(sf::Color(216, 198, 118, alpha));
+    pageText.setPosition(position + PagerTextPosition);
 
     sf::Text previousText;
     previousText.setFont(font);
     previousText.setCharacterSize(22);
     previousText.setString("<");
-    previousText.setFillColor(sf::Color(245, 225, 180, alpha));
-    previousText.setPosition({GetPreviousPageBounds().left + 8.0f,
-                              GetPreviousPageBounds().top - 1.0f});
+    previousText.setFillColor(sf::Color(232, 205, 116, alpha));
+    previousText.setPosition(position + PagerPreviousPosition);
 
     sf::Text nextText;
     nextText.setFont(font);
     nextText.setCharacterSize(22);
     nextText.setString(">");
-    nextText.setFillColor(sf::Color(245, 225, 180, alpha));
-    nextText.setPosition({GetNextPageBounds().left + 8.0f, GetNextPageBounds().top - 1.0f});
+    nextText.setFillColor(sf::Color(232, 205, 116, alpha));
+    nextText.setPosition(position + PagerNextPosition);
 
     window.draw(pageText);
     window.draw(previousText);
@@ -170,13 +205,17 @@ void InventoryPanel::DrawSlot(sf::RenderWindow& window, int localIndex)
     sf::FloatRect bounds = GetSlotBounds(localIndex);
     sf::Uint8 alpha = GetAlphaByte();
 
+    if (UITextureUtils::DrawTexture(window, "ui_slot_inventory", bounds, alpha))
+    {
+        return;
+    }
+
     sf::RectangleShape slot;
     slot.setPosition({bounds.left, bounds.top});
     slot.setSize({bounds.width, bounds.height});
-    slot.setFillColor(sf::Color(45, 36, 32, alpha));
-    slot.setOutlineColor(sf::Color(145, 105, 70, alpha));
+    slot.setFillColor(sf::Color(48, 64, 42, alpha));
+    slot.setOutlineColor(sf::Color(104, 118, 66, alpha));
     slot.setOutlineThickness(2.0f);
-
     window.draw(slot);
 }
 
@@ -192,28 +231,36 @@ void InventoryPanel::DrawItem(sf::RenderWindow& window, const UIItemView& item, 
         selection.setPosition({bounds.left, bounds.top});
         selection.setSize({bounds.width, bounds.height});
         selection.setFillColor(sf::Color::Transparent);
-        selection.setOutlineColor(sf::Color(245, 225, 130, alpha));
+        selection.setOutlineColor(sf::Color(236, 214, 126, alpha));
         selection.setOutlineThickness(4.0f);
 
         window.draw(selection);
     }
 
-    sf::RectangleShape icon;
-    icon.setPosition({bounds.left + 12.0f, bounds.top + 10.0f});
-    icon.setSize({40.0f, 40.0f});
-
-    sf::Color iconColor = item.iconColor;
-    iconColor.a = alpha;
-    icon.setFillColor(iconColor);
+    bool drewItemTexture =
+        UITextureUtils::DrawItemTexture(
+            window, item, {bounds.left + 14.0f, bounds.top + 12.0f, 64.0f, 64.0f}, alpha);
 
     sf::Text countText;
     countText.setFont(font);
     countText.setCharacterSize(13);
     countText.setString(std::to_string(item.stack.count));
-    countText.setFillColor(sf::Color(255, 255, 255, alpha));
-    countText.setPosition({bounds.left + bounds.width - 18.0f, bounds.top + bounds.height - 20.0f});
+    countText.setFillColor(sf::Color(238, 214, 142, alpha));
+    countText.setPosition({bounds.left + bounds.width - 24.0f, bounds.top + bounds.height - 24.0f});
 
-    window.draw(icon);
+    if (!drewItemTexture)
+    {
+        sf::RectangleShape icon;
+        icon.setPosition({bounds.left + 18.0f, bounds.top + 16.0f});
+        icon.setSize({56.0f, 56.0f});
+
+        sf::Color iconColor = item.iconColor;
+        iconColor.a = alpha;
+        icon.setFillColor(iconColor);
+
+        window.draw(icon);
+    }
+
     window.draw(countText);
 }
 
@@ -222,20 +269,27 @@ sf::FloatRect InventoryPanel::GetSlotBounds(int localIndex) const
     int row = localIndex / GameConfig::InventoryColumns;
     int column = localIndex % GameConfig::InventoryColumns;
 
-    float x = position.x + 32.0f + static_cast<float>(column) * (slotSize + gap);
-    float y = position.y + 78.0f + static_cast<float>(row) * (slotSize + gap);
+    const float gridWidth =
+        static_cast<float>(GameConfig::InventoryColumns) * slotSize +
+        static_cast<float>(GameConfig::InventoryColumns - 1) * gap;
+    const float startX = position.x + (size.x - gridWidth) * 0.5f;
+
+    float x = startX + static_cast<float>(column) * (slotSize + gap);
+    float y = position.y + InventoryGridTop + static_cast<float>(row) * (slotSize + gap);
 
     return {x, y, slotSize, slotSize};
 }
 
 sf::FloatRect InventoryPanel::GetPreviousPageBounds() const
 {
-    return {position.x + size.x - 120.0f, position.y + 20.0f, 28.0f, 28.0f};
+    return {position.x + PagerPreviousClickBounds.left, position.y + PagerPreviousClickBounds.top,
+            PagerPreviousClickBounds.width, PagerPreviousClickBounds.height};
 }
 
 sf::FloatRect InventoryPanel::GetNextPageBounds() const
 {
-    return {position.x + size.x - 36.0f, position.y + 20.0f, 28.0f, 28.0f};
+    return {position.x + PagerNextClickBounds.left, position.y + PagerNextClickBounds.top,
+            PagerNextClickBounds.width, PagerNextClickBounds.height};
 }
 
 int InventoryPanel::GetFirstPageItemIndex() const

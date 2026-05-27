@@ -1,5 +1,8 @@
 # Visual Studio
 .vs/
+ipch/
+*.VC.db
+*.VC.opendb
 *.vcxproj.user
 *.user
 *.suo
@@ -10,6 +13,8 @@ Debug/
 Release/
 bin/
 obj/
+*.tlog
+*.lastbuildstate
 
 # CMake
 CMakeFiles/
@@ -17,7 +22,7 @@ CMakeCache.txt
 cmake-build-*/
 
 # Logs
-Saved/Logs/*.txt
+**/Saved/Logs/*.txt
 
 # Temporary files
 *.tmp

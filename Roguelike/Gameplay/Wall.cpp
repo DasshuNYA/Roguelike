@@ -3,17 +3,18 @@
 #include "pch.h"
 #include "Wall.h"
 
+#include "BoxColliderComponent.h"
 #include "GameConfig.h"
 #include "GameObject.h"
 #include "GameWorld.h"
+#include "Logger.h"
 #include "ResourceSystem.h"
-#include "SpriteColliderComponent.h"
 #include "SpriteRendererComponent.h"
 #include "TransformComponent.h"
 
 namespace Roguelike
 {
-Wall::Wall(float x, float y)
+Wall::Wall(float x, float y, const std::string& textureKey)
 {
     gameObject = Engine::GameWorld::Instance()->CreateGameObject("Wall");
 
@@ -23,11 +24,26 @@ Wall::Wall(float x, float y)
 
     auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-    renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("wall"));
+    Engine::ResourceSystem* resources = Engine::ResourceSystem::Instance();
 
-    renderer->SetPixelSize(GameConfig::TilePixelSize, GameConfig::TilePixelSize);
+    // Fallback protects collision tiles from missing future wall variants.
+    const std::string safeTextureKey = resources->HasTexture(textureKey) ? textureKey : "wall_1";
 
-    gameObject->AddComponent<Engine::SpriteColliderComponent>();
+    const sf::Texture* texture = resources->GetTextureShared(safeTextureKey);
+
+    if (texture != nullptr)
+    {
+        renderer->SetTexture(*texture);
+        renderer->SetPixelSize(GameConfig::TilePixelSize, GameConfig::TilePixelSize);
+    }
+
+    if (texture == nullptr)
+    {
+        LOG_ERROR("Wall texture missing. Collision still created for tile.");
+    }
+
+    auto collider = gameObject->AddComponent<Engine::BoxColliderComponent>();
+    collider->SetSize(GameConfig::TileSize, GameConfig::TileSize);
 }
 
 Engine::GameObject* Wall::GetGameObject() const { return gameObject; }

@@ -8,8 +8,16 @@
 #include "MazeNavigation.h"
 #include "StatsComponent.h"
 
+#include <algorithm>
+
 namespace Roguelike
 {
+namespace
+{
+const float PathNodeReachDistance = 12.0f;
+const float MinMoveDistance = 0.01f;
+}
+
 PlayerSearchComponent::PlayerSearchComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
@@ -21,12 +29,12 @@ void PlayerSearchComponent::Update(float deltaTime)
 {
     if (currentAttackCooldown > 0.f)
     {
-        currentAttackCooldown -= deltaTime;
+        currentAttackCooldown = std::max(0.0f, currentAttackCooldown - deltaTime);
     }
 
     if (currentPathUpdateCooldown > 0.f)
     {
-        currentPathUpdateCooldown -= deltaTime;
+        currentPathUpdateCooldown = std::max(0.0f, currentPathUpdateCooldown - deltaTime);
     }
 
     if (rigidbody == nullptr)
@@ -123,13 +131,23 @@ void PlayerSearchComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
 
 void PlayerSearchComponent::SetPlayerDetected(bool detected)
 {
+    if (isPlayerDetected == detected)
+    {
+        return;
+    }
+
     isPlayerDetected = detected;
 
     if (!isPlayerDetected)
     {
         path.clear();
         currentPathIndex = 0;
+        currentPathUpdateCooldown = 0.0f;
+        return;
     }
+
+    // Detection should feel responsive, so the first path is built immediately.
+    currentPathUpdateCooldown = 0.0f;
 }
 
 void PlayerSearchComponent::UpdatePath()
@@ -170,13 +188,13 @@ void PlayerSearchComponent::MoveByPath()
 
     float distance = direction.GetLength();
 
-    if (distance < 12.f)
+    if (distance < PathNodeReachDistance)
     {
         currentPathIndex++;
         return;
     }
 
-    if (distance <= 0.01f)
+    if (distance <= MinMoveDistance)
     {
         rigidbody->SetLinearVelocity({0.f, 0.f});
         return;

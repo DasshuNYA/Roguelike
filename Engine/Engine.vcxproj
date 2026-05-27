@@ -181,6 +181,7 @@
     <ClInclude Include="Math\Matrix2D.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Physics\BoxColliderComponent.h" />
     <ClInclude Include="Physics\ColliderComponent.h" />
     <ClInclude Include="Physics\Collision.h" />
     <ClInclude Include="Physics\PhysicsSystem.h" />
@@ -212,6 +213,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Physics\BoxColliderComponent.cpp" />
     <ClCompile Include="Physics\ColliderComponent.cpp" />
     <ClCompile Include="Physics\Collision.cpp" />
     <ClCompile Include="Physics\PhysicsSystem.cpp" />

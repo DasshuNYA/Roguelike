@@ -46,7 +46,7 @@ void ProjectileComponent::Update(float deltaTime)
 
 void ProjectileComponent::Render()
 {
-    if (transform == nullptr)
+    if (transform == nullptr || Engine::GameWorld::Instance()->IsPaused())
     {
         return;
     }

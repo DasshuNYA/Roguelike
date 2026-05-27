@@ -141,7 +141,8 @@ void MazeGenerator::BuildObjects()
             float worldX = x * tileSize;
             float worldY = y * tileSize;
 
-            level->floors.push_back(std::make_unique<Floor>(worldX, worldY));
+            level->floors.push_back(
+                std::make_unique<Floor>(worldX, worldY, GetRandomFloorTextureKey()));
 
             if (!isWall[y][x])
             {
@@ -150,7 +151,8 @@ void MazeGenerator::BuildObjects()
 
             if (isWall[y][x])
             {
-                level->walls.push_back(std::make_unique<Wall>(worldX, worldY));
+                level->walls.push_back(
+                    std::make_unique<Wall>(worldX, worldY, GetRandomWallTextureKey()));
             }
         }
     }
@@ -167,5 +169,20 @@ void MazeGenerator::BuildObjects()
     }
 
     MazeNavigation::Instance()->SetMap(walkableGrid, tileSize);
+
+    LOG_INFO("Maze objects created. Floors: " + std::to_string(level->floors.size()) +
+             ", walls: " + std::to_string(level->walls.size()));
+}
+
+const char* MazeGenerator::GetRandomFloorTextureKey() const
+{
+    // Tile variants are data-driven: add loaded texture keys to GameConfig to extend visuals.
+    return GameConfig::FloorTextureKeys[std::rand() % GameConfig::FloorTextureKeys.size()];
+}
+
+const char* MazeGenerator::GetRandomWallTextureKey() const
+{
+    // Keeping random choice here lets Floor and Wall stay simple renderable objects.
+    return GameConfig::WallTextureKeys[std::rand() % GameConfig::WallTextureKeys.size()];
 }
 }  // namespace Roguelike

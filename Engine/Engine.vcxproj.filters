@@ -32,6 +32,9 @@
     <ClCompile Include="Physics\Trigger.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\BoxColliderComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
     <ClCompile Include="Rendering\CameraComponent.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -111,6 +114,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Trigger.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoxColliderComponent.h">
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\CameraComponent.h">

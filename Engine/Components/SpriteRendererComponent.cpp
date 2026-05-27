@@ -4,6 +4,7 @@
 #include "SpriteRendererComponent.h"
 #include "TransformComponent.h"
 #include "RenderSystem.h"
+#include "Logger.h"
 
 namespace Engine
 {
@@ -29,7 +30,7 @@ void SpriteRendererComponent::Update(float deltaTime) {}
 
 void SpriteRendererComponent::Render()
 {
-    if (sprite != nullptr)
+    if (sprite != nullptr && transform != nullptr)
     {
         sprite->setPosition(Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
 
@@ -47,16 +48,47 @@ const sf::Sprite* SpriteRendererComponent::GetSprite() const { return sprite; }
 
 void SpriteRendererComponent::SetTexture(const sf::Texture& newTexture)
 {
+    if (sprite == nullptr)
+    {
+        return;
+    }
+
     sprite->setTexture(newTexture);
 
-    auto textureSize = sprite->getTexture()->getSize();
+    const sf::Texture* texture = sprite->getTexture();
+
+    if (texture == nullptr)
+    {
+        LOG_ERROR("SpriteRenderer received null texture.");
+        return;
+    }
+
+    auto textureSize = texture->getSize();
+
+    if (textureSize.x == 0 || textureSize.y == 0)
+    {
+        LOG_ERROR("SpriteRenderer received empty texture.");
+        return;
+    }
 
     sprite->setOrigin({0.5f * textureSize.x, 0.5f * textureSize.y});
 }
 
 void SpriteRendererComponent::SetPixelSize(int newWidth, int newHeight)
 {
+    if (sprite == nullptr || sprite->getTexture() == nullptr)
+    {
+        LOG_ERROR("SpriteRenderer cannot scale without texture.");
+        return;
+    }
+
     auto originalSize = sprite->getTexture()->getSize();
+
+    if (originalSize.x == 0 || originalSize.y == 0)
+    {
+        LOG_ERROR("SpriteRenderer cannot scale empty texture.");
+        return;
+    }
 
     scale = {(float)newWidth / (float)originalSize.x, (float)newHeight / (float)originalSize.y};
 }

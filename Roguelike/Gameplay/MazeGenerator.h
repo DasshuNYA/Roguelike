@@ -26,6 +26,8 @@ class MazeGenerator
 
     void CarvePath(int x1, int y1, int x2, int y2);
     void BuildObjects();
+    const char* GetRandomFloorTextureKey() const;
+    const char* GetRandomWallTextureKey() const;
 
    private:
     int width = 0;

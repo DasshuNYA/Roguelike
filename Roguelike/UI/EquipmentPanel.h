@@ -23,6 +23,8 @@ class EquipmentPanel : public FramedPanel
 
     bool TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item);
     bool ContainsPoint(sf::Vector2f mousePosition) const;
+    void SetHighlightedItem(const std::optional<UIItemView>& item);
+    void ClearHighlightedItem();
 
     void Draw(sf::RenderWindow& window) override;
 
@@ -35,20 +37,20 @@ class EquipmentPanel : public FramedPanel
    private:
     const sf::Font& font;
 
-    std::array<std::optional<UIItemView>, 6> slots;
-    std::array<EquipmentSlotType, 6> slotTypes = {EquipmentSlotType::Head,
+    std::array<std::optional<UIItemView>, 5> slots;
+    std::optional<UIItemView> highlightedItem;
+    std::array<EquipmentSlotType, 5> slotTypes = {EquipmentSlotType::Head,
                                                   EquipmentSlotType::Armor,
-                                                  EquipmentSlotType::Weapon,
                                                   EquipmentSlotType::Boots,
                                                   EquipmentSlotType::Amulet,
-                                                  EquipmentSlotType::Ring};
-    std::array<std::string, 6> slotLabels = {"Head", "Armor", "Weapon", "Boots", "Amulet", "Ring"};
+                                                  EquipmentSlotType::Weapon};
+    std::array<std::string, 5> slotLabels = {"Head", "Armor", "Boots", "Amulet", "Weapon"};
 
     bool isOpen = false;
 
-    sf::Vector2f position = {820.0f, 160.0f};
-    sf::Vector2f size = {320.0f, 360.0f};
+    sf::Vector2f position = {580.0f, 90.0f};
+    sf::Vector2f size = {760.0f, 280.0f};
 
-    float slotSize = 58.0f;
+    float slotSize = 76.0f;
 };
 }  // namespace Roguelike

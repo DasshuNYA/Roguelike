@@ -34,6 +34,8 @@ class HotbarPanel : public Engine::UIElement
     bool TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item);
     bool TryAutoPlaceItem(const UIItemView& item);
     bool ContainsPoint(sf::Vector2f mousePosition) const;
+    void SetHighlightedItem(const std::optional<UIItemView>& item);
+    void ClearHighlightedItem();
     HotbarUseResult TryUseHotkey();
 
     void Update(float deltaTime) override;
@@ -47,10 +49,11 @@ class HotbarPanel : public Engine::UIElement
     const sf::Font& font;
 
     std::array<std::optional<UIItemView>, 6> slots;
+    std::optional<UIItemView> highlightedItem;
     std::array<bool, 6> wasKeyPressed = {false, false, false, false, false, false};
     std::array<float, 6> pulseTimers = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
-    sf::Vector2f position = {415.0f, 650.0f};
+    sf::Vector2f position = {784.0f, 980.0f};
 
     float slotSize = 52.0f;
     float gap = 8.0f;

@@ -4,17 +4,28 @@
 #include "GameUIComponent.h"
 
 #include "Engine.h"
+#include "GameConfig.h"
 #include "GameNotifications.h"
 #include "GameWorld.h"
 #include "LevelProgress.h"
 #include "RenderSystem.h"
 #include "StatsComponent.h"
+#include "UITextureUtils.h"
 
 namespace Roguelike
 {
+namespace
+{
+const float DraggedItemTextureSize = 44.0f;
+const float DraggedItemFallbackSize = 32.0f;
+const sf::Uint8 DraggedItemTextureAlpha = 230;
+const sf::Uint8 DraggedItemFallbackAlpha = 220;
+}  // namespace
+
 GameUIComponent::GameUIComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
-    font.loadFromFile("Resources/Fonts/Roboto-Regular.ttf");
+    font.loadFromFile("Resources/Fonts/MPLUSRounded1c-Regular.ttf");
+    titleFont.loadFromFile("Resources/Fonts/CGXYZPCAlt-Regular.otf");
     CreateUI();
 
     Engine::GameWorld::Instance()->SetPaused(true);
@@ -88,7 +99,7 @@ void GameUIComponent::CreateUI()
     equipment = &uiManager.CreateElement<EquipmentPanel>(font);
     descriptionPanel = &uiManager.CreateElement<ItemDescriptionPanel>(font);
     popup = &uiManager.CreateElement<PopupMessage>(font);
-    overlay = &uiManager.CreateElement<GameScreenOverlay>(font);
+    overlay = &uiManager.CreateElement<GameScreenOverlay>(font, titleFont);
 
     overlay->ShowMainMenu();
 }
@@ -114,7 +125,7 @@ void GameUIComponent::UpdateHUD()
         return;
     }
 
-    hud->SetStats(stats->GetHealth(), 100.0f, stats->GetArmor(), 100.0f);
+    hud->SetStats(stats->GetHealth(), 100.0f, stats->GetArmor(), GameConfig::PlayerArmor);
 }
 
 void GameUIComponent::UpdateLevelObjective(float deltaTime)
@@ -201,6 +212,7 @@ void GameUIComponent::HandleInput(sf::RenderWindow& window)
 {
     HandleDeathState();
 
+    // Modal UI states are handled first so gameplay input cannot leak through them.
     if (isGameOver)
     {
         HandleGameOverInput();
@@ -313,6 +325,7 @@ void GameUIComponent::HandleInventoryInput(sf::RenderWindow& window)
 
     if (isRightMousePressed && !wasRightMousePressed && draggedItem.has_value())
     {
+        // Right click cancels drag-and-drop without touching inventory data.
         ClearSelectedItem();
         wasRightMousePressed = isRightMousePressed;
         return;
@@ -441,6 +454,7 @@ void GameUIComponent::ToggleInventory()
 
     inventory->Toggle();
 
+    // Equipment is a companion panel, so it follows inventory visibility.
     if (equipment != nullptr)
     {
         equipment->SetOpen(inventory->IsOpen());
@@ -480,6 +494,16 @@ void GameUIComponent::ClearSelectedItem()
     {
         descriptionPanel->Hide();
     }
+
+    if (equipment != nullptr)
+    {
+        equipment->ClearHighlightedItem();
+    }
+
+    if (hotbar != nullptr)
+    {
+        hotbar->ClearHighlightedItem();
+    }
 }
 
 void GameUIComponent::SelectItem(const UIItemView& item)
@@ -489,6 +513,16 @@ void GameUIComponent::SelectItem(const UIItemView& item)
     if (descriptionPanel != nullptr)
     {
         descriptionPanel->ShowItem(item);
+    }
+
+    if (equipment != nullptr)
+    {
+        equipment->SetHighlightedItem(draggedItem);
+    }
+
+    if (hotbar != nullptr)
+    {
+        hotbar->SetHighlightedItem(draggedItem);
     }
 }
 
@@ -545,12 +579,26 @@ void GameUIComponent::DrawDraggedItem(sf::RenderWindow& window)
     sf::Vector2f mousePosition =
         window.mapPixelToCoords(pixelMousePosition, window.getDefaultView());
 
+    const std::string textureKey = GetItemTextureKey(draggedItem->stack);
+
+    if (!textureKey.empty() &&
+        UITextureUtils::DrawTexture(
+            window, textureKey,
+            {mousePosition.x - DraggedItemTextureSize * 0.5f,
+             mousePosition.y - DraggedItemTextureSize * 0.5f, DraggedItemTextureSize,
+             DraggedItemTextureSize},
+            DraggedItemTextureAlpha))
+    {
+        return;
+    }
+
     sf::RectangleShape icon;
-    icon.setPosition({mousePosition.x - 16.0f, mousePosition.y - 16.0f});
-    icon.setSize({32.0f, 32.0f});
+    icon.setPosition({mousePosition.x - DraggedItemFallbackSize * 0.5f,
+                      mousePosition.y - DraggedItemFallbackSize * 0.5f});
+    icon.setSize({DraggedItemFallbackSize, DraggedItemFallbackSize});
 
     sf::Color iconColor = draggedItem->iconColor;
-    iconColor.a = 220;
+    iconColor.a = DraggedItemFallbackAlpha;
 
     icon.setFillColor(iconColor);
     icon.setOutlineColor(sf::Color(255, 255, 255, 180));

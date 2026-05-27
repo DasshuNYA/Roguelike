@@ -23,8 +23,8 @@ inline constexpr std::array<BackgroundTrackConfig, 4> BackgroundTracks = {
      {"bg_level_3", "Resources/Sounds/background_3.ogg"},
      {"bg_level_4", "Resources/Sounds/background_4.ogg"}}};
 
-inline constexpr unsigned int WindowWidth = 1280;
-inline constexpr unsigned int WindowHeight = 720;
+inline constexpr unsigned int WindowWidth = 1920;
+inline constexpr unsigned int WindowHeight = 1080;
 inline constexpr float WindowCenterX = WindowWidth / 2.0f;
 inline constexpr float WindowCenterY = WindowHeight / 2.0f;
 
@@ -36,8 +36,14 @@ inline constexpr int MazeHeight = 15;
 inline constexpr int CharacterPixelSize = 48;
 inline constexpr int TilePixelSize = 64;
 
+// Level generation picks from these keys, so adding tile variants stays data-only.
+inline constexpr std::array<const char*, 8> FloorTextureKeys = {
+    {"floor_1", "floor_2", "floor_3", "floor_4", "floor_5", "floor_6", "floor_7", "floor_8"}};
+inline constexpr std::array<const char*, 8> WallTextureKeys = {
+    {"wall_1", "wall_2", "wall_3", "wall_4", "wall_5", "wall_6", "wall_7", "wall_8"}};
+
 inline constexpr float PlayerHealth = 100.f;
-inline constexpr float PlayerArmor = 0.f;
+inline constexpr float PlayerArmor = 4.f;
 inline constexpr float PlayerAttackPower = 25.f;
 inline constexpr float PlayerStartTileX = 1.f;
 inline constexpr float PlayerStartTileY = 1.f;
@@ -53,7 +59,7 @@ inline constexpr float CreeperSpeed = 180.f;
 inline constexpr float CreeperDetectionRadius = 250.f;
 
 inline constexpr float WarriorHealth = 100.f;
-inline constexpr float WarriorArmor = 5.f;
+inline constexpr float WarriorArmor = 0.f;
 inline constexpr float WarriorAttackPower = 15.f;
 inline constexpr float WarriorSpeed = 130.f;
 inline constexpr float WarriorDetectionRadius = 250.f;
@@ -66,7 +72,7 @@ inline constexpr int ItemSpawnCount = 18;
 inline constexpr float ItemMinSpawnDistanceFromPlayer = 180.f;
 inline constexpr float ItemPickupRadius = 28.f;
 inline constexpr float ItemIconSize = 30.f;
-inline constexpr int InventoryColumns = 4;
+inline constexpr int InventoryColumns = 6;
 inline constexpr int InventoryRows = 2;
 inline constexpr int InventoryPages = 4;
 inline constexpr int InventorySlotCount = InventoryColumns * InventoryRows * InventoryPages;

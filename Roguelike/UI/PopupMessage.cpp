@@ -3,12 +3,14 @@
 #include "pch.h"
 #include "PopupMessage.h"
 
+#include "UITextureUtils.h"
+
 namespace Roguelike
 {
 PopupMessage::PopupMessage(const sf::Font& uiFont) : font(uiFont)
 {
-    background.setSize({320.0f, 44.0f});
-    background.setPosition({20.0f, 120.0f});
+    background.setSize({320.0f, 140.0f});
+    background.setPosition({20.0f, 260.0f});
     background.setFillColor(sf::Color(25, 22, 20, 210));
     background.setOutlineColor(sf::Color(120, 90, 65, 255));
     background.setOutlineThickness(2.0f);
@@ -16,7 +18,7 @@ PopupMessage::PopupMessage(const sf::Font& uiFont) : font(uiFont)
     text.setFont(font);
     text.setCharacterSize(18);
     text.setFillColor(sf::Color::White);
-    text.setPosition({38.0f, 130.0f});
+    text.setPosition({64.0f, 320.0f});
 
     GetAnimation().SetAlpha(0.0f);
     Hide();
@@ -60,7 +62,14 @@ void PopupMessage::Draw(sf::RenderWindow& window)
     background.setOutlineColor(sf::Color(120, 90, 65, alpha));
     text.setFillColor(sf::Color(255, 255, 255, alpha));
 
-    window.draw(background);
+    if (!UITextureUtils::DrawTexture(window, "ui_popup_message",
+                                     {background.getPosition().x, background.getPosition().y,
+                                      background.getSize().x, background.getSize().y},
+                                     alpha))
+    {
+        window.draw(background);
+    }
+
     window.draw(text);
 }
 }  // namespace Roguelike

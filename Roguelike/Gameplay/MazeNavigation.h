@@ -12,6 +12,8 @@ namespace Roguelike
 class MazeNavigation
 {
    public:
+    using Cell = std::pair<int, int>;
+
     static MazeNavigation* Instance();
 
     void SetMap(const std::vector<std::vector<bool>>& walkableGrid, float tileSize);
@@ -22,11 +24,17 @@ class MazeNavigation
    private:
     MazeNavigation() = default;
 
+    bool IsMapReady() const;
     bool IsInside(int x, int y) const;
     bool IsWalkable(int x, int y) const;
 
+    // Keeps pathfinding usable when physics places an actor slightly off the grid.
+    bool TryFindNearestWalkable(Cell start, Cell& result) const;
+
     Engine::Vector2Df CellToWorld(int x, int y) const;
-    std::pair<int, int> WorldToCell(const Engine::Vector2Df& position) const;
+    Cell WorldToCell(const Engine::Vector2Df& position) const;
+    int GetCellIndex(Cell cell) const;
+    int GetHeuristic(Cell from, Cell to) const;
 
    private:
     std::vector<std::vector<bool>> walkableGrid;

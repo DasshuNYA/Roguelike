@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "ResourceSystem.h"
 
+#include "Logger.h"
+
 namespace Engine
 {
 ResourceSystem* ResourceSystem::Instance()
@@ -27,13 +29,27 @@ void ResourceSystem::LoadTexture(const std::string& name, std::string sourcePath
     }
     else
     {
+        LOG_ERROR("Texture load failed: " + name + " from " + sourcePath);
         delete newTexture;
     }
 }
 
+bool ResourceSystem::HasTexture(const std::string& name) const
+{
+    return textures.find(name) != textures.end();
+}
+
 const sf::Texture* ResourceSystem::GetTextureShared(const std::string& name) const
 {
-    return textures.find(name)->second;
+    auto texture = textures.find(name);
+
+    if (texture == textures.end())
+    {
+        LOG_ERROR("Texture not found: " + name);
+        return nullptr;
+    }
+
+    return texture->second;
 }
 
 sf::Texture* ResourceSystem::GetTextureCopy(const std::string& name) const

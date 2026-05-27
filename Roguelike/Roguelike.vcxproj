@@ -101,6 +101,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,6 +122,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -137,6 +145,10 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -159,6 +171,10 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -203,6 +219,7 @@
     <ClCompile Include="UI\InventoryPanel.cpp" />
     <ClCompile Include="UI\ItemDescriptionPanel.cpp" />
     <ClCompile Include="UI\PopupMessage.cpp" />
+    <ClCompile Include="UI\UITextureUtils.cpp" />
     <ClCompile Include="UI\UITextUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +262,7 @@
     <ClInclude Include="UI\ItemDescriptionPanel.h" />
     <ClInclude Include="UI\PopupMessage.h" />
     <ClInclude Include="UI\UIItemView.h" />
+    <ClInclude Include="UI\UITextureUtils.h" />
     <ClInclude Include="UI\UITextUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

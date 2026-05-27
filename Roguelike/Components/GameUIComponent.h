@@ -69,6 +69,7 @@ class GameUIComponent : public Engine::Component
     Engine::UIManager uiManager;
 
     sf::Font font;
+    sf::Font titleFont;
 
     HUD* hud = nullptr;
     InventoryPanel* inventory = nullptr;

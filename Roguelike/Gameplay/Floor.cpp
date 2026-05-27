@@ -10,7 +10,7 @@
 
 namespace Roguelike
 {
-Floor::Floor(float x, float y)
+Floor::Floor(float x, float y, const std::string& textureKey)
 {
     gameObject = Engine::GameWorld::Instance()->CreateGameObject("Floor");
 
@@ -21,7 +21,19 @@ Floor::Floor(float x, float y)
     Engine::SpriteRendererComponent* renderer =
         gameObject->AddComponent<Engine::SpriteRendererComponent>();
 
-    renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("floor"));
+    Engine::ResourceSystem* resources = Engine::ResourceSystem::Instance();
+
+    // Fallback protects level generation when a future tile variant is not loaded yet.
+    const std::string safeTextureKey = resources->HasTexture(textureKey) ? textureKey : "floor_1";
+
+    const sf::Texture* texture = resources->GetTextureShared(safeTextureKey);
+
+    if (texture == nullptr)
+    {
+        return;
+    }
+
+    renderer->SetTexture(*texture);
 
     renderer->SetPixelSize(GameConfig::TilePixelSize, GameConfig::TilePixelSize);
 }

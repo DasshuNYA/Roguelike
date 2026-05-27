@@ -25,8 +25,13 @@ void StatsComponent::SetAttackPower(float newAttackPower) { attackPower = newAtt
 
 float StatsComponent::TakeDamage(float damage)
 {
-    float finalDamage = std::max(0.0f, damage - armor);
+    if (armor >= 1.0f)
+    {
+        armor -= 1.0f;
+        return 0.0f;
+    }
 
+    float finalDamage = std::max(0.0f, damage);
     health -= finalDamage;
 
     if (health < 0.0f)

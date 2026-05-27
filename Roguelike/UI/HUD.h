@@ -30,7 +30,9 @@ class HUD : public Engine::UIElement
     Engine::UIProgressBar armorBar;
 
     float currentHealth = 100.0f;
+    float maximumHealth = 100.0f;
     float currentArmor = 0.0f;
+    float maximumArmor = 100.0f;
     int currentLevel = 1;
     int currentAliveEnemies = 0;
     int currentTotalEnemies = 0;

@@ -101,6 +101,9 @@
     <ClCompile Include="UI\UITextUtils.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UITextureUtils.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="UI\FramedPanel.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -221,6 +224,9 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="UI\UITextUtils.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UITextureUtils.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\FramedPanel.h">
