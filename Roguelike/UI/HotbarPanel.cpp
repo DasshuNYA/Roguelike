@@ -77,7 +77,7 @@ bool HotbarPanel::ContainsPoint(sf::Vector2f mousePosition) const
     return false;
 }
 
-std::string HotbarPanel::TryUseHotkey()
+HotbarUseResult HotbarPanel::TryUseHotkey()
 {
     std::array<sf::Keyboard::Key, 6> keys = {sf::Keyboard::Num1, sf::Keyboard::Num2,
                                              sf::Keyboard::Num3, sf::Keyboard::Num4,
@@ -103,10 +103,10 @@ std::string HotbarPanel::TryUseHotkey()
                     slots[i].reset();
                 }
 
-                return itemName;
+                return {HotbarUseState::Used, itemName};
             }
 
-            return "Empty slot";
+            return {HotbarUseState::Empty, ""};
         }
 
         if (!isPressed)
@@ -115,7 +115,7 @@ std::string HotbarPanel::TryUseHotkey()
         }
     }
 
-    return "";
+    return {};
 }
 
 void HotbarPanel::Update(float deltaTime)

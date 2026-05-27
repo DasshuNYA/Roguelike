@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Engine.h"
+#include "GameConfig.h"
 #include "RenderSystem.h"
 #include "Logger.h"
 #include "DeveloperLevel.h"
@@ -27,7 +28,9 @@ int main()
     LOG_INFO("Logger initialized.");
     LOG_INFO("Game started.");
 
-    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike");
+    sf::RenderWindow* window = new sf::RenderWindow(
+        sf::VideoMode(Roguelike::GameConfig::WindowWidth, Roguelike::GameConfig::WindowHeight),
+        "Roguelike");
 
     Engine::RenderSystem::Instance()->SetMainWindow(window);
 

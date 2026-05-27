@@ -33,14 +33,6 @@ bool EquipmentPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& 
         return false;
     }
 
-    for (auto& slot : slots)
-    {
-        if (slot.has_value() && slot->stack.GetName() == item.stack.GetName())
-        {
-            slot.reset();
-        }
-    }
-
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
     {
         if (GetSlotBounds(i).contains(mousePosition))
@@ -48,6 +40,14 @@ bool EquipmentPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& 
             if (!CanEquipInSlot(item.stack, slotTypes[i]))
             {
                 return false;
+            }
+
+            for (auto& slot : slots)
+            {
+                if (slot.has_value() && slot->stack.GetName() == item.stack.GetName())
+                {
+                    slot.reset();
+                }
             }
 
             slots[i] = item;

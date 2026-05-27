@@ -23,6 +23,11 @@ inline constexpr std::array<BackgroundTrackConfig, 4> BackgroundTracks = {
      {"bg_level_3", "Resources/Sounds/background_3.ogg"},
      {"bg_level_4", "Resources/Sounds/background_4.ogg"}}};
 
+inline constexpr unsigned int WindowWidth = 1280;
+inline constexpr unsigned int WindowHeight = 720;
+inline constexpr float WindowCenterX = WindowWidth / 2.0f;
+inline constexpr float WindowCenterY = WindowHeight / 2.0f;
+
 inline constexpr float TileSize = 64.f;
 
 inline constexpr int MazeWidth = 21;

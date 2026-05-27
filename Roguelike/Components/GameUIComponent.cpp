@@ -119,7 +119,7 @@ void GameUIComponent::UpdateHUD()
 
 void GameUIComponent::UpdateLevelObjective(float deltaTime)
 {
-    if (isMainMenuOpen || isPauseOpen || isGameOver)
+    if (isMainMenuOpen || isPauseOpen || isGameOver || isLevelComplete)
     {
         return;
     }
@@ -140,6 +140,7 @@ void GameUIComponent::UpdateLevelObjective(float deltaTime)
     }
 
     isLevelComplete = true;
+    wasRestartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
     CloseInventory();
 
     if (overlay != nullptr)
@@ -354,22 +355,22 @@ void GameUIComponent::HandleHotbarInput()
         return;
     }
 
-    std::string usedItem = hotbar->TryUseHotkey();
+    HotbarUseResult useResult = hotbar->TryUseHotkey();
 
-    if (!usedItem.empty())
+    if (useResult.state == HotbarUseState::Empty)
     {
-        if (usedItem == "Empty slot")
-        {
-            popup->ShowMessage("Empty slot", 1.5f);
-            return;
-        }
+        popup->ShowMessage("Empty slot", 1.5f);
+        return;
+    }
 
+    if (useResult.state == HotbarUseState::Used)
+    {
         if (playerInventory != nullptr)
         {
-            playerInventory->RemoveOneItem(usedItem);
+            playerInventory->RemoveOneItem(useResult.itemName);
         }
 
-        popup->ShowMessage("Used: " + usedItem, 1.5f);
+        popup->ShowMessage("Used: " + useResult.itemName, 1.5f);
     }
 }
 
@@ -388,6 +389,7 @@ void GameUIComponent::HandleDeathState()
     }
 
     isGameOver = true;
+    wasRestartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
     if (inventory != nullptr && inventory->IsOpen())
     {

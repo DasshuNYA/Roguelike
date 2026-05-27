@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "HUD.h"
 
+#include "GameConfig.h"
+
 namespace Roguelike
 {
 HUD::HUD(const sf::Font& uiFont) : font(uiFont)
@@ -54,7 +56,7 @@ void HUD::Draw(sf::RenderWindow& window)
     objectiveText.setString("Enemies: " + std::to_string(currentAliveEnemies) + "/" +
                             std::to_string(currentTotalEnemies));
 
-    float rightMargin = 1248.0f;
+    float rightMargin = static_cast<float>(GameConfig::WindowWidth) - 32.0f;
     sf::FloatRect levelBounds = levelText.getLocalBounds();
     sf::FloatRect objectiveBounds = objectiveText.getLocalBounds();
     levelText.setPosition(rightMargin - levelBounds.width, 18.0f);

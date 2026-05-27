@@ -29,7 +29,7 @@ Player::Player()
 
     playerCamera->SetWindow(&Engine::RenderSystem::Instance()->GetMainWindow());
 
-    playerCamera->SetBaseResolution(1280, 720);
+    playerCamera->SetBaseResolution(GameConfig::WindowWidth, GameConfig::WindowHeight);
 
     gameObject->AddComponent<Engine::InputComponent>();
 

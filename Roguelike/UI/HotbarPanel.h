@@ -13,6 +13,19 @@
 
 namespace Roguelike
 {
+enum class HotbarUseState
+{
+    None,
+    Empty,
+    Used
+};
+
+struct HotbarUseResult
+{
+    HotbarUseState state = HotbarUseState::None;
+    std::string itemName;
+};
+
 class HotbarPanel : public Engine::UIElement
 {
    public:
@@ -21,7 +34,7 @@ class HotbarPanel : public Engine::UIElement
     bool TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item);
     bool TryAutoPlaceItem(const UIItemView& item);
     bool ContainsPoint(sf::Vector2f mousePosition) const;
-    std::string TryUseHotkey();
+    HotbarUseResult TryUseHotkey();
 
     void Update(float deltaTime) override;
     void Draw(sf::RenderWindow& window) override;

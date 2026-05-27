@@ -3,12 +3,14 @@
 #include "pch.h"
 #include "GameScreenOverlay.h"
 
+#include "GameConfig.h"
+
 namespace Roguelike
 {
 GameScreenOverlay::GameScreenOverlay(const sf::Font& uiFont) : font(uiFont)
 {
     background.setPosition({0.0f, 0.0f});
-    background.setSize({1280.0f, 720.0f});
+    background.setSize({GameConfig::WindowWidth, GameConfig::WindowHeight});
 
     windowPanel.setPosition({290.0f, 160.0f});
     windowPanel.setSize({700.0f, 360.0f});
@@ -74,12 +76,12 @@ void GameScreenOverlay::SetText(const std::string& title, const std::string& sub
     sf::FloatRect titleBounds = titleText.getLocalBounds();
     titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
                         titleBounds.top + titleBounds.height / 2.0f);
-    titleText.setPosition({640.0f, 300.0f});
+    titleText.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY - 60.0f});
 
     sf::FloatRect subtitleBounds = subtitleText.getLocalBounds();
     subtitleText.setOrigin(subtitleBounds.left + subtitleBounds.width / 2.0f,
                            subtitleBounds.top + subtitleBounds.height / 2.0f);
-    subtitleText.setPosition({640.0f, 380.0f});
+    subtitleText.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY + 20.0f});
 }
 
 void GameScreenOverlay::Draw(sf::RenderWindow& window)
