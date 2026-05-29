@@ -10,6 +10,7 @@ Debug/
 Release/
 bin/
 obj/
+dist/
 
 # CMake
 CMakeFiles/
