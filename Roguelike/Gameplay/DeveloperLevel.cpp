@@ -154,7 +154,16 @@ void DeveloperLevel::CreateMusic()
 
     Engine::AudioComponent* music = musicObject->AddComponent<Engine::AudioComponent>();
 
-    music->SetAudio(*Engine::ResourceSystem::Instance()->GetSoundBufferShared("main_theme"));
+    const sf::SoundBuffer* soundBuffer =
+        Engine::ResourceSystem::Instance()->GetSoundBufferShared("main_theme");
+
+    if (soundBuffer == nullptr)
+    {
+        LOG_WARN("Background music buffer is missing.");
+        return;
+    }
+
+    music->SetAudio(*soundBuffer);
 
     music->SetLoop(true);
     music->SetVolume(GameConfig::MusicVolume);

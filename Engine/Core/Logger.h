@@ -2,11 +2,14 @@
 
 #pragma once
 
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -15,55 +18,136 @@ namespace Engine
 {
 enum class LogLevel
 {
+    DEBUG,
     INFO,
     WARNING,
     ERROR
 };
 
+struct LogRecord
+{
+    LogLevel level = LogLevel::INFO;
+    std::string message;
+    const char* file = nullptr;
+    int line = 0;
+    const char* function = nullptr;
+    std::chrono::system_clock::time_point time = std::chrono::system_clock::now();
+};
+
 class LogSink
 {
    public:
+    explicit LogSink(LogLevel minLevel = LogLevel::DEBUG) : minLevel(minLevel) {}
     virtual ~LogSink() = default;
-    virtual void log(LogLevel level, const std::string& message) = 0;
+    virtual void log(const LogRecord& record) = 0;
+
+    bool ShouldLog(LogLevel level) const
+    {
+        return static_cast<int>(level) >= static_cast<int>(minLevel);
+    }
+
+   private:
+    LogLevel minLevel = LogLevel::DEBUG;
 };
 
 class LogFormatter
 {
    public:
-    static std::string ToString(LogLevel level)
+    static std::string LevelToString(LogLevel level)
     {
         switch (level)
         {
+            case LogLevel::DEBUG:
+                return "DEBUG";
             case LogLevel::INFO:
-                return "[INFO]";
+                return "INFO";
             case LogLevel::WARNING:
-                return "[WARNING]";
+                return "WARN";
             case LogLevel::ERROR:
-                return "[ERROR]";
+                return "ERROR";
             default:
-                return "[UNKNOWN]";
+                return "UNKNOWN";
         }
+    }
+
+    static std::string FormatConsole(const LogRecord& record)
+    {
+        return "[" + FormatTime(record.time, false) + "] [" + LevelToString(record.level) + "] " +
+               record.message;
+    }
+
+    static std::string FormatFile(const LogRecord& record)
+    {
+        std::ostringstream stream;
+        stream << "[" << FormatTime(record.time, true) << "] [" << LevelToString(record.level)
+               << "] " << ShortFileName(record.file) << ":" << record.line;
+
+        if (record.function != nullptr)
+        {
+            stream << " (" << record.function << ")";
+        }
+
+        stream << " | " << record.message;
+        return stream.str();
+    }
+
+   private:
+    static std::string FormatTime(std::chrono::system_clock::time_point time, bool includeDate)
+    {
+        const auto timeValue = std::chrono::system_clock::to_time_t(time);
+        const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                      time.time_since_epoch()) %
+                                  1000;
+
+        std::tm localTime = {};
+        localtime_s(&localTime, &timeValue);
+
+        std::ostringstream stream;
+
+        if (includeDate)
+        {
+            stream << std::put_time(&localTime, "%Y-%m-%d ");
+        }
+
+        stream << std::put_time(&localTime, "%H:%M:%S") << "." << std::setfill('0')
+               << std::setw(3) << milliseconds.count();
+
+        return stream.str();
+    }
+
+    static std::string ShortFileName(const char* file)
+    {
+        if (file == nullptr)
+        {
+            return "unknown";
+        }
+
+        std::filesystem::path path(file);
+        return path.filename().string();
     }
 };
 
 class ConsoleSink : public LogSink
 {
    public:
-    void log(LogLevel level, const std::string& message) override
+    explicit ConsoleSink(LogLevel minLevel = LogLevel::INFO) : LogSink(minLevel) {}
+
+    void log(const LogRecord& record) override
     {
-        std::cout << LogFormatter::ToString(level) << " " << message << std::endl;
+        std::cout << LogFormatter::FormatConsole(record) << std::endl;
     }
 };
 
 class FileSink : public LogSink
 {
    public:
-    explicit FileSink(const std::string& filename)
+    explicit FileSink(const std::string& filename, LogLevel minLevel = LogLevel::DEBUG)
+        : LogSink(minLevel)
     {
         std::filesystem::path logPath(filename);
         std::filesystem::create_directories(logPath.parent_path());
 
-        logFile.open(filename, std::ios::app);
+        logFile.open(filename, std::ios::out);
     }
 
     ~FileSink() override
@@ -74,14 +158,14 @@ class FileSink : public LogSink
         }
     }
 
-    void log(LogLevel level, const std::string& message) override
+    void log(const LogRecord& record) override
     {
         if (!logFile)
         {
             return;
         }
 
-        logFile << LogFormatter::ToString(level) << " " << message << std::endl;
+        logFile << LogFormatter::FormatFile(record) << std::endl;
     }
 
    private:
@@ -93,21 +177,44 @@ class Logger
    public:
     void addSink(std::shared_ptr<LogSink> sink) { sinks.push_back(sink); }
 
-    void log(LogLevel level, const std::string& message)
+    void log(LogLevel level,
+             const std::string& message,
+             const char* file = nullptr,
+             int line = 0,
+             const char* function = nullptr)
     {
         std::lock_guard<std::mutex> lock(logMutex);
 
+        LogRecord record{level, message, file, line, function, std::chrono::system_clock::now()};
+
         for (auto& sink : sinks)
         {
-            sink->log(level, message);
+            if (sink != nullptr && sink->ShouldLog(level))
+            {
+                sink->log(record);
+            }
         }
     }
 
-    void info(const std::string& message) { log(LogLevel::INFO, message); }
+    void debug(const std::string& message, const char* file, int line, const char* function)
+    {
+        log(LogLevel::DEBUG, message, file, line, function);
+    }
 
-    void warn(const std::string& message) { log(LogLevel::WARNING, message); }
+    void info(const std::string& message, const char* file, int line, const char* function)
+    {
+        log(LogLevel::INFO, message, file, line, function);
+    }
 
-    void error(const std::string& message) { log(LogLevel::ERROR, message); }
+    void warn(const std::string& message, const char* file, int line, const char* function)
+    {
+        log(LogLevel::WARNING, message, file, line, function);
+    }
+
+    void error(const std::string& message, const char* file, int line, const char* function)
+    {
+        log(LogLevel::ERROR, message, file, line, function);
+    }
 
    private:
     std::vector<std::shared_ptr<LogSink>> sinks;
@@ -127,9 +234,11 @@ class LoggerRegistry
     {
         std::lock_guard<std::mutex> lock(registryMutex);
 
-        if (loggers.find(name) != loggers.end())
+        auto logger = loggers.find(name);
+
+        if (logger != loggers.end())
         {
-            return loggers[name];
+            return logger->second;
         }
 
         return defaultLogger;
@@ -145,14 +254,19 @@ class LoggerRegistry
 
    private:
     std::unordered_map<std::string, std::shared_ptr<Logger>> loggers;
-    std::shared_ptr<Logger> defaultLogger;
+    std::shared_ptr<Logger> defaultLogger = std::make_shared<Logger>();
     std::mutex registryMutex;
 };
 }  // namespace Engine
 
-#define LOG_INFO(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message)
+#define LOG_DEBUG(message) \
+    ::Engine::LoggerRegistry::getInstance().getLogger("global")->debug(message, __FILE__, __LINE__, __func__)
 
-#define LOG_WARN(message) ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message)
+#define LOG_INFO(message) \
+    ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message, __FILE__, __LINE__, __func__)
+
+#define LOG_WARN(message) \
+    ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message, __FILE__, __LINE__, __func__)
 
 #define LOG_ERROR(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->error(message)
+    ::Engine::LoggerRegistry::getInstance().getLogger("global")->error(message, __FILE__, __LINE__, __func__)

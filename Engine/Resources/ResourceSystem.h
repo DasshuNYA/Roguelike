@@ -17,6 +17,7 @@ class ResourceSystem
     static ResourceSystem* Instance();
 
     void LoadTexture(const std::string& name, std::string sourcePath, bool isSmooth = true);
+    bool HasTexture(const std::string& name) const;
     const sf::Texture* GetTextureShared(const std::string& name) const;
     sf::Texture* GetTextureCopy(const std::string& name) const;
     void DeleteSharedTexture(const std::string& name);
@@ -29,6 +30,7 @@ class ResourceSystem
     void DeleteSharedTextureMap(const std::string& name);
 
     void LoadSoundBuffer(const std::string& name, std::string sourcePath);
+    bool HasSoundBuffer(const std::string& name) const;
     const sf::SoundBuffer* GetSoundBufferShared(const std::string& name) const;
     void DeleteSharedSoundBuffer(const std::string& name);
 

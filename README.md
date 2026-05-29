@@ -165,6 +165,13 @@ Requirements:
 
 ---
 
+# Logs
+
+Runtime logs are written to `Roguelike/Saved/Logs/log.txt`.
+Console output shows the main `INFO`, `WARN`, and `ERROR` messages, while the file log also keeps `DEBUG` messages and source locations.
+
+---
+
 # Author
 
 Educational project created for gameplay architecture and combat system practice.

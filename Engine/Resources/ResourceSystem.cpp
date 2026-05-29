@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "ResourceSystem.h"
 
+#include "Logger.h"
+
 namespace Engine
 {
 ResourceSystem* ResourceSystem::Instance()
@@ -27,18 +29,33 @@ void ResourceSystem::LoadTexture(const std::string& name, std::string sourcePath
     }
     else
     {
+        LOG_ERROR("Texture load failed: " + name + " from " + sourcePath);
         delete newTexture;
     }
 }
 
+bool ResourceSystem::HasTexture(const std::string& name) const
+{
+    return textures.find(name) != textures.end();
+}
+
 const sf::Texture* ResourceSystem::GetTextureShared(const std::string& name) const
 {
-    return textures.find(name)->second;
+    auto texture = textures.find(name);
+
+    if (texture == textures.end())
+    {
+        LOG_ERROR("Texture not found: " + name);
+        return nullptr;
+    }
+
+    return texture->second;
 }
 
 sf::Texture* ResourceSystem::GetTextureCopy(const std::string& name) const
 {
-    return new sf::Texture(*textures.find(name)->second);
+    const sf::Texture* texture = GetTextureShared(name);
+    return texture != nullptr ? new sf::Texture(*texture) : nullptr;
 }
 
 void ResourceSystem::DeleteSharedTexture(const std::string& name)
@@ -70,6 +87,13 @@ void ResourceSystem::LoadTextureMap(const std::string& name, std::string sourceP
         std::vector<sf::Texture*> textureMapElements;
 
         auto textureSize = textureMap.getSize();
+
+        if (textureSize.x < elementPixelSize.x || textureSize.y < elementPixelSize.y)
+        {
+            LOG_ERROR("Texture map is smaller than one element: " + name);
+            return;
+        }
+
         int loadedElements = 0;
 
         for (int y = 0; y <= static_cast<int>(textureSize.y - elementPixelSize.y);
@@ -107,23 +131,50 @@ void ResourceSystem::LoadTextureMap(const std::string& name, std::string sourceP
 
         textureMaps.emplace(name, textureMapElements);
     }
+    else
+    {
+        LOG_ERROR("Texture map load failed: " + name + " from " + sourcePath);
+    }
 }
 
 const sf::Texture* ResourceSystem::GetTextureMapElementShared(const std::string& name,
                                                               int elementIndex) const
 {
-    return textureMaps.find(name)->second[elementIndex];
+    auto textureMap = textureMaps.find(name);
+
+    if (textureMap == textureMaps.end())
+    {
+        LOG_ERROR("Texture map not found: " + name);
+        return nullptr;
+    }
+
+    if (elementIndex < 0 || elementIndex >= static_cast<int>(textureMap->second.size()))
+    {
+        LOG_ERROR("Texture map element out of range: " + name);
+        return nullptr;
+    }
+
+    return textureMap->second[elementIndex];
 }
 
 sf::Texture* ResourceSystem::GetTextureMapElementCopy(const std::string& name,
                                                       int elementIndex) const
 {
-    return new sf::Texture(*textureMaps.find(name)->second[elementIndex]);
+    const sf::Texture* texture = GetTextureMapElementShared(name, elementIndex);
+    return texture != nullptr ? new sf::Texture(*texture) : nullptr;
 }
 
 int ResourceSystem::GetTextureMapElementsCount(const std::string& name) const
 {
-    return static_cast<int>(textureMaps.find(name)->second.size());
+    auto textureMap = textureMaps.find(name);
+
+    if (textureMap == textureMaps.end())
+    {
+        LOG_ERROR("Texture map not found: " + name);
+        return 0;
+    }
+
+    return static_cast<int>(textureMap->second.size());
 }
 
 void ResourceSystem::DeleteSharedTextureMap(const std::string& name)
@@ -158,13 +209,27 @@ void ResourceSystem::LoadSoundBuffer(const std::string& name, std::string source
     }
     else
     {
+        LOG_ERROR("Sound buffer load failed: " + name + " from " + sourcePath);
         delete newSoundBuffer;
     }
 }
 
+bool ResourceSystem::HasSoundBuffer(const std::string& name) const
+{
+    return soundBuffers.find(name) != soundBuffers.end();
+}
+
 const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(const std::string& name) const
 {
-    return soundBuffers.find(name)->second;
+    auto soundBuffer = soundBuffers.find(name);
+
+    if (soundBuffer == soundBuffers.end())
+    {
+        LOG_ERROR("Sound buffer not found: " + name);
+        return nullptr;
+    }
+
+    return soundBuffer->second;
 }
 
 void ResourceSystem::DeleteSharedSoundBuffer(const std::string& name)
