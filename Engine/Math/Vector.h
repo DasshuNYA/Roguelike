@@ -1,31 +1,28 @@
 // @file Vector.h
 
 #pragma once
+
 #include <cmath>
+#include <utility>
 
 namespace Engine
 {
 template <typename T>
 struct Vector2D
 {
-    T x = (T)0;
-    T y = (T)0;
+    T x = static_cast<T>(0);
+    T y = static_cast<T>(0);
 
-    Vector2D()
+    constexpr Vector2D() = default;
+
+    constexpr Vector2D(T newX, T newY) : x(newX), y(newY) {}
+
+    float GetLength() const
     {
-        x = (T)0;
-        y = (T)0;
+        return std::sqrt(static_cast<float>(x * x + y * y));
     }
 
-    Vector2D(T newX, T newY)
-    {
-        x = newX;
-        y = newY;
-    }
-
-    float GetLength() { return sqrtf(x * x + y * y); }
-
-    float DotProduct(const Vector2D<T>& vector) { return x * vector.x + y * vector.y; }
+    T DotProduct(const Vector2D<T>& vector) const { return x * vector.x + y * vector.y; }
 };
 
 using Vector2Df = Vector2D<float>;
@@ -85,7 +82,9 @@ bool operator!=(const Vector2D<T>& left, const Vector2D<T>& right)
 template <typename U, typename V>
 U Convert(const V& v)
 {
-    // decltype deduces type from expression
-    return {static_cast<decltype(U::x)>(v.x), static_cast<decltype(U::y)>(v.y)};
+    using XType = decltype(std::declval<U>().x);
+    using YType = decltype(std::declval<U>().y);
+
+    return {static_cast<XType>(v.x), static_cast<YType>(v.y)};
 }
 }  // namespace Engine
