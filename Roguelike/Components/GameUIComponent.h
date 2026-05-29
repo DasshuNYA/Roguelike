@@ -37,6 +37,7 @@ class GameUIComponent : public Engine::Component
    private:
     void CreateUI();
     void UpdateHUD();
+    void UpdateHUDStats(float health, float armor);
     void UpdateInventory();
     void UpdateLevelObjective(float deltaTime);
     void AutoPlaceNewHotbarItems(const std::vector<ItemStack>& items);

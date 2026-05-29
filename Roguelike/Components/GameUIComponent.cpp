@@ -36,6 +36,17 @@ void GameUIComponent::SetPlayer(Engine::GameObject* player)
     playerObject = player;
     playerInventory =
         playerObject != nullptr ? playerObject->GetComponent<InventoryComponent>() : nullptr;
+
+    Engine::StatsComponent* stats =
+        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
+
+    if (stats != nullptr)
+    {
+        // Stats drive HUD updates by event; the frame update only refreshes objective text.
+        stats->AddStatsChangedListener(
+            [this](float health, float armor) { UpdateHUDStats(health, armor); });
+        UpdateHUDStats(stats->GetHealth(), stats->GetArmor());
+    }
 }
 
 void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& enemies, int level)
@@ -112,20 +123,16 @@ void GameUIComponent::UpdateHUD()
     }
 
     hud->SetObjective(levelNumber, aliveEnemyCount, totalEnemyCount);
+}
 
-    if (playerObject == nullptr)
+void GameUIComponent::UpdateHUDStats(float health, float armor)
+{
+    if (hud == nullptr)
     {
         return;
     }
 
-    Engine::StatsComponent* stats = playerObject->GetComponent<Engine::StatsComponent>();
-
-    if (stats == nullptr)
-    {
-        return;
-    }
-
-    hud->SetStats(stats->GetHealth(), 100.0f, stats->GetArmor(), GameConfig::PlayerArmor);
+    hud->SetStats(health, GameConfig::PlayerHealth, armor, GameConfig::PlayerArmor);
 }
 
 void GameUIComponent::UpdateLevelObjective(float deltaTime)

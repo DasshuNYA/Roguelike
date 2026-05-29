@@ -42,8 +42,13 @@ Important methods:
 - `SetStats(float health, float armor)` sets base defensive stats;
 - `SetAttackPower(float attackPower)` sets attack damage;
 - `TakeDamage(float damage)` applies armor reduction and changes health;
+- `AddStatsChangedListener(...)` lets UI or gameplay helpers react when health or armor changes;
 - `GetHealth()` returns current health;
 - `IsDead()` checks whether health reached zero.
+
+HUD health and armor are event-driven. `GameUIComponent` subscribes to the player's
+`StatsComponent`, so damage immediately updates the HUD without polling player stats every
+frame.
 
 When health reaches zero, `DeathComponent` marks the object for destruction and `GameWorld` removes it later.
 
