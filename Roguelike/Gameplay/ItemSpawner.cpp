@@ -33,7 +33,7 @@ void ItemSpawner::Spawn(const std::vector<Engine::Vector2Df>& floorPositions,
 
     int spawnedCount = 0;
     int attempts = 0;
-    int maxAttempts = GameConfig::ItemSpawnCount * 40;
+    int maxAttempts = GameConfig::ItemSpawnCount * GameConfig::SpawnMaxAttemptsMultiplier;
     std::vector<int> usedPositionIndexes;
 
     while (spawnedCount < GameConfig::ItemSpawnCount && attempts < maxAttempts)
@@ -60,7 +60,8 @@ void ItemSpawner::Spawn(const std::vector<Engine::Vector2Df>& floorPositions,
 
         const ItemData& itemData = GameConfig::Items[std::rand() % GameConfig::Items.size()];
 
-        Engine::GameObject* itemObject = Engine::GameWorld::Instance()->CreateGameObject(itemData.name);
+        Engine::GameObject* itemObject =
+            Engine::GameWorld::Instance()->CreateGameObject(itemData.name);
 
         Engine::TransformComponent* transform =
             itemObject->GetComponent<Engine::TransformComponent>();

@@ -7,6 +7,20 @@
 
 namespace Engine
 {
+namespace
+{
+template <typename ResourceMap>
+void DeleteResourceMap(ResourceMap& resources)
+{
+    for (auto& resourcePair : resources)
+    {
+        delete resourcePair.second;
+    }
+
+    resources.clear();
+}
+}  // namespace
+
 ResourceSystem* ResourceSystem::Instance()
 {
     static ResourceSystem resourceSystem;
@@ -211,46 +225,24 @@ void ResourceSystem::Clear()
 
 void ResourceSystem::DeleteAllTextures()
 {
-    std::vector<std::string> keysToDelete;
-
-    for (const auto& texturePair : textures)
-    {
-        keysToDelete.push_back(texturePair.first);
-    }
-
-    for (const auto& key : keysToDelete)
-    {
-        DeleteSharedTexture(key);
-    }
+    DeleteResourceMap(textures);
 }
 
 void ResourceSystem::DeleteAllTextureMaps()
 {
-    std::vector<std::string> keysToDelete;
-
-    for (const auto& textureMapPair : textureMaps)
+    for (auto& textureMapPair : textureMaps)
     {
-        keysToDelete.push_back(textureMapPair.first);
+        for (sf::Texture* texture : textureMapPair.second)
+        {
+            delete texture;
+        }
     }
 
-    for (const auto& key : keysToDelete)
-    {
-        DeleteSharedTextureMap(key);
-    }
+    textureMaps.clear();
 }
 
 void ResourceSystem::DeleteAllSoundBuffers()
 {
-    std::vector<std::string> keysToDelete;
-
-    for (const auto& soundBufferPair : soundBuffers)
-    {
-        keysToDelete.push_back(soundBufferPair.first);
-    }
-
-    for (const auto& key : keysToDelete)
-    {
-        DeleteSharedSoundBuffer(key);
-    }
+    DeleteResourceMap(soundBuffers);
 }
 }  // namespace Engine

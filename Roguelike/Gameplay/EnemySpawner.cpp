@@ -5,6 +5,7 @@
 
 #include "Character.h"
 #include "Creeper.h"
+#include "GameConfig.h"
 #include "GameObject.h"
 #include "Logger.h"
 #include "MazeNavigation.h"
@@ -44,7 +45,7 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
 
     int spawnedCount = 0;
     int attempts = 0;
-    int maxAttempts = settings.count * 40;
+    int maxAttempts = settings.count * GameConfig::SpawnMaxAttemptsMultiplier;
     std::vector<Engine::Vector2Df> usedPositions;
 
     while (spawnedCount < settings.count && attempts < maxAttempts)
@@ -68,21 +69,14 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
             continue;
         }
 
-        switch (settings.enemyType)
+        std::unique_ptr<Character> enemy = CreateEnemy(settings.enemyType, player, position);
+
+        if (enemy == nullptr)
         {
-            case EnemyType::Creeper:
-                spawnedEnemies.push_back(std::make_unique<Creeper>(player, position.x, position.y));
-                break;
-
-            case EnemyType::Warrior:
-                spawnedEnemies.push_back(std::make_unique<Warrior>(player, position.x, position.y));
-                break;
-
-            default:
-                LOG_WARN("EnemySpawner received unknown enemy type.");
-                break;
+            continue;
         }
 
+        spawnedEnemies.push_back(std::move(enemy));
         usedPositions.push_back(position);
         spawnedCount++;
     }
@@ -141,5 +135,23 @@ bool EnemySpawner::IsPositionAlreadyUsed(
     }
 
     return false;
+}
+
+std::unique_ptr<Character> EnemySpawner::CreateEnemy(EnemyType enemyType,
+                                                     Engine::GameObject* player,
+                                                     const Engine::Vector2Df& position) const
+{
+    switch (enemyType)
+    {
+        case EnemyType::Creeper:
+            return std::make_unique<Creeper>(player, position.x, position.y);
+
+        case EnemyType::Warrior:
+            return std::make_unique<Warrior>(player, position.x, position.y);
+
+        default:
+            LOG_WARN("EnemySpawner received unknown enemy type.");
+            return nullptr;
+    }
 }
 }  // namespace Roguelike

@@ -2,12 +2,10 @@
 
 #pragma once
 
-#include <memory>
-#include <SFML/Graphics.hpp>
 #include "Component.h"
 #include "GameObject.h"
-#include "Vector.h"
 #include "Matrix2D.h"
+#include "Vector.h"
 
 namespace Engine
 {
@@ -40,8 +38,8 @@ class TransformComponent : public Component
     const Vector2Df& GetWorldPosition() const;
     const Vector2Df& GetLocalPosition() const;
 
-    const float GetWorldRotation() const;
-    const float GetLocalRotation() const;
+    float GetWorldRotation() const;
+    float GetLocalRotation() const;
 
     const Vector2Df& GetWorldScale() const;
     const Vector2Df& GetLocalScale() const;
@@ -49,7 +47,7 @@ class TransformComponent : public Component
     void SetParent(TransformComponent* newParent);
     TransformComponent* GetParent() const;
 
-    const Matrix2D GetWorldTransform() const;
+    Matrix2D GetWorldTransform() const;
     void Print() const;
 
    private:
@@ -69,8 +67,6 @@ class TransformComponent : public Component
     void setWorldInfoFrom(const Matrix2D& transform) const;
     void setLocalInfoFrom(const Matrix2D& transform) const;
     void updateLocalTransform() const;
-    void updateLocalTransform(const Vector2Df& position, float rotation,
-                              const Vector2Df& scale) const;
     Matrix2D createTransform(const Vector2Df& position, float rotation,
                              const Vector2Df& scale) const;
 };
