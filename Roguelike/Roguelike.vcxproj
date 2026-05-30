@@ -190,6 +190,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClCompile Include="Components\AttackComponent.cpp" />
     <ClCompile Include="Components\DeathComponent.cpp" />
     <ClCompile Include="Components\DetectionTriggerComponent.cpp" />
+    <ClCompile Include="Components\DirectionalSpriteComponent.cpp" />
     <ClCompile Include="Components\GameUIComponent.cpp" />
     <ClCompile Include="Components\InventoryComponent.cpp" />
     <ClCompile Include="Components\ItemPickupComponent.cpp" />
@@ -231,6 +232,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClInclude Include="Components\AttackComponent.h" />
     <ClInclude Include="Components\DeathComponent.h" />
     <ClInclude Include="Components\DetectionTriggerComponent.h" />
+    <ClInclude Include="Components\DirectionalSpriteComponent.h" />
     <ClInclude Include="Components\GameUIComponent.h" />
     <ClInclude Include="Components\InventoryComponent.h" />
     <ClInclude Include="Components\ItemPickupComponent.h" />
@@ -252,6 +254,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClInclude Include="Gameplay\LevelProgress.h" />
     <ClInclude Include="Gameplay\MazeGenerator.h" />
     <ClInclude Include="Gameplay\MazeNavigation.h" />
+    <ClInclude Include="Gameplay\PlayerRunSnapshot.h" />
     <ClInclude Include="Gameplay\Wall.h" />
     <ClInclude Include="UI\EquipmentPanel.h" />
     <ClInclude Include="UI\FramedPanel.h" />

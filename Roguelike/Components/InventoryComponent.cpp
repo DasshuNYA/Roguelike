@@ -76,6 +76,8 @@ bool InventoryComponent::HasSpaceFor(const ItemStack& item) const
 
 const std::vector<ItemStack>& InventoryComponent::GetItems() const { return items; }
 
+void InventoryComponent::SetItems(const std::vector<ItemStack>& newItems) { items = newItems; }
+
 void InventoryComponent::Update(float deltaTime) {}
 
 void InventoryComponent::Render() {}

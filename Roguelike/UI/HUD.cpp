@@ -35,15 +35,28 @@ bool DrawArmorIcon(sf::RenderWindow& window, sf::FloatRect bounds, sf::Uint8 alp
 
 // HUD layout. These are absolute screen coordinates.
 const sf::FloatRect HealthBarBounds = {20.0f, 18.0f, 440.0f, 108.0f};
-const sf::Vector2f ArmorStartPosition = {20.0f, 128.0f};
+const sf::Vector2f ArmorStartPosition = {112.0f, 128.0f};
 const sf::Vector2f ArmorIconSize = {64.0f, 64.0f};
 const float ArmorIconGap = 72.0f;
-const float ObjectiveRightMargin = 32.0f;
-const float LevelTextY = 18.0f;
-const float EnemiesTextY = 44.0f;
+const float QuestPanelWidth = 190.0f;
+const float QuestPanelHeight = 174.0f;
+const float QuestPanelMargin = 24.0f;
+const sf::FloatRect QuestPanelBounds = {GameConfig::WindowWidth - QuestPanelWidth -
+                                            QuestPanelMargin,
+                                        QuestPanelMargin, QuestPanelWidth, QuestPanelHeight};
+const float QuestLevelY = QuestPanelBounds.top + 46.0f;
+const float QuestEnemiesY = QuestPanelBounds.top + 100.0f;
+
+void CenterText(sf::Text& text, float centerX, float y)
+{
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setOrigin(bounds.left + bounds.width * 0.5f, bounds.top + bounds.height * 0.5f);
+    text.setPosition(centerX, y);
+}
 }  // namespace
 
-HUD::HUD(const sf::Font& uiFont) : font(uiFont)
+HUD::HUD(const sf::Font& uiFont, const sf::Font& uiTitleFont)
+    : font(uiFont), titleFont(uiTitleFont)
 {
     healthText.setFont(font);
     healthText.setCharacterSize(24);
@@ -53,11 +66,11 @@ HUD::HUD(const sf::Font& uiFont) : font(uiFont)
     armorText.setCharacterSize(24);
     armorText.setPosition(24.0f, 136.0f);
 
-    levelText.setFont(font);
+    levelText.setFont(titleFont);
     levelText.setCharacterSize(18);
 
     objectiveText.setFont(font);
-    objectiveText.setCharacterSize(18);
+    objectiveText.setCharacterSize(15);
 
     healthBar.SetPosition({120.0f, 22.0f});
     healthBar.SetSize({180.0f, 18.0f});
@@ -90,20 +103,18 @@ void HUD::Draw(sf::RenderWindow& window)
 {
     healthText.setString("");
     armorText.setString("");
-    levelText.setString("Level: " + std::to_string(currentLevel));
+    levelText.setString("LEVEL " + std::to_string(currentLevel));
     objectiveText.setString("Enemies: " + std::to_string(currentAliveEnemies) + "/" +
                             std::to_string(currentTotalEnemies));
 
-    float rightMargin = static_cast<float>(GameConfig::WindowWidth) - ObjectiveRightMargin;
-    sf::FloatRect levelBounds = levelText.getLocalBounds();
-    sf::FloatRect objectiveBounds = objectiveText.getLocalBounds();
-    levelText.setPosition(rightMargin - levelBounds.width, LevelTextY);
-    objectiveText.setPosition(rightMargin - objectiveBounds.width, EnemiesTextY);
+    float questCenterX = QuestPanelBounds.left + QuestPanelBounds.width * 0.5f;
+    CenterText(levelText, questCenterX, QuestLevelY);
+    CenterText(objectiveText, questCenterX, QuestEnemiesY);
 
     healthText.setFillColor(ApplyAlpha(sf::Color::White));
     armorText.setFillColor(ApplyAlpha(sf::Color::White));
-    levelText.setFillColor(ApplyAlpha(sf::Color::White));
-    objectiveText.setFillColor(ApplyAlpha(sf::Color::White));
+    levelText.setFillColor(ApplyAlpha(sf::Color(79, 52, 31, 255)));
+    objectiveText.setFillColor(ApplyAlpha(sf::Color(65, 48, 36, 255)));
 
     sf::Uint8 alpha = GetAlphaByte();
     bool drewHealthBar =
@@ -141,6 +152,7 @@ void HUD::Draw(sf::RenderWindow& window)
         }
     }
 
+    UITextureUtils::DrawTexture(window, "ui_quest_list", QuestPanelBounds, alpha);
     window.draw(healthText);
     window.draw(armorText);
     window.draw(levelText);

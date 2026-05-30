@@ -6,10 +6,12 @@
 #include "GameObject.h"
 #include "GameWorld.h"
 #include "RenderSystem.h"
+#include "ResourceSystem.h"
 #include "StatsComponent.h"
 #include "TransformComponent.h"
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 namespace Roguelike
 {
@@ -53,6 +55,27 @@ void ProjectileComponent::Render()
 
     Engine::Vector2Df position = transform->GetWorldPosition();
 
+    if (!textureKey.empty() && Engine::ResourceSystem::Instance()->HasTexture(textureKey))
+    {
+        const sf::Texture* texture = Engine::ResourceSystem::Instance()->GetTextureShared(textureKey);
+
+        if (texture != nullptr)
+        {
+            sf::Sprite sprite(*texture);
+            sf::Vector2u textureSize = texture->getSize();
+
+            sprite.setOrigin(static_cast<float>(textureSize.x) * 0.5f,
+                             static_cast<float>(textureSize.y) * 0.5f);
+            sprite.setPosition(position.x, position.y);
+            sprite.setScale(textureWidth / static_cast<float>(textureSize.x),
+                            textureHeight / static_cast<float>(textureSize.y));
+            sprite.setRotation(std::atan2(direction.y, direction.x) * 180.0f / 3.14159265f);
+
+            Engine::RenderSystem::Instance()->Render(sprite);
+            return;
+        }
+    }
+
     sf::CircleShape shape(radius);
     shape.setOrigin(radius, radius);
     shape.setPosition(position.x, position.y);
@@ -73,6 +96,17 @@ void ProjectileComponent::SetSpeed(float newSpeed) { speed = newSpeed; }
 void ProjectileComponent::SetRadius(float newRadius) { radius = newRadius; }
 
 void ProjectileComponent::SetLifeTime(float newLifeTime) { lifeTime = newLifeTime; }
+
+void ProjectileComponent::SetTextureKey(const std::string& newTextureKey)
+{
+    textureKey = newTextureKey;
+}
+
+void ProjectileComponent::SetTextureSize(float width, float height)
+{
+    textureWidth = width;
+    textureHeight = height;
+}
 
 void ProjectileComponent::SetTargets(const std::vector<Engine::GameObject*>& newTargets)
 {

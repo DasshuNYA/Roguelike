@@ -177,6 +177,7 @@
     <ClInclude Include="Core\GameObject.h" />
     <ClInclude Include="Core\GameWorld.h" />
     <ClInclude Include="Core\Logger.h" />
+    <ClInclude Include="Core\SaveSystem.h" />
     <ClInclude Include="Core\Scene.h" />
     <ClInclude Include="Math\Matrix2D.h" />
     <ClInclude Include="Math\Vector.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\GameObject.cpp" />
     <ClCompile Include="Core\GameWorld.cpp" />
+    <ClCompile Include="Core\SaveSystem.cpp" />
     <ClCompile Include="Math\Matrix2D.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

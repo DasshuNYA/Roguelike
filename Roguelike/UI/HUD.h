@@ -12,7 +12,7 @@ namespace Roguelike
 class HUD : public Engine::UIElement
 {
    public:
-    explicit HUD(const sf::Font& font);
+    HUD(const sf::Font& font, const sf::Font& titleFont);
 
     void SetStats(float health, float maxHealth, float armor, float maxArmor);
     void SetObjective(int level, int aliveEnemies, int totalEnemies);
@@ -20,6 +20,7 @@ class HUD : public Engine::UIElement
 
    private:
     const sf::Font& font;
+    const sf::Font& titleFont;
 
     sf::Text healthText;
     sf::Text armorText;

@@ -20,6 +20,7 @@ SpriteColliderComponent::SpriteColliderComponent(GameObject* gameObject)
         return;
     }
 
+    this->spriteRenderer = spriteRenderer;
     sprite = spriteRenderer->GetSprite();
 
     PhysicsSystem::Instance()->Subscribe(this);
@@ -32,6 +33,12 @@ SpriteColliderComponent::~SpriteColliderComponent()
 
 void SpriteColliderComponent::Update(float deltaTime)
 {
+    if (spriteRenderer != nullptr)
+    {
+        // Physics runs before rendering, so bounds must use the current transform immediately.
+        spriteRenderer->SyncSpriteTransform();
+    }
+
     if (sprite == nullptr)
     {
         return;

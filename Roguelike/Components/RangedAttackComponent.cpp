@@ -60,6 +60,11 @@ void RangedAttackComponent::SetObstacles(const std::vector<Engine::GameObject*>&
     obstacles = newObstacles;
 }
 
+void RangedAttackComponent::SetProjectileTextureKey(const std::string& newTextureKey)
+{
+    projectileTextureKey = newTextureKey;
+}
+
 void RangedAttackComponent::Shoot()
 {
     if (transform == nullptr)
@@ -100,6 +105,9 @@ void RangedAttackComponent::Shoot()
     projectileComponent->SetSpeed(GameConfig::ProjectileSpeed);
     projectileComponent->SetRadius(GameConfig::ProjectileRadius);
     projectileComponent->SetLifeTime(GameConfig::ProjectileLifeTime);
+    projectileComponent->SetTextureKey(projectileTextureKey);
+    projectileComponent->SetTextureSize(GameConfig::ProjectileTextureWidth,
+                                        GameConfig::ProjectileTextureHeight);
     projectileComponent->SetTargets(targets);
     projectileComponent->SetObstacles(obstacles);
 }

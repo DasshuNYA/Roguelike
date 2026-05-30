@@ -142,6 +142,31 @@ HotbarUseResult HotbarPanel::TryUseHotkey()
     return {};
 }
 
+std::array<std::optional<ItemStack>, 6> HotbarPanel::GetSavedSlots() const
+{
+    std::array<std::optional<ItemStack>, 6> savedSlots;
+
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        if (slots[i].has_value())
+        {
+            savedSlots[i] = slots[i]->stack;
+        }
+    }
+
+    return savedSlots;
+}
+
+void HotbarPanel::SetSavedSlots(const std::array<std::optional<ItemStack>, 6>& savedSlots)
+{
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        slots[i] = savedSlots[i].has_value()
+                       ? std::optional<UIItemView>(UIItemView::FromStack(savedSlots[i].value()))
+                       : std::nullopt;
+    }
+}
+
 void HotbarPanel::Update(float deltaTime)
 {
     Engine::UIElement::Update(deltaTime);

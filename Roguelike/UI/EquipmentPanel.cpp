@@ -95,6 +95,31 @@ void EquipmentPanel::ClearHighlightedItem()
     highlightedItem.reset();
 }
 
+std::array<std::optional<ItemStack>, 5> EquipmentPanel::GetSavedSlots() const
+{
+    std::array<std::optional<ItemStack>, 5> savedSlots;
+
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        if (slots[i].has_value())
+        {
+            savedSlots[i] = slots[i]->stack;
+        }
+    }
+
+    return savedSlots;
+}
+
+void EquipmentPanel::SetSavedSlots(const std::array<std::optional<ItemStack>, 5>& savedSlots)
+{
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        slots[i] = savedSlots[i].has_value()
+                       ? std::optional<UIItemView>(UIItemView::FromStack(savedSlots[i].value()))
+                       : std::nullopt;
+    }
+}
+
 void EquipmentPanel::Draw(sf::RenderWindow& window)
 {
     if (Engine::ResourceSystem::Instance()->HasTexture("ui_inventory_menu_top"))

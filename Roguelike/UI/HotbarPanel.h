@@ -37,6 +37,8 @@ class HotbarPanel : public Engine::UIElement
     void SetHighlightedItem(const std::optional<UIItemView>& item);
     void ClearHighlightedItem();
     HotbarUseResult TryUseHotkey();
+    std::array<std::optional<ItemStack>, 6> GetSavedSlots() const;
+    void SetSavedSlots(const std::array<std::optional<ItemStack>, 6>& savedSlots);
 
     void Update(float deltaTime) override;
     void Draw(sf::RenderWindow& window) override;

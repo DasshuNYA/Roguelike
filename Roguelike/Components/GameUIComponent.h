@@ -50,6 +50,8 @@ class GameUIComponent : public Engine::Component
     void HandleDeathState();
     void HandleGameOverInput();
     void HandleLevelCompleteInput();
+    void RestorePlayerRunState();
+    void SavePlayerRunState();
     void ToggleInventory();
     void CloseInventory();
     void ClearSelectedItem();

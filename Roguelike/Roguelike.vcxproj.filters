@@ -26,6 +26,9 @@
     <ClCompile Include="Components\DetectionTriggerComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Components\DirectionalSpriteComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="Components\PlayerMovementComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -145,6 +148,9 @@
     <ClInclude Include="Components\DetectionTriggerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Components\DirectionalSpriteComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="Components\PlayerMovementComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -239,6 +245,9 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Gameplay\LevelProgress.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\PlayerRunSnapshot.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
   </ItemGroup>

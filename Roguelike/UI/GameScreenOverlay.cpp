@@ -6,6 +6,10 @@
 #include "GameConfig.h"
 #include "UITextureUtils.h"
 
+#include <algorithm>
+#include <cmath>
+#include <cstdint>
+
 namespace Roguelike
 {
 GameScreenOverlay::GameScreenOverlay(const sf::Font& uiFont, const sf::Font& uiTitleFont)
@@ -20,6 +24,13 @@ GameScreenOverlay::GameScreenOverlay(const sf::Font& uiFont, const sf::Font& uiT
     windowPanel.setFillColor(sf::Color(18, 16, 18, 235));
     windowPanel.setOutlineColor(sf::Color(180, 150, 100, 255));
     windowPanel.setOutlineThickness(4.0f);
+
+    pauseTextPanel.setSize({PausePanelWidth, PausePanelHeight});
+    pauseTextPanel.setOrigin({PausePanelWidth * 0.5f, PausePanelHeight * 0.5f});
+    pauseTextPanel.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY - 18.0f});
+    pauseTextPanel.setFillColor(sf::Color(6, 6, 8, 165));
+    pauseTextPanel.setOutlineColor(sf::Color(244, 226, 146, 70));
+    pauseTextPanel.setOutlineThickness(2.0f);
 
     titleText.setFont(titleFont);
     titleText.setCharacterSize(64);
@@ -56,6 +67,7 @@ void GameScreenOverlay::ShowGameOver()
     style = OverlayStyle::GameOver;
     SetText("YOU DIED", "Press Space to rise again");
     isMainMenuBackdropOpaque = false;
+    deathLightTime = 0.0f;
     GetAnimation().SetAlpha(0.0f);
     Show();
 }
@@ -73,6 +85,27 @@ void GameScreenOverlay::HideOverlay()
 {
     isMainMenuBackdropOpaque = false;
     Hide();
+}
+
+void GameScreenOverlay::Update(float deltaTime)
+{
+    Engine::UIElement::Update(deltaTime);
+
+    if (IsVisible())
+    {
+        subtitleBlinkTime += deltaTime;
+    }
+
+    if (style == OverlayStyle::GameOver && IsVisible())
+    {
+        deathLightTime += deltaTime;
+    }
+
+    if (style == OverlayStyle::MainMenu && IsVisible())
+    {
+        fireLightTime += deltaTime;
+        fireSpriteTime += deltaTime;
+    }
 }
 
 void GameScreenOverlay::SetText(const std::string& title, const std::string& subtitle)
@@ -107,44 +140,223 @@ const char* GameScreenOverlay::GetBackgroundTextureKey() const
     }
 }
 
+float GameScreenOverlay::GetEnterOffset() const
+{
+    float progress = static_cast<float>(GetAlpha()) / MaxAlpha;
+    progress = std::clamp(progress, 0.0f, 1.0f);
+
+    float easedProgress = 1.0f - (1.0f - progress) * (1.0f - progress);
+    return EnterOffsetY * (1.0f - easedProgress);
+}
+
+sf::Uint8 GameScreenOverlay::GetDeathLightAlpha(sf::Uint8 backgroundAlpha) const
+{
+    if (style != OverlayStyle::GameOver)
+    {
+        return 0;
+    }
+
+    float progress = std::clamp(deathLightTime / DeathLightFadeSeconds, 0.0f, 1.0f);
+    float fade = (1.0f - progress) * (1.0f - progress);
+
+    std::uint32_t jitterStep = static_cast<std::uint32_t>(deathLightTime * 12.0f);
+    float jitter = (Noise01(jitterStep + 71) - 0.5f) * DeathLightJitterAlpha * fade;
+    float tremble = std::sin(deathLightTime * 17.0f) * 9.0f * fade;
+
+    float alpha = static_cast<float>(backgroundAlpha) * fade + jitter + tremble;
+    return static_cast<sf::Uint8>(std::clamp(alpha, 0.0f, MaxAlpha));
+}
+
+sf::Uint8 GameScreenOverlay::GetFireLightAlpha(sf::Uint8 backgroundAlpha) const
+{
+    if (style != OverlayStyle::MainMenu)
+    {
+        return 0;
+    }
+
+    std::uint32_t jitterStep = static_cast<std::uint32_t>(fireLightTime * 18.0f);
+    float jitter = (Noise01(jitterStep) - 0.5f) * 0.32f;
+
+    float sharpPulse = std::max(0.0f, std::sin(fireLightTime * 29.0f +
+                                               Noise01(jitterStep + 17) * 6.28318f));
+    sharpPulse = sharpPulse * sharpPulse * sharpPulse * 0.22f;
+
+    float lowWave = 0.52f + 0.15f * std::sin(fireLightTime * 5.7f) +
+                    0.08f * std::sin(fireLightTime * 11.3f);
+    float flicker = lowWave + jitter + sharpPulse;
+    flicker = std::clamp(flicker, 0.0f, 1.0f);
+
+    float alpha = FireLightMinAlpha + (FireLightMaxAlpha - FireLightMinAlpha) * flicker;
+    alpha *= static_cast<float>(backgroundAlpha) / MaxAlpha;
+
+    return static_cast<sf::Uint8>(std::clamp(alpha, 0.0f, MaxAlpha));
+}
+
+sf::Uint8 GameScreenOverlay::GetSubtitleAlpha(sf::Uint8 alpha) const
+{
+    float wave = (std::sin(subtitleBlinkTime * SubtitleBlinkSpeed) + 1.0f) * 0.5f;
+    float factor = SubtitleMinAlphaFactor + (1.0f - SubtitleMinAlphaFactor) * wave;
+    float result = static_cast<float>(alpha) * factor;
+
+    return static_cast<sf::Uint8>(std::clamp(result, 0.0f, MaxAlpha));
+}
+
+sf::FloatRect GameScreenOverlay::GetStartBackgroundBounds(const sf::RenderWindow& window,
+                                                          float strength) const
+{
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+    sf::Vector2u windowSize = window.getSize();
+
+    float normalizedX =
+        std::clamp((static_cast<float>(mousePosition.x) / static_cast<float>(windowSize.x)) -
+                       0.5f,
+                   -0.5f, 0.5f);
+    float normalizedY =
+        std::clamp((static_cast<float>(mousePosition.y) / static_cast<float>(windowSize.y)) -
+                       0.5f,
+                   -0.5f, 0.5f);
+
+    float width = GameConfig::WindowWidth + StartBackgroundOverscan * 2.0f;
+    float height = GameConfig::WindowHeight + StartBackgroundOverscan * 2.0f;
+    float x = -StartBackgroundOverscan - normalizedX * strength;
+    float y = -StartBackgroundOverscan - normalizedY * strength;
+
+    return {x, y, width, height};
+}
+
+sf::FloatRect GameScreenOverlay::GetStartFireBounds(const sf::RenderWindow& window) const
+{
+    sf::FloatRect backgroundBounds = GetStartBackgroundBounds(window, StartBackgroundParallax);
+    float parallaxX = backgroundBounds.left + StartBackgroundOverscan;
+    float parallaxY = backgroundBounds.top + StartBackgroundOverscan;
+
+    return {GameConfig::StartMenuFireLeft + parallaxX, GameConfig::StartMenuFireTop + parallaxY,
+            GameConfig::StartMenuFireWidth, GameConfig::StartMenuFireHeight};
+}
+
+std::string GameScreenOverlay::GetStartFireTextureKey() const
+{
+    int frameIndex = static_cast<int>(fireSpriteTime / GameConfig::StartMenuFireFrameSeconds) %
+                     GameConfig::StartMenuFireFrameCount;
+
+    return "ui_start_fire_" + std::to_string(frameIndex + 1);
+}
+
+void GameScreenOverlay::DrawMainMenuEffects(sf::RenderWindow& window,
+                                            sf::Uint8 backgroundAlpha) const
+{
+    UITextureUtils::DrawTexture(window, GetStartFireTextureKey(), GetStartFireBounds(window),
+                                backgroundAlpha);
+
+    sf::FloatRect fireLightBounds = GetStartBackgroundBounds(window, FireLightParallax);
+    UITextureUtils::DrawTexture(window, "ui_start_game_fire_light", fireLightBounds,
+                                GetFireLightAlpha(backgroundAlpha), sf::Color::White, 1.0f,
+                                sf::BlendAdd);
+}
+
+void GameScreenOverlay::DrawGameOverEffects(sf::RenderWindow& window,
+                                            sf::Uint8 backgroundAlpha) const
+{
+    UITextureUtils::DrawTexture(window, "ui_dead_light_background",
+                                {0.0f, 0.0f, GameConfig::WindowWidth,
+                                 GameConfig::WindowHeight},
+                                GetDeathLightAlpha(backgroundAlpha), sf::Color::White, 1.0f,
+                                sf::BlendAlpha);
+}
+
+void GameScreenOverlay::DrawPausePanel(sf::RenderWindow& window, float enterOffset,
+                                       sf::Uint8 alpha) const
+{
+    sf::RectangleShape animatedPausePanel = pauseTextPanel;
+    animatedPausePanel.move({0.0f, enterOffset * 0.55f});
+    sf::FloatRect pausePanelBounds = animatedPausePanel.getGlobalBounds();
+
+    if (UITextureUtils::DrawTexture(window, "ui_popup_message", pausePanelBounds,
+                                    static_cast<sf::Uint8>(alpha * 0.86f)))
+    {
+        return;
+    }
+
+    animatedPausePanel.setFillColor(sf::Color(6, 6, 8, static_cast<sf::Uint8>(alpha * 0.66f)));
+    animatedPausePanel.setOutlineColor(
+        sf::Color(244, 226, 146, static_cast<sf::Uint8>(alpha * 0.28f)));
+    window.draw(animatedPausePanel);
+}
+
+float GameScreenOverlay::Noise01(std::uint32_t seed)
+{
+    seed ^= seed >> 16;
+    seed *= 0x7feb352dU;
+    seed ^= seed >> 15;
+    seed *= 0x846ca68bU;
+    seed ^= seed >> 16;
+
+    return static_cast<float>(seed & 0x00ffffffU) / static_cast<float>(0x00ffffffU);
+}
+
 void GameScreenOverlay::Draw(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
     sf::Uint8 backgroundAlpha = isMainMenuBackdropOpaque ? 255 : alpha;
+    float enterOffset = GetEnterOffset();
 
     background.setFillColor(sf::Color(0, 0, 0, backgroundAlpha));
 
     sf::Color panelColor = sf::Color(18, 16, 18, alpha);
     sf::Color outlineColor = sf::Color(180, 150, 100, alpha);
 
-    windowPanel.setFillColor(panelColor);
-    windowPanel.setOutlineColor(outlineColor);
+    sf::RectangleShape animatedPanel = windowPanel;
+    animatedPanel.move({0.0f, enterOffset});
+    animatedPanel.setFillColor(panelColor);
+    animatedPanel.setOutlineColor(outlineColor);
 
     sf::Color titleColor = style == OverlayStyle::MainMenu
                                ? sf::Color(255, 255, 255, alpha)
                                : sf::Color(244, 226, 146, alpha);
     sf::Color subtitleColor = style == OverlayStyle::MainMenu
-                                  ? sf::Color(255, 255, 255, alpha)
-                                  : sf::Color(220, 210, 190, alpha);
+                                  ? sf::Color(255, 255, 255, GetSubtitleAlpha(alpha))
+                                  : sf::Color(220, 210, 190, GetSubtitleAlpha(alpha));
 
-    titleText.setFillColor(titleColor);
-    subtitleText.setFillColor(subtitleColor);
+    sf::Text animatedTitle = titleText;
+    sf::Text animatedSubtitle = subtitleText;
+
+    animatedTitle.move({0.0f, enterOffset});
+    animatedSubtitle.move({0.0f, enterOffset * 0.65f});
+    animatedTitle.setFillColor(titleColor);
+    animatedSubtitle.setFillColor(subtitleColor);
 
     const char* backgroundTextureKey = GetBackgroundTextureKey();
+    sf::FloatRect backgroundBounds =
+        style == OverlayStyle::MainMenu
+            ? GetStartBackgroundBounds(window, StartBackgroundParallax)
+            : sf::FloatRect{0.0f, 0.0f, GameConfig::WindowWidth, GameConfig::WindowHeight};
     bool drewBackgroundTexture =
         backgroundTextureKey != nullptr &&
-        UITextureUtils::DrawTexture(window, backgroundTextureKey,
-                                    {0.0f, 0.0f, GameConfig::WindowWidth,
-                                     GameConfig::WindowHeight},
+        UITextureUtils::DrawTexture(window, backgroundTextureKey, backgroundBounds,
                                     backgroundAlpha);
+
+    if (style == OverlayStyle::MainMenu && drewBackgroundTexture)
+    {
+        DrawMainMenuEffects(window, backgroundAlpha);
+    }
+
+    if (style == OverlayStyle::GameOver && drewBackgroundTexture)
+    {
+        DrawGameOverEffects(window, backgroundAlpha);
+    }
 
     if (!drewBackgroundTexture && style != OverlayStyle::Pause)
     {
         window.draw(background);
-        window.draw(windowPanel);
+        window.draw(animatedPanel);
     }
 
-    window.draw(titleText);
-    window.draw(subtitleText);
+    if (style == OverlayStyle::Pause)
+    {
+        DrawPausePanel(window, enterOffset, alpha);
+    }
+
+    window.draw(animatedTitle);
+    window.draw(animatedSubtitle);
 }
 }  // namespace Roguelike

@@ -4,6 +4,7 @@
 #include "Player.h"
 
 #include "DeathComponent.h"
+#include "DirectionalSpriteComponent.h"
 #include "GameConfig.h"
 #include "InventoryComponent.h"
 #include "Logger.h"
@@ -36,6 +37,10 @@ Player::Player()
     auto body = gameObject->AddComponent<Engine::RigidbodyComponent>();
     body->SetLinearDamping(0.f);
 
+    auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
+    directionalSprite->SetTextures("player_default", "player_down", "player_right", "player_up",
+                                   "player_left");
+
     gameObject->AddComponent<PlayerMovementComponent>();
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
     gameObject->AddComponent<InventoryComponent>();
@@ -44,7 +49,8 @@ Player::Player()
     stats->SetStats(GameConfig::PlayerHealth, GameConfig::PlayerArmor);
 
     gameObject->AddComponent<Engine::DeathComponent>();
-    gameObject->AddComponent<RangedAttackComponent>();
+    auto rangedAttack = gameObject->AddComponent<RangedAttackComponent>();
+    rangedAttack->SetProjectileTextureKey(GameConfig::PlayerProjectileTextureKey);
 
     LOG_INFO("Player created.");
 }

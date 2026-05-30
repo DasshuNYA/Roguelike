@@ -19,7 +19,8 @@ bool DrawTexture(sf::RenderWindow& window,
                  sf::FloatRect bounds,
                  sf::Uint8 alpha,
                  sf::Color tint,
-                 float fillRatio)
+                 float fillRatio,
+                 sf::BlendMode blendMode)
 {
     Engine::ResourceSystem* resources = Engine::ResourceSystem::Instance();
 
@@ -50,7 +51,7 @@ bool DrawTexture(sf::RenderWindow& window,
                               static_cast<sf::Uint8>((static_cast<float>(tint.a) / 255.0f) *
                                                      static_cast<float>(alpha))));
 
-    window.draw(sprite);
+    window.draw(sprite, blendMode);
     return true;
 }
 

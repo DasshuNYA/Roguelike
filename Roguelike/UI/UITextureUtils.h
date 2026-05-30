@@ -18,7 +18,8 @@ bool DrawTexture(sf::RenderWindow& window,
                  sf::FloatRect bounds,
                  sf::Uint8 alpha,
                  sf::Color tint = sf::Color::White,
-                 float fillRatio = 1.0f);
+                 float fillRatio = 1.0f,
+                 sf::BlendMode blendMode = sf::BlendAlpha);
 
 bool DrawItemTexture(sf::RenderWindow& window,
                      const UIItemView& item,

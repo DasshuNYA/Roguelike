@@ -8,7 +8,9 @@
 #include "GameNotifications.h"
 #include "GameWorld.h"
 #include "LevelProgress.h"
+#include "PlayerRunSnapshot.h"
 #include "RenderSystem.h"
+#include "SaveSystem.h"
 #include "StatsComponent.h"
 #include "UITextureUtils.h"
 
@@ -24,8 +26,8 @@ const sf::Uint8 DraggedItemFallbackAlpha = 220;
 
 GameUIComponent::GameUIComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
-    font.loadFromFile("Resources/Fonts/MPLUSRounded1c-Regular.ttf");
-    titleFont.loadFromFile("Resources/Fonts/CGXYZPCAlt-Regular.otf");
+    font.loadFromFile(GameConfig::MainUIFontPath);
+    titleFont.loadFromFile(GameConfig::TitleFontPath);
     CreateUI();
 
     Engine::GameWorld::Instance()->SetPaused(true);
@@ -47,6 +49,8 @@ void GameUIComponent::SetPlayer(Engine::GameObject* player)
             [this](float health, float armor) { UpdateHUDStats(health, armor); });
         UpdateHUDStats(stats->GetHealth(), stats->GetArmor());
     }
+
+    RestorePlayerRunState();
 }
 
 void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& enemies, int level)
@@ -104,7 +108,7 @@ void GameUIComponent::Render()
 
 void GameUIComponent::CreateUI()
 {
-    hud = &uiManager.CreateElement<HUD>(font);
+    hud = &uiManager.CreateElement<HUD>(font, titleFont);
     hotbar = &uiManager.CreateElement<HotbarPanel>(font);
     inventory = &uiManager.CreateElement<InventoryPanel>(font);
     equipment = &uiManager.CreateElement<EquipmentPanel>(font);
@@ -432,6 +436,7 @@ void GameUIComponent::HandleGameOverInput()
 
     if (isRestartPressed && !wasRestartPressed)
     {
+        Engine::SaveSystem::Instance()->RemoveValue(PlayerRunSnapshotKey);
         LevelProgress::Reset();
         Engine::Engine::Instance()->RequestSceneRestart();
     }
@@ -445,11 +450,83 @@ void GameUIComponent::HandleLevelCompleteInput()
 
     if (isNextLevelPressed && !wasRestartPressed)
     {
+        SavePlayerRunState();
         LevelProgress::Advance();
         Engine::Engine::Instance()->RequestSceneRestart();
     }
 
     wasRestartPressed = isNextLevelPressed;
+}
+
+void GameUIComponent::RestorePlayerRunState()
+{
+    if (playerInventory == nullptr)
+    {
+        return;
+    }
+
+    std::optional<PlayerRunSnapshot> snapshot =
+        Engine::SaveSystem::Instance()->GetValue<PlayerRunSnapshot>(PlayerRunSnapshotKey);
+
+    if (!snapshot.has_value())
+    {
+        return;
+    }
+
+    playerInventory->SetItems(snapshot->inventoryItems);
+    knownInventoryItems = snapshot->inventoryItems;
+
+    if (hotbar != nullptr)
+    {
+        hotbar->SetSavedSlots(snapshot->hotbarSlots);
+    }
+
+    if (equipment != nullptr)
+    {
+        equipment->SetSavedSlots(snapshot->equipmentSlots);
+    }
+
+    Engine::StatsComponent* stats =
+        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
+
+    if (stats != nullptr)
+    {
+        stats->SetStats(snapshot->health, snapshot->armor);
+        stats->SetAttackPower(snapshot->attackPower);
+    }
+}
+
+void GameUIComponent::SavePlayerRunState()
+{
+    if (playerInventory == nullptr)
+    {
+        return;
+    }
+
+    PlayerRunSnapshot snapshot;
+    snapshot.inventoryItems = playerInventory->GetItems();
+
+    if (hotbar != nullptr)
+    {
+        snapshot.hotbarSlots = hotbar->GetSavedSlots();
+    }
+
+    if (equipment != nullptr)
+    {
+        snapshot.equipmentSlots = equipment->GetSavedSlots();
+    }
+
+    Engine::StatsComponent* stats =
+        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
+
+    if (stats != nullptr)
+    {
+        snapshot.health = stats->GetHealth();
+        snapshot.armor = stats->GetArmor();
+        snapshot.attackPower = stats->GetAttackPower();
+    }
+
+    Engine::SaveSystem::Instance()->SetValue(PlayerRunSnapshotKey, snapshot);
 }
 
 void GameUIComponent::ToggleInventory()

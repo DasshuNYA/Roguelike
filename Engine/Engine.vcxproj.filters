@@ -17,6 +17,9 @@
     <ClCompile Include="Core\GameWorld.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\SaveSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="Math\Matrix2D.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -96,6 +99,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Logger.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SaveSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Scene.h">

@@ -25,6 +25,8 @@ class EquipmentPanel : public FramedPanel
     bool ContainsPoint(sf::Vector2f mousePosition) const;
     void SetHighlightedItem(const std::optional<UIItemView>& item);
     void ClearHighlightedItem();
+    std::array<std::optional<ItemStack>, 5> GetSavedSlots() const;
+    void SetSavedSlots(const std::array<std::optional<ItemStack>, 5>& savedSlots);
 
     void Draw(sf::RenderWindow& window) override;
 

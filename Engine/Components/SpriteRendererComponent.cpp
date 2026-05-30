@@ -30,21 +30,29 @@ void SpriteRendererComponent::Update(float deltaTime) {}
 
 void SpriteRendererComponent::Render()
 {
-    if (sprite != nullptr && transform != nullptr)
+    SyncSpriteTransform();
+
+    if (sprite != nullptr)
     {
-        sprite->setPosition(Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
-
-        sprite->setRotation(transform->GetWorldRotation());
-
-        auto transformScale = Convert<sf::Vector2f, Vector2Df>(transform->GetWorldScale());
-
-        sprite->setScale({scale.x * transformScale.x, scale.y * transformScale.y});
-
         RenderSystem::Instance()->Render(*sprite);
     }
 }
 
 const sf::Sprite* SpriteRendererComponent::GetSprite() const { return sprite; }
+
+void SpriteRendererComponent::SyncSpriteTransform()
+{
+    if (sprite == nullptr || transform == nullptr)
+    {
+        return;
+    }
+
+    sprite->setPosition(Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
+    sprite->setRotation(transform->GetWorldRotation());
+
+    auto transformScale = Convert<sf::Vector2f, Vector2Df>(transform->GetWorldScale());
+    sprite->setScale({scale.x * transformScale.x, scale.y * transformScale.y});
+}
 
 void SpriteRendererComponent::SetTexture(const sf::Texture& newTexture)
 {

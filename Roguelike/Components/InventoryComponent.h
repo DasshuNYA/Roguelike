@@ -19,6 +19,7 @@ class InventoryComponent : public Engine::Component
     bool RemoveOneItem(const std::string& itemName);
     bool HasSpaceFor(const ItemStack& item) const;
     const std::vector<ItemStack>& GetItems() const;
+    void SetItems(const std::vector<ItemStack>& newItems);
 
     void Update(float deltaTime) override;
     void Render() override;
