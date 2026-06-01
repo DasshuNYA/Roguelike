@@ -49,20 +49,38 @@ class GameScreenOverlay : public Engine::UIElement
     static float Noise01(std::uint32_t seed);
 
    private:
+    // Shared overlay animation tuning.
     static constexpr float MainMenuFadeSeconds = 1.0f;
     static constexpr float MaxAlpha = 255.0f;
     static constexpr float EnterOffsetY = 34.0f;
+
+    // Main menu background and fire parallax tuning.
     static constexpr float FireLightMinAlpha = 16.0f;
     static constexpr float FireLightMaxAlpha = 92.0f;
     static constexpr float StartBackgroundOverscan = 28.0f;
     static constexpr float StartBackgroundParallax = 20.0f;
     static constexpr float FireLightParallax = 28.0f;
+
+    // Subtitle blink animation tuning.
     static constexpr float SubtitleBlinkSpeed = 2.2f;
     static constexpr float SubtitleMinAlphaFactor = 0.34f;
+
+    // Game over light fade and jitter tuning.
     static constexpr float DeathLightFadeSeconds = 3.8f;
     static constexpr float DeathLightJitterAlpha = 34.0f;
-    static constexpr float PausePanelWidth = 640.0f;
-    static constexpr float PausePanelHeight = 190.0f;
+
+    // Pause popup layout. Width/height control the panel size.
+    // Texture margins are 9-slice borders: corners keep their original shape,
+    // only the middle stretches.
+    static constexpr float PausePanelWidth = 600.0f;
+    static constexpr float PausePanelHeight = 210.0f;
+    static constexpr float PausePanelTextureMarginX = 92.0f;
+    static constexpr float PausePanelTextureMarginTop = 78.0f;
+    static constexpr float PausePanelTextureMarginBottom = 82.0f;
+
+    // Pause text sizes. Text positions are adjusted in Draw() for the pause style.
+    static constexpr unsigned int PauseTitleCharacterSize = 52;
+    static constexpr unsigned int PauseSubtitleCharacterSize = 26;
 
     const sf::Font& font;
     const sf::Font& titleFont;

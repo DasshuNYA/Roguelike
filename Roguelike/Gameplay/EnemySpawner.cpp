@@ -48,6 +48,8 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
     int maxAttempts = settings.count * GameConfig::SpawnMaxAttemptsMultiplier;
     std::vector<Engine::Vector2Df> usedPositions;
 
+    // Spawn selection is conservative: no duplicate tile, far enough from player,
+    // and reachable by pathfinding so the level cannot softlock enemy progress.
     while (spawnedCount < settings.count && attempts < maxAttempts)
     {
         attempts++;
@@ -103,6 +105,7 @@ bool EnemySpawner::IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& positi
 
     Engine::Vector2Df direction = {position.x - playerPosition.x, position.y - playerPosition.y};
 
+    // minDistance is a balance knob in GameConfig, not a collision radius.
     return direction.GetLength() >= minDistance;
 }
 
@@ -118,6 +121,7 @@ bool EnemySpawner::IsPositionReachableFromPlayer(const Engine::Vector2Df& positi
         return false;
     }
 
+    // Reject isolated floor cells so every spawned enemy can eventually reach the player.
     return !MazeNavigation::Instance()
                 ->FindPath(playerTransform->GetWorldPosition(), position)
                 .empty();

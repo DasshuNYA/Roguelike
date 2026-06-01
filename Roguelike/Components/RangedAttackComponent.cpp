@@ -8,6 +8,7 @@
 #include "GameWorld.h"
 #include "ProjectileComponent.h"
 #include "RenderSystem.h"
+#include "StatsComponent.h"
 #include "TransformComponent.h"
 #include "Vector.h"
 
@@ -87,6 +88,7 @@ void RangedAttackComponent::Shoot()
 
     if (length <= 0.01f)
     {
+        // Ignore clicks exactly on the player to avoid a zero-length projectile direction.
         return;
     }
 
@@ -101,7 +103,10 @@ void RangedAttackComponent::Shoot()
     ProjectileComponent* projectileComponent = projectile->AddComponent<ProjectileComponent>();
 
     projectileComponent->SetDirection(direction);
-    projectileComponent->SetDamage(GameConfig::PlayerAttackPower);
+    Engine::StatsComponent* stats = gameObject->GetComponent<Engine::StatsComponent>();
+    // Attack potion modifies StatsComponent, so projectile damage is read at shot time.
+    projectileComponent->SetDamage(stats != nullptr ? stats->GetAttackPower()
+                                                     : GameConfig::PlayerAttackPower);
     projectileComponent->SetSpeed(GameConfig::ProjectileSpeed);
     projectileComponent->SetRadius(GameConfig::ProjectileRadius);
     projectileComponent->SetLifeTime(GameConfig::ProjectileLifeTime);

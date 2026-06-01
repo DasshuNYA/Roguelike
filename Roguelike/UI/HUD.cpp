@@ -33,17 +33,22 @@ bool DrawArmorIcon(sf::RenderWindow& window, sf::FloatRect bounds, sf::Uint8 alp
     return UITextureUtils::DrawTexture(window, "ui_player_armor", bounds, alpha);
 }
 
-// HUD layout. These are absolute screen coordinates.
+// HUD layout. These are absolute screen coordinates in the 1920x1080 UI space.
+// Move the health bar, armor icons, and quest parchment by changing these values.
 const sf::FloatRect HealthBarBounds = {20.0f, 18.0f, 440.0f, 108.0f};
 const sf::Vector2f ArmorStartPosition = {112.0f, 128.0f};
 const sf::Vector2f ArmorIconSize = {64.0f, 64.0f};
 const float ArmorIconGap = 72.0f;
+
+// Quest parchment layout. Width/height resize the paper texture;
+// margin controls the distance from the top-right corner.
 const float QuestPanelWidth = 190.0f;
 const float QuestPanelHeight = 174.0f;
 const float QuestPanelMargin = 24.0f;
 const sf::FloatRect QuestPanelBounds = {GameConfig::WindowWidth - QuestPanelWidth -
                                             QuestPanelMargin,
                                         QuestPanelMargin, QuestPanelWidth, QuestPanelHeight};
+// Text Y positions inside the quest parchment.
 const float QuestLevelY = QuestPanelBounds.top + 46.0f;
 const float QuestEnemiesY = QuestPanelBounds.top + 100.0f;
 
@@ -66,6 +71,7 @@ HUD::HUD(const sf::Font& uiFont, const sf::Font& uiTitleFont)
     armorText.setCharacterSize(24);
     armorText.setPosition(24.0f, 136.0f);
 
+    // Quest title and objective text sizes.
     levelText.setFont(titleFont);
     levelText.setCharacterSize(18);
 
@@ -94,6 +100,7 @@ void HUD::SetStats(float health, float maxHealth, float armor, float maxArmor)
 
 void HUD::SetObjective(int level, int aliveEnemies, int totalEnemies)
 {
+    // GameUIComponent passes alive/total enemies. HUD converts it to killed/total in Draw().
     currentLevel = level;
     currentAliveEnemies = aliveEnemies;
     currentTotalEnemies = totalEnemies;
@@ -104,7 +111,9 @@ void HUD::Draw(sf::RenderWindow& window)
     healthText.setString("");
     armorText.setString("");
     levelText.setString("LEVEL " + std::to_string(currentLevel));
-    objectiveText.setString("Enemies: " + std::to_string(currentAliveEnemies) + "/" +
+    // Quest progress is displayed as killed enemies, e.g. "Kill enemies: 0/5".
+    int killedEnemies = std::max(0, currentTotalEnemies - currentAliveEnemies);
+    objectiveText.setString("Kill enemies: " + std::to_string(killedEnemies) + "/" +
                             std::to_string(currentTotalEnemies));
 
     float questCenterX = QuestPanelBounds.left + QuestPanelBounds.width * 0.5f;

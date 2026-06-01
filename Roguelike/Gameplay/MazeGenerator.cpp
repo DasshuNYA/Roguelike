@@ -29,6 +29,7 @@ MazeGenerator::MazeGenerator(int newWidth, int newHeight, DeveloperLevel* newLev
         height++;
     }
 
+    // Recursive backtracking works on odd cells with wall cells between corridors.
     visited.resize(height, std::vector<bool>(width, false));
     isWall.resize(height, std::vector<bool>(width, true));
 }
@@ -39,6 +40,7 @@ void MazeGenerator::Generate()
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
+    // Start from the same inner cell as the player spawn area so the first corridor is reachable.
     int startX = 1;
     int startY = 1;
 
@@ -86,6 +88,7 @@ const std::vector<Engine::Vector2Df>& MazeGenerator::GetFloorPositions() const
 
 std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x, int y)
 {
+    // Move two grid cells at a time so the cell between can be carved as a corridor.
     std::vector<std::pair<int, int>> directions = {{0, -2}, {0, 2}, {-2, 0}, {2, 0}};
 
     std::vector<std::pair<int, int>> available;
@@ -119,6 +122,7 @@ void MazeGenerator::CarvePath(int x1, int y1, int x2, int y2)
     int wallX = (x1 + x2) / 2;
     int wallY = (y1 + y2) / 2;
 
+    // Open both target cells and the wall between them.
     isWall[y1][x1] = false;
     isWall[wallY][wallX] = false;
     isWall[y2][x2] = false;

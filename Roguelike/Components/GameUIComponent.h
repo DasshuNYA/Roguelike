@@ -35,13 +35,18 @@ class GameUIComponent : public Engine::Component
     void Render() override;
 
    private:
+    // UI creation and frame refresh.
     void CreateUI();
     void UpdateHUD();
     void UpdateHUDStats(float health, float armor);
     void UpdateInventory();
     void UpdateLevelObjective(float deltaTime);
+
+    // Inventory/hotbar synchronization.
     void AutoPlaceNewHotbarItems(const std::vector<ItemStack>& items);
     int GetKnownItemCount(const ItemData* itemData) const;
+
+    // Modal input flow. Game over, level complete, main menu, and pause consume input first.
     void HandleInput(sf::RenderWindow& window);
     void HandleMainMenuInput();
     void HandlePauseInput();
@@ -50,8 +55,13 @@ class GameUIComponent : public Engine::Component
     void HandleDeathState();
     void HandleGameOverInput();
     void HandleLevelCompleteInput();
+
+    // Consumable effects and run persistence between levels.
+    std::string ApplyHotbarItemEffect(const std::string& itemName);
     void RestorePlayerRunState();
     void SavePlayerRunState();
+
+    // Drag-and-drop selection helpers shared by inventory, equipment, hotbar, and description.
     void ToggleInventory();
     void CloseInventory();
     void ClearSelectedItem();
@@ -63,6 +73,8 @@ class GameUIComponent : public Engine::Component
    private:
     Engine::GameObject* playerObject = nullptr;
     InventoryComponent* playerInventory = nullptr;
+
+    // Objective state: enemies are tracked as alive/total, HUD converts to killed/total.
     std::vector<Engine::GameObject*> objectiveEnemies;
     int levelNumber = 1;
     int totalEnemyCount = 0;
@@ -71,6 +83,7 @@ class GameUIComponent : public Engine::Component
 
     Engine::UIManager uiManager;
 
+    // Fonts are loaded once and passed by reference into every panel.
     sf::Font font;
     sf::Font titleFont;
 
@@ -82,13 +95,16 @@ class GameUIComponent : public Engine::Component
     PopupMessage* popup = nullptr;
     GameScreenOverlay* overlay = nullptr;
 
+    // Currently dragged inventory item and snapshot used for hotbar auto-placement.
     std::optional<UIItemView> draggedItem;
     std::vector<ItemStack> knownInventoryItems;
 
+    // Modal state flags. Only one top-level overlay should own input at a time.
     bool isMainMenuOpen = true;
     bool isPauseOpen = false;
     bool isGameOver = false;
 
+    // Input edge flags prevent one held key/mouse button from firing every frame.
     bool wasStartPressed = false;
     bool wasRestartPressed = false;
     bool wasInventoryPressed = false;

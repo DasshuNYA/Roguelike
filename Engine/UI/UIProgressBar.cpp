@@ -23,6 +23,7 @@ void UIProgressBar::SetSize(sf::Vector2f size)
 
 void UIProgressBar::SetValue(float current, float max)
 {
+    // Store progress normalized to 0..1; rendering scales the fill rectangle later.
     if (max <= 0.0f)
     {
         value = 0.0f;
@@ -40,11 +41,13 @@ void UIProgressBar::SetOutlineColor(sf::Color color) { outlineColor = color; }
 
 void UIProgressBar::Draw(sf::RenderWindow& window)
 {
+    // ApplyAlpha comes from UIElement, so bars fade together with their parent HUD.
     background.setFillColor(ApplyAlpha(backColor));
     background.setOutlineColor(ApplyAlpha(outlineColor));
 
     sf::Vector2f size = background.getSize();
 
+    // Fill shrinks horizontally while the background frame keeps its full size.
     fill.setSize({size.x * value, size.y});
     fill.setFillColor(ApplyAlpha(fillColor));
 

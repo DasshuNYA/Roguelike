@@ -21,6 +21,17 @@ bool DrawTexture(sf::RenderWindow& window,
                  float fillRatio = 1.0f,
                  sf::BlendMode blendMode = sf::BlendAlpha);
 
+bool DrawNineSliceTexture(sf::RenderWindow& window,
+                          const std::string& textureKey,
+                          sf::FloatRect bounds,
+                          float leftMargin,
+                          float topMargin,
+                          float rightMargin,
+                          float bottomMargin,
+                          sf::Uint8 alpha,
+                          sf::Color tint = sf::Color::White,
+                          sf::BlendMode blendMode = sf::BlendAlpha);
+
 bool DrawItemTexture(sf::RenderWindow& window,
                      const UIItemView& item,
                      sf::FloatRect bounds,

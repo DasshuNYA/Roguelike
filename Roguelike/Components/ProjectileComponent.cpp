@@ -15,6 +15,15 @@
 
 namespace Roguelike
 {
+namespace
+{
+// Projectile collision tuning. Obstacle radius is slightly larger than target radius so
+// shots do not visually pass through wall edges before being destroyed.
+const float ProjectileObstacleHitDistance = 36.0f;
+const float ProjectileTargetHitDistance = 32.0f;
+const float RadiansToDegrees = 180.0f / 3.14159265f;
+}  // namespace
+
 ProjectileComponent::ProjectileComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
     transform = gameObject->GetComponent<Engine::TransformComponent>();
@@ -69,7 +78,8 @@ void ProjectileComponent::Render()
             sprite.setPosition(position.x, position.y);
             sprite.setScale(textureWidth / static_cast<float>(textureSize.x),
                             textureHeight / static_cast<float>(textureSize.y));
-            sprite.setRotation(std::atan2(direction.y, direction.x) * 180.0f / 3.14159265f);
+            // Projectile art points to the right in texture space, so rotate by movement angle.
+            sprite.setRotation(std::atan2(direction.y, direction.x) * RadiansToDegrees);
 
             Engine::RenderSystem::Instance()->Render(sprite);
             return;
@@ -147,7 +157,7 @@ bool ProjectileComponent::CheckObstacles()
         Engine::Vector2Df difference = {obstaclePosition.x - projectilePosition.x,
                                         obstaclePosition.y - projectilePosition.y};
 
-        if (difference.GetLength() <= 36.f)
+        if (difference.GetLength() <= ProjectileObstacleHitDistance)
         {
             return true;
         }
@@ -191,7 +201,7 @@ void ProjectileComponent::CheckTargets()
         Engine::Vector2Df difference = {targetPosition.x - projectilePosition.x,
                                         targetPosition.y - projectilePosition.y};
 
-        if (difference.GetLength() <= 32.f)
+        if (difference.GetLength() <= ProjectileTargetHitDistance)
         {
             targetStats->TakeDamage(damage);
             Engine::GameWorld::Instance()->DestroyGameObject(gameObject);

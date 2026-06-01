@@ -39,6 +39,7 @@ class EquipmentPanel : public FramedPanel
    private:
     const sf::Font& font;
 
+    // Equipment slots are drawn in this order and validated against slotTypes.
     std::array<std::optional<UIItemView>, 5> slots;
     std::optional<UIItemView> highlightedItem;
     std::array<EquipmentSlotType, 5> slotTypes = {EquipmentSlotType::Head,
@@ -50,6 +51,7 @@ class EquipmentPanel : public FramedPanel
 
     bool isOpen = false;
 
+    // Equipment panel geometry in screen-space.
     sf::Vector2f position = {580.0f, 90.0f};
     sf::Vector2f size = {760.0f, 280.0f};
 

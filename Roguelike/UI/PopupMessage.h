@@ -23,9 +23,11 @@ class PopupMessage : public Engine::UIElement
    private:
     const sf::Font& font;
 
+    // Background is a fallback rectangle; PopupMessage.cpp draws the texture when available.
     sf::RectangleShape background;
     sf::Text text;
 
+    // Lifetime controls auto-hide; fade alpha is handled by UIAnimation.
     float timer = 0.0f;
     float lifeTime = 2.0f;
 };

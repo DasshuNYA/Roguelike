@@ -36,6 +36,7 @@ void ItemSpawner::Spawn(const std::vector<Engine::Vector2Df>& floorPositions,
     int maxAttempts = GameConfig::ItemSpawnCount * GameConfig::SpawnMaxAttemptsMultiplier;
     std::vector<int> usedPositionIndexes;
 
+    // Items use the same attempt budget as enemies, but only need distance and duplicate checks.
     while (spawnedCount < GameConfig::ItemSpawnCount && attempts < maxAttempts)
     {
         attempts++;
@@ -58,6 +59,7 @@ void ItemSpawner::Spawn(const std::vector<Engine::Vector2Df>& floorPositions,
 
         usedPositionIndexes.push_back(positionIndex);
 
+        // Item definitions are data-driven in GameConfig::Items.
         const ItemData& itemData = GameConfig::Items[std::rand() % GameConfig::Items.size()];
 
         Engine::GameObject* itemObject =

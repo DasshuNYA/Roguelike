@@ -7,6 +7,7 @@
 
 namespace Roguelike::UITextUtils
 {
+// Measures rendered text with the exact SFML font and character size used by the UI.
 static float GetTextWidth(const sf::Font& font, const std::string& text, unsigned int characterSize)
 {
     sf::Text measuredText;
@@ -29,6 +30,7 @@ std::string FitTextToWidth(const sf::Font& font,
 
     std::string fitted;
 
+    // Keep adding characters until the ellipsis would overflow maxWidth.
     for (char character : text)
     {
         std::string candidate = fitted + character + "...";
@@ -56,6 +58,7 @@ std::string WrapText(const sf::Font& font,
     std::string wrapped;
     int lineCount = 1;
 
+    // Word wrapping keeps descriptions readable and avoids text leaving inventory panels.
     while (words >> word)
     {
         std::string candidate = line.empty() ? word : line + " " + word;

@@ -14,9 +14,11 @@ namespace Roguelike
 {
 namespace
 {
+// Enemy path-following tuning. Reach distance controls when an enemy advances to the next
+// path node; min distance prevents tiny velocity jitter when already on the node.
 const float PathNodeReachDistance = 12.0f;
 const float MinMoveDistance = 0.01f;
-}
+}  // namespace
 
 PlayerSearchComponent::PlayerSearchComponent(Engine::GameObject* gameObject) : Component(gameObject)
 {
@@ -116,6 +118,7 @@ void PlayerSearchComponent::Update(float deltaTime)
 
     if (currentPathUpdateCooldown <= 0.f)
     {
+        // Rebuilding the path on a cooldown keeps enemies responsive without doing A* every frame.
         UpdatePath();
         currentPathUpdateCooldown = pathUpdateCooldown;
     }
@@ -190,6 +193,7 @@ void PlayerSearchComponent::MoveByPath()
 
     if (distance < PathNodeReachDistance)
     {
+        // Step to the next maze node once close enough; exact equality is too fragile with physics.
         currentPathIndex++;
         return;
     }

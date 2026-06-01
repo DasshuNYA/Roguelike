@@ -8,20 +8,29 @@
 #include "GameNotifications.h"
 #include "GameWorld.h"
 #include "LevelProgress.h"
+#include "PlayerMovementComponent.h"
 #include "PlayerRunSnapshot.h"
 #include "RenderSystem.h"
 #include "SaveSystem.h"
 #include "StatsComponent.h"
 #include "UITextureUtils.h"
 
+#include <algorithm>
+
 namespace Roguelike
 {
 namespace
 {
+// Dragged item cursor visual tuning.
 const float DraggedItemTextureSize = 44.0f;
 const float DraggedItemFallbackSize = 32.0f;
 const sf::Uint8 DraggedItemTextureAlpha = 230;
 const sf::Uint8 DraggedItemFallbackAlpha = 220;
+
+// Popup feedback durations.
+const float LevelPopupSeconds = 2.0f;
+const float TutorialPopupSeconds = 3.0f;
+const float QuickFeedbackSeconds = 1.5f;
 }  // namespace
 
 GameUIComponent::GameUIComponent(Engine::GameObject* gameObject) : Component(gameObject)
@@ -71,7 +80,7 @@ void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& 
         }
 
         Engine::GameWorld::Instance()->SetPaused(false);
-        ShowPopupMessage("Level " + std::to_string(levelNumber), 2.0f);
+        ShowPopupMessage("Level " + std::to_string(levelNumber), LevelPopupSeconds);
     }
 }
 
@@ -243,6 +252,13 @@ void GameUIComponent::HandleInput(sf::RenderWindow& window)
     }
 
     HandlePauseInput();
+
+    if (isPauseOpen)
+    {
+        wasInventoryPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::I);
+        return;
+    }
+
     HandleInventoryInput(window);
     HandleHotbarInput();
 }
@@ -264,7 +280,7 @@ void GameUIComponent::HandleMainMenuInput()
 
         if (popup != nullptr)
         {
-            popup->ShowMessage("Press I to open inventory", 3.0f);
+            popup->ShowMessage("Press I to open inventory", TutorialPopupSeconds);
         }
     }
 
@@ -383,18 +399,20 @@ void GameUIComponent::HandleHotbarInput()
 
     if (useResult.state == HotbarUseState::Empty)
     {
-        popup->ShowMessage("Empty slot", 1.5f);
+        popup->ShowMessage("Empty slot", QuickFeedbackSeconds);
         return;
     }
 
     if (useResult.state == HotbarUseState::Used)
     {
+        std::string effectMessage = ApplyHotbarItemEffect(useResult.itemName);
+
         if (playerInventory != nullptr)
         {
             playerInventory->RemoveOneItem(useResult.itemName);
         }
 
-        popup->ShowMessage("Used: " + useResult.itemName, 1.5f);
+        popup->ShowMessage(effectMessage, QuickFeedbackSeconds);
     }
 }
 
@@ -458,6 +476,39 @@ void GameUIComponent::HandleLevelCompleteInput()
     wasRestartPressed = isNextLevelPressed;
 }
 
+std::string GameUIComponent::ApplyHotbarItemEffect(const std::string& itemName)
+{
+    Engine::StatsComponent* stats =
+        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
+
+    if (itemName == "Health Potion" && stats != nullptr)
+    {
+        float restoredHealth =
+            std::min(GameConfig::PlayerHealth, stats->GetHealth() + GameConfig::HealthPotionRestore);
+        stats->SetStats(restoredHealth, stats->GetArmor());
+        return "Health restored";
+    }
+
+    if (itemName == "Attack Potion" && stats != nullptr)
+    {
+        stats->SetAttackPower(stats->GetAttackPower() + GameConfig::AttackPotionBonus);
+        return "Attack increased";
+    }
+
+    if (itemName == "Speed Potion" && playerObject != nullptr)
+    {
+        PlayerMovementComponent* movement = playerObject->GetComponent<PlayerMovementComponent>();
+
+        if (movement != nullptr)
+        {
+            movement->SetSpeed(movement->GetSpeed() + GameConfig::SpeedPotionBonus);
+            return "Speed increased";
+        }
+    }
+
+    return "Used: " + itemName;
+}
+
 void GameUIComponent::RestorePlayerRunState()
 {
     if (playerInventory == nullptr)
@@ -494,6 +545,14 @@ void GameUIComponent::RestorePlayerRunState()
         stats->SetStats(snapshot->health, snapshot->armor);
         stats->SetAttackPower(snapshot->attackPower);
     }
+
+    PlayerMovementComponent* movement =
+        playerObject != nullptr ? playerObject->GetComponent<PlayerMovementComponent>() : nullptr;
+
+    if (movement != nullptr)
+    {
+        movement->SetSpeed(snapshot->movementSpeed);
+    }
 }
 
 void GameUIComponent::SavePlayerRunState()
@@ -524,6 +583,14 @@ void GameUIComponent::SavePlayerRunState()
         snapshot.health = stats->GetHealth();
         snapshot.armor = stats->GetArmor();
         snapshot.attackPower = stats->GetAttackPower();
+    }
+
+    PlayerMovementComponent* movement =
+        playerObject != nullptr ? playerObject->GetComponent<PlayerMovementComponent>() : nullptr;
+
+    if (movement != nullptr)
+    {
+        snapshot.movementSpeed = movement->GetSpeed();
     }
 
     Engine::SaveSystem::Instance()->SetValue(PlayerRunSnapshotKey, snapshot);

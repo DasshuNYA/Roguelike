@@ -10,16 +10,32 @@ namespace Roguelike
 {
 namespace
 {
-// Player avatar position inside the top equipment panel.
+// Equipment panel layout.
+// Coordinates are local offsets from EquipmentPanel::position in EquipmentPanel.h.
+// Change these values to move the avatar or individual equipment slots.
 const sf::FloatRect AvatarBounds = {18.0f, 18.0f, 258.0f, 250.0f};
 
-// Equipment slot positions inside the top equipment panel.
-// Slots 0-3 are armor slots, slot 4 is the weapon slot.
+// Slot order must match EquipmentPanel::slotTypes:
+// 0=head, 1=armor, 2=boots, 3=amulet, 4=weapon.
 const std::array<sf::Vector2f, 5> EquipmentSlotOffsets = {{{356.0f, 60.0f},
                                                            {440.0f, 60.0f},
                                                            {356.0f, 144.0f},
                                                            {440.0f, 144.0f},
                                                            {620.0f, 102.0f}}};
+
+// Item drawing inside each equipment slot. Bounds are local to the slot.
+const sf::FloatRect EquipmentItemIconBounds = {12.0f, 12.0f, 52.0f, 52.0f};
+const sf::Vector2f EquipmentFallbackIconPosition = {18.0f, 18.0f};
+const sf::Vector2f EquipmentFallbackIconSize = {40.0f, 40.0f};
+const sf::Vector2f EquipmentCountPosition = {54.0f, 54.0f};
+
+// Fallback avatar is only used if ui_player_avatar is missing.
+const float FallbackAvatarHeadRadius = 28.0f;
+const sf::Vector2f FallbackAvatarHeadPosition = {122.0f, 82.0f};
+const sf::Vector2f FallbackAvatarBodyPosition = {108.0f, 146.0f};
+const sf::Vector2f FallbackAvatarBodySize = {70.0f, 64.0f};
+const sf::Vector2f FallbackAvatarBeltPosition = {104.0f, 190.0f};
+const sf::Vector2f FallbackAvatarBeltSize = {78.0f, 10.0f};
 }  // namespace
 
 EquipmentPanel::EquipmentPanel(const sf::Font& uiFont) : FramedPanel(uiFont), font(uiFont)
@@ -147,8 +163,9 @@ void EquipmentPanel::DrawSlot(sf::RenderWindow& window, int index)
     const std::string textureKey =
         slotTypes[index] == EquipmentSlotType::Weapon ? "ui_slot_weapon" : "ui_slot_equipment";
 
-    bool isTargetSlot = highlightedItem.has_value() &&
-                        CanEquipInSlot(highlightedItem->stack, slotTypes[index]);
+    // Highlight only slots that can accept the currently dragged equipment item.
+    bool isTargetSlot =
+        highlightedItem.has_value() && CanEquipInSlot(highlightedItem->stack, slotTypes[index]);
 
     if (!UITextureUtils::DrawTexture(window, textureKey, bounds, alpha))
     {
@@ -184,11 +201,16 @@ void EquipmentPanel::DrawSlot(sf::RenderWindow& window, int index)
     const UIItemView& item = slots[index].value();
 
     if (!UITextureUtils::DrawItemTexture(
-            window, item, {bounds.left + 12.0f, bounds.top + 12.0f, 52.0f, 52.0f}, alpha))
+            window, item,
+            {bounds.left + EquipmentItemIconBounds.left,
+             bounds.top + EquipmentItemIconBounds.top, EquipmentItemIconBounds.width,
+             EquipmentItemIconBounds.height},
+            alpha))
     {
         sf::RectangleShape icon;
-        icon.setPosition({bounds.left + 18.0f, bounds.top + 18.0f});
-        icon.setSize({40.0f, 40.0f});
+        icon.setPosition({bounds.left + EquipmentFallbackIconPosition.x,
+                          bounds.top + EquipmentFallbackIconPosition.y});
+        icon.setSize(EquipmentFallbackIconSize);
 
         sf::Color iconColor = item.iconColor;
         iconColor.a = alpha;
@@ -202,7 +224,8 @@ void EquipmentPanel::DrawSlot(sf::RenderWindow& window, int index)
     countText.setCharacterSize(13);
     countText.setString(std::to_string(item.stack.count));
     countText.setFillColor(sf::Color(238, 214, 142, alpha));
-    countText.setPosition({bounds.left + 54.0f, bounds.top + 54.0f});
+    countText.setPosition({bounds.left + EquipmentCountPosition.x,
+                           bounds.top + EquipmentCountPosition.y});
 
     window.draw(countText);
 }
@@ -223,6 +246,8 @@ void EquipmentPanel::DrawCharacterPreview(sf::RenderWindow& window)
     previewFrame.setOutlineColor(sf::Color(92, 108, 66, alpha));
     previewFrame.setOutlineThickness(2.0f);
 
+    // The real avatar texture is preferred. If it is missing, draw a simple fallback preview
+    // so the inventory UI still remains readable during asset changes.
     if (Engine::ResourceSystem::Instance()->HasTexture("ui_player_avatar"))
     {
         if (!hasTexturedBackground)
@@ -234,20 +259,23 @@ void EquipmentPanel::DrawCharacterPreview(sf::RenderWindow& window)
         return;
     }
 
-    sf::CircleShape head(28.0f);
-    head.setPosition({position.x + 122.0f, position.y + 82.0f});
+    sf::CircleShape head(FallbackAvatarHeadRadius);
+    head.setPosition({position.x + FallbackAvatarHeadPosition.x,
+                      position.y + FallbackAvatarHeadPosition.y});
     head.setFillColor(sf::Color(205, 170, 125, alpha));
 
     sf::RectangleShape body;
-    body.setPosition({position.x + 108.0f, position.y + 146.0f});
-    body.setSize({70.0f, 64.0f});
+    body.setPosition({position.x + FallbackAvatarBodyPosition.x,
+                      position.y + FallbackAvatarBodyPosition.y});
+    body.setSize(FallbackAvatarBodySize);
     body.setFillColor(sf::Color(115, 80, 70, alpha));
     body.setOutlineColor(sf::Color(210, 190, 155, alpha));
     body.setOutlineThickness(2.0f);
 
     sf::RectangleShape belt;
-    belt.setPosition({position.x + 104.0f, position.y + 190.0f});
-    belt.setSize({78.0f, 10.0f});
+    belt.setPosition({position.x + FallbackAvatarBeltPosition.x,
+                      position.y + FallbackAvatarBeltPosition.y});
+    belt.setSize(FallbackAvatarBeltSize);
     belt.setFillColor(sf::Color(70, 52, 48, alpha));
 
     if (!hasTexturedBackground)

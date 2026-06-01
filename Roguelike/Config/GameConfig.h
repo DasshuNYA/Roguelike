@@ -124,6 +124,11 @@ inline constexpr TextureConfig NextLevelBackgroundTexture = {
 inline constexpr float PlayerHealth = 100.f;
 inline constexpr float PlayerArmor = 4.f;
 inline constexpr float PlayerAttackPower = 25.f;
+inline constexpr float PlayerMoveSpeed = 500.f;
+inline constexpr float MaxPlayerMoveSpeed = 740.f;
+inline constexpr float HealthPotionRestore = 35.f;
+inline constexpr float AttackPotionBonus = 10.f;
+inline constexpr float SpeedPotionBonus = 60.f;
 inline constexpr float PlayerStartTileX = 1.f;
 inline constexpr float PlayerStartTileY = 1.f;
 

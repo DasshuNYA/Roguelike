@@ -22,6 +22,7 @@ class HUD : public Engine::UIElement
     const sf::Font& font;
     const sf::Font& titleFont;
 
+    // Text objects are positioned in HUD.cpp because the parchment and bar layouts are art-driven.
     sf::Text healthText;
     sf::Text armorText;
     sf::Text levelText;
@@ -30,6 +31,7 @@ class HUD : public Engine::UIElement
     Engine::UIProgressBar healthBar;
     Engine::UIProgressBar armorBar;
 
+    // Cached gameplay values. Draw() formats these into the visible HUD strings.
     float currentHealth = 100.0f;
     float maximumHealth = 100.0f;
     float currentArmor = 0.0f;

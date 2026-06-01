@@ -21,6 +21,7 @@ void UIAnimation::Hide()
 
 void UIAnimation::Update(float deltaTime)
 {
+    // Simple linear fade shared by all UIElement-based widgets.
     if (alpha < targetAlpha)
     {
         alpha += fadeSpeed * deltaTime;

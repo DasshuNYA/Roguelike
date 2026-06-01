@@ -5,15 +5,26 @@
 
 namespace Roguelike
 {
+namespace
+{
+// Generic fallback frame styling for inventory-like panels when custom textures are unavailable.
+const sf::Color FrameBackgroundColor = sf::Color(38, 54, 38, 236);
+const sf::Color FrameOutlineColor = sf::Color(145, 142, 86, 255);
+const sf::Color FrameTitleColor = sf::Color(226, 210, 132);
+const float FrameOutlineThickness = 3.0f;
+const unsigned int FrameTitleSize = 26;
+const sf::Vector2f FrameTitleOffset = {24.0f, 18.0f};
+}  // namespace
+
 FramedPanel::FramedPanel(const sf::Font& uiFont) : font(uiFont)
 {
-    background.setFillColor(sf::Color(38, 54, 38, 236));
-    background.setOutlineColor(sf::Color(145, 142, 86, 255));
-    background.setOutlineThickness(3.0f);
+    background.setFillColor(FrameBackgroundColor);
+    background.setOutlineColor(FrameOutlineColor);
+    background.setOutlineThickness(FrameOutlineThickness);
 
     titleText.setFont(font);
-    titleText.setCharacterSize(26);
-    titleText.setFillColor(sf::Color(226, 210, 132));
+    titleText.setCharacterSize(FrameTitleSize);
+    titleText.setFillColor(FrameTitleColor);
 
     GetAnimation().SetAlpha(0.0f);
     Hide();
@@ -25,16 +36,20 @@ void FramedPanel::SetupFrame(sf::Vector2f position, sf::Vector2f size, const std
     background.setSize(size);
 
     titleText.setString(title);
-    titleText.setPosition(position.x + 24.0f, position.y + 18.0f);
+    titleText.setPosition(position.x + FrameTitleOffset.x, position.y + FrameTitleOffset.y);
 }
 
 void FramedPanel::DrawFrame(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
 
-    background.setFillColor(sf::Color(38, 54, 38, alpha));
-    background.setOutlineColor(sf::Color(145, 142, 86, alpha));
-    titleText.setFillColor(sf::Color(226, 210, 132, alpha));
+    // The frame is redrawn every frame with current fade alpha from UIAnimation.
+    background.setFillColor(sf::Color(FrameBackgroundColor.r, FrameBackgroundColor.g,
+                                      FrameBackgroundColor.b, alpha));
+    background.setOutlineColor(sf::Color(FrameOutlineColor.r, FrameOutlineColor.g,
+                                         FrameOutlineColor.b, alpha));
+    titleText.setFillColor(sf::Color(FrameTitleColor.r, FrameTitleColor.g, FrameTitleColor.b,
+                                     alpha));
 
     window.draw(background);
     window.draw(titleText);

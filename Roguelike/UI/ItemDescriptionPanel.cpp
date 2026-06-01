@@ -47,13 +47,13 @@ ItemDescriptionPanel::ItemDescriptionPanel(const sf::Font& uiFont)
     countText.setFont(font);
     countText.setCharacterSize(CountTextSize);
     countText.setPosition(CountTextPosition);
-
 }
 
 void ItemDescriptionPanel::ShowItem(const UIItemView& item)
 {
     selectedItem = item;
 
+    // Long names/descriptions are clipped or wrapped here so they never leave the panel.
     nameText.setString(
         UITextUtils::FitTextToWidth(font, selectedItem.stack.GetName(), NameTextSize, NameMaxWidth));
     descriptionText.setString(
@@ -70,13 +70,13 @@ void ItemDescriptionPanel::Draw(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
 
+    // Prefer the authored description texture; DrawFrame keeps the panel usable if art is missing.
     if (!UITextureUtils::DrawTexture(window, "ui_inventory_menu_description", PanelBounds, alpha))
     {
         DrawFrame(window);
     }
 
-    bool drewItemTexture =
-        UITextureUtils::DrawItemTexture(window, selectedItem, IconBounds, alpha);
+    bool drewItemTexture = UITextureUtils::DrawItemTexture(window, selectedItem, IconBounds, alpha);
 
     sf::Color iconColor = selectedItem.iconColor;
     iconColor.a = alpha;

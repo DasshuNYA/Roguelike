@@ -50,11 +50,15 @@ class HotbarPanel : public Engine::UIElement
    private:
     const sf::Font& font;
 
+    // Six visible slots mapped to keyboard keys 1..6.
     std::array<std::optional<UIItemView>, 6> slots;
     std::optional<UIItemView> highlightedItem;
+
+    // Per-key debounce and per-slot pulse animation timers.
     std::array<bool, 6> wasKeyPressed = {false, false, false, false, false, false};
     std::array<float, 6> pulseTimers = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
+    // Hotbar row geometry in screen-space.
     sf::Vector2f position = {784.0f, 980.0f};
 
     float slotSize = 52.0f;

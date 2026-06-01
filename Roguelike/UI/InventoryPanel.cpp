@@ -12,20 +12,28 @@ namespace Roguelike
 {
 namespace
 {
-// Inventory title position inside the inventory panel.
+// Inventory panel layout.
+// Panel position, panel size, slot size, and slot gap live in InventoryPanel.h.
+// Values below are local offsets from InventoryPanel::position.
 const sf::Vector2f InventoryTitlePosition = {120.0f, 36.0f};
 
-// Pager positions inside the inventory panel. Change x/y directly to move each text part.
-const sf::Vector2f PagerPreviousPosition = {590.0f, 52.0f};
-const sf::Vector2f PagerTextPosition = {628.0f, 52.0f};
-const sf::Vector2f PagerNextPosition = {690.0f, 52.0f};
+// Pager text positions. Move these together with the click bounds below.
+const sf::Vector2f PagerPreviousPosition = {590.0f, 40.0f};
+const sf::Vector2f PagerTextPosition = {628.0f, 44.0f};
+const sf::Vector2f PagerNextPosition = {682.0f, 40.0f};
 
-// Pager click areas inside the inventory panel. Move these together with the arrows.
+// Pager click areas. They are intentionally wider than the visible arrows.
 const sf::FloatRect PagerPreviousClickBounds = {580.0f, 48.0f, 42.0f, 36.0f};
 const sf::FloatRect PagerNextClickBounds = {682.0f, 48.0f, 42.0f, 36.0f};
 
-// Inventory grid layout inside the inventory panel.
+// Top edge of the inventory slot grid, relative to the panel.
 const float InventoryGridTop = 94.0f;
+
+// Item drawing inside a slot. Bounds are local to each slot.
+const sf::FloatRect ItemIconBounds = {14.0f, 12.0f, 64.0f, 64.0f};
+const sf::Vector2f ItemFallbackIconPosition = {18.0f, 16.0f};
+const sf::Vector2f ItemFallbackIconSize = {56.0f, 56.0f};
+const sf::Vector2f ItemCountOffsetFromBottomRight = {24.0f, 24.0f};
 }  // namespace
 
 InventoryPanel::InventoryPanel(const sf::Font& uiFont) : FramedPanel(uiFont), font(uiFont)
@@ -53,6 +61,7 @@ void InventoryPanel::SetItems(const std::vector<ItemStack>& newItems)
 {
     items = &newItems;
 
+    // Selection and page are clamped when inventory contents change after item use/pickup.
     if (selectedIndex >= static_cast<int>(items->size()))
     {
         selectedIndex = -1;
@@ -237,22 +246,26 @@ void InventoryPanel::DrawItem(sf::RenderWindow& window, const UIItemView& item, 
         window.draw(selection);
     }
 
-    bool drewItemTexture =
-        UITextureUtils::DrawItemTexture(
-            window, item, {bounds.left + 14.0f, bounds.top + 12.0f, 64.0f, 64.0f}, alpha);
+    bool drewItemTexture = UITextureUtils::DrawItemTexture(
+        window, item,
+        {bounds.left + ItemIconBounds.left, bounds.top + ItemIconBounds.top,
+         ItemIconBounds.width, ItemIconBounds.height},
+        alpha);
 
     sf::Text countText;
     countText.setFont(font);
     countText.setCharacterSize(13);
     countText.setString(std::to_string(item.stack.count));
     countText.setFillColor(sf::Color(238, 214, 142, alpha));
-    countText.setPosition({bounds.left + bounds.width - 24.0f, bounds.top + bounds.height - 24.0f});
+    countText.setPosition({bounds.left + bounds.width - ItemCountOffsetFromBottomRight.x,
+                           bounds.top + bounds.height - ItemCountOffsetFromBottomRight.y});
 
     if (!drewItemTexture)
     {
         sf::RectangleShape icon;
-        icon.setPosition({bounds.left + 18.0f, bounds.top + 16.0f});
-        icon.setSize({56.0f, 56.0f});
+        icon.setPosition({bounds.left + ItemFallbackIconPosition.x,
+                          bounds.top + ItemFallbackIconPosition.y});
+        icon.setSize(ItemFallbackIconSize);
 
         sf::Color iconColor = item.iconColor;
         iconColor.a = alpha;

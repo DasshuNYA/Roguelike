@@ -19,6 +19,7 @@ MazeNavigation* MazeNavigation::Instance()
 void MazeNavigation::SetMap(const std::vector<std::vector<bool>>& newWalkableGrid,
                             float newTileSize)
 {
+    // MazeGenerator owns generation; MazeNavigation keeps only a lightweight walkable map.
     walkableGrid = newWalkableGrid;
     tileSize = newTileSize;
 
@@ -220,11 +221,13 @@ bool MazeNavigation::TryFindNearestWalkable(Cell start, Cell& result) const
 
 Engine::Vector2Df MazeNavigation::CellToWorld(int x, int y) const
 {
+    // World positions use tile centers in this project, matching MazeGenerator object placement.
     return {x * tileSize, y * tileSize};
 }
 
 MazeNavigation::Cell MazeNavigation::WorldToCell(const Engine::Vector2Df& position) const
 {
+    // Round instead of floor so slightly displaced physics objects snap to the nearest tile.
     return {static_cast<int>(std::round(position.x / tileSize)),
             static_cast<int>(std::round(position.y / tileSize))};
 }

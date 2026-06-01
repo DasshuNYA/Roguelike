@@ -11,15 +11,22 @@ namespace Roguelike
 {
 namespace
 {
+// Popup layout. Base positions are screen-space coordinates; text position is separate
+// because the decorative texture has asymmetric empty space.
 const sf::Vector2f PopupBasePosition = {20.0f, 260.0f};
 const sf::Vector2f PopupTextBasePosition = {64.0f, 320.0f};
+const sf::Vector2f PopupFallbackSize = {320.0f, 140.0f};
+
+// Popup motion. The message slides in while fading, then floats upward near the end.
 const float PopupEnterOffsetY = 18.0f;
 const float PopupExitFloatY = -12.0f;
+const float PopupExitStartProgress = 0.72f;
 }  // namespace
 
 PopupMessage::PopupMessage(const sf::Font& uiFont) : font(uiFont)
 {
-    background.setSize({320.0f, 140.0f});
+    // Fallback rectangle is used only when the popup texture is not loaded.
+    background.setSize(PopupFallbackSize);
     background.setPosition(PopupBasePosition);
     background.setFillColor(sf::Color(25, 22, 20, 210));
     background.setOutlineColor(sf::Color(120, 90, 65, 255));
@@ -67,9 +74,11 @@ void PopupMessage::Draw(sf::RenderWindow& window)
     float fadeProgress = static_cast<float>(alpha) / 255.0f;
     float lifeProgress = lifeTime > 0.0f ? std::clamp(timer / lifeTime, 0.0f, 1.0f) : 1.0f;
     float enterOffset = PopupEnterOffsetY * (1.0f - fadeProgress);
-    float exitOffset = PopupExitFloatY * std::max(0.0f, lifeProgress - 0.72f) / 0.28f;
+    float exitOffset = PopupExitFloatY * std::max(0.0f, lifeProgress - PopupExitStartProgress) /
+                       (1.0f - PopupExitStartProgress);
     float yOffset = enterOffset + exitOffset;
 
+    // Alpha is inherited from UIAnimation; color RGB stays constant while opacity changes.
     sf::Color backgroundColor = sf::Color(25, 22, 20, 210);
     backgroundColor.a = static_cast<sf::Uint8>((210.0f / 255.0f) * alpha);
 

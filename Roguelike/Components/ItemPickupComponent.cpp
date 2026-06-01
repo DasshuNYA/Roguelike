@@ -17,6 +17,13 @@ namespace Roguelike
 {
 namespace
 {
+// World item visual tuning. Gameplay radius and base icon size live in GameConfig.
+const float ItemTextureScale = 1.75f;
+const float ItemShadowWidthScale = 1.55f;
+const float ItemShadowHeightScale = 0.42f;
+const float ItemShadowYOffsetScale = 0.6f;
+const float ItemFallbackRotation = 45.0f;
+
 bool RenderItemTexture(const ItemStack& item, sf::Vector2f center, float size)
 {
     const std::string textureKey = GetItemTextureKey(item);
@@ -65,6 +72,7 @@ void ItemPickupComponent::Update(float deltaTime)
     Engine::Vector2Df position = transform->GetWorldPosition();
     float radius = GameConfig::ItemPickupRadius;
 
+    // Pickup bounds are centered on the item and read by PickupComponent trigger checks.
     bounds = sf::FloatRect(position.x - radius, position.y - radius, radius * 2.0f,
                            radius * 2.0f);
 }
@@ -80,20 +88,21 @@ void ItemPickupComponent::Render()
     float size = GameConfig::ItemIconSize;
 
     sf::RectangleShape shadow;
-    shadow.setSize({size * 1.55f, size * 0.42f});
-    shadow.setOrigin({size * 0.775f, size * 0.21f});
-    shadow.setPosition({position.x, position.y + size * 0.6f});
+    shadow.setSize({size * ItemShadowWidthScale, size * ItemShadowHeightScale});
+    shadow.setOrigin({size * ItemShadowWidthScale * 0.5f,
+                      size * ItemShadowHeightScale * 0.5f});
+    shadow.setPosition({position.x, position.y + size * ItemShadowYOffsetScale});
     shadow.setFillColor(sf::Color(0, 0, 0, 70));
 
     Engine::RenderSystem::Instance()->Render(shadow);
 
-    if (!RenderItemTexture(item, {position.x, position.y}, size * 1.75f))
+    if (!RenderItemTexture(item, {position.x, position.y}, size * ItemTextureScale))
     {
         sf::RectangleShape icon;
         icon.setSize({size, size});
         icon.setOrigin({size / 2.0f, size / 2.0f});
         icon.setPosition({position.x, position.y});
-        icon.setRotation(45.0f);
+        icon.setRotation(ItemFallbackRotation);
         icon.setFillColor(item.GetIconColor());
         icon.setOutlineColor(sf::Color(245, 225, 170, 220));
         icon.setOutlineThickness(2.0f);

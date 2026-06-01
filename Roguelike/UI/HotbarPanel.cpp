@@ -11,14 +11,21 @@ namespace Roguelike
 {
 namespace
 {
-// Hotbar frame padding around all slots.
+// Hotbar frame layout.
+// Panel position, slot size, and gap live in HotbarPanel.h.
+// Padding expands the decorative frame around the computed slot row.
 const sf::Vector2f HotbarFramePadding = {28.0f, 18.0f};
 const float HotbarFrameHeight = 88.0f;
 
-// Item icon and counter positions inside each hotbar slot.
+// Per-slot text/icon layout. These offsets are local to the slot bounds.
 const sf::FloatRect HotbarItemIconBounds = {10.0f, 10.0f, 32.0f, 32.0f};
 const sf::Vector2f HotbarCountPosition = {34.0f, 34.0f};
 const sf::Vector2f HotbarNumberPosition = {4.0f, 2.0f};
+
+// Hotkey feedback animation. Duration controls how long the slot pulse lasts;
+// inflate controls how far the slot grows during that pulse.
+const float HotbarPulseSeconds = 0.18f;
+const float HotbarPulseInflate = 3.0f;
 }  // namespace
 
 HotbarPanel::HotbarPanel(const sf::Font& uiFont) : font(uiFont) {}
@@ -114,7 +121,7 @@ HotbarUseResult HotbarPanel::TryUseHotkey()
         if (isPressed && !wasKeyPressed[i])
         {
             wasKeyPressed[i] = true;
-            pulseTimers[i] = 0.18f;
+            pulseTimers[i] = HotbarPulseSeconds;
 
             if (slots[i].has_value())
             {
@@ -197,8 +204,10 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
 {
     sf::FloatRect bounds = GetSlotBounds(index);
     sf::Uint8 alpha = GetAlphaByte();
-    float pulse = pulseTimers[index] / 0.18f;
-    float inflate = 3.0f * pulse;
+    // Pulse gently enlarges the slot after hotkey use. Highlight is separate
+    // and shows valid drag-and-drop targets while the inventory is open.
+    float pulse = pulseTimers[index] / HotbarPulseSeconds;
+    float inflate = HotbarPulseInflate * pulse;
     bool isTargetSlot = highlightedItem.has_value() && CanUseOnHotbar(highlightedItem->stack) &&
                         (!slots[index].has_value() ||
                          slots[index]->stack.GetName() == highlightedItem->stack.GetName());

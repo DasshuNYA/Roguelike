@@ -20,6 +20,7 @@ struct PlayerRunSnapshot
 
     float health = 100.0f;
     float armor = 0.0f;
-    float attackPower = 10.0f;
+    float attackPower = 25.0f;
+    float movementSpeed = 500.0f;
 };
 }  // namespace Roguelike

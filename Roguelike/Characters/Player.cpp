@@ -47,6 +47,7 @@ Player::Player()
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
     stats->SetStats(GameConfig::PlayerHealth, GameConfig::PlayerArmor);
+    stats->SetAttackPower(GameConfig::PlayerAttackPower);
 
     gameObject->AddComponent<Engine::DeathComponent>();
     auto rangedAttack = gameObject->AddComponent<RangedAttackComponent>();

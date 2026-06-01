@@ -40,14 +40,18 @@ class InventoryPanel : public FramedPanel
    private:
     const sf::Font& font;
     const std::vector<ItemStack>* items = nullptr;
+
+    // Selection is an absolute inventory index; page is zero-based.
     int selectedIndex = -1;
     int currentPage = 0;
 
     bool isOpen = false;
 
+    // Main inventory panel geometry in screen-space.
     sf::Vector2f position = {580.0f, 370.0f};
     sf::Vector2f size = {760.0f, 350.0f};
 
+    // Slot grid tuning. Column/row count comes from GameConfig.
     float slotSize = 92.0f;
     float gap = 18.0f;
 };

@@ -14,8 +14,9 @@ namespace Roguelike
 {
 namespace
 {
+// Velocity below this threshold is treated as idle, preventing texture flicker from tiny motion.
 const float MovementDirectionThreshold = 1.0f;
-}
+}  // namespace
 
 DirectionalSpriteComponent::DirectionalSpriteComponent(Engine::GameObject* gameObject)
     : Component(gameObject)
@@ -62,6 +63,7 @@ DirectionalSpriteComponent::Direction DirectionalSpriteComponent::GetDirectionFr
 
     if (std::abs(velocity.x) > std::abs(velocity.y))
     {
+        // Dominant axis decides the sprite direction for diagonal movement.
         return velocity.x > 0.0f ? Direction::Right : Direction::Left;
     }
 

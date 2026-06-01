@@ -12,12 +12,24 @@
 
 namespace Roguelike
 {
+namespace
+{
+// Centers SFML text visually around a screen position after its string or size changes.
+void CenterText(sf::Text& text, sf::Vector2f position)
+{
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setOrigin(bounds.left + bounds.width * 0.5f, bounds.top + bounds.height * 0.5f);
+    text.setPosition(position);
+}
+}  // namespace
+
 GameScreenOverlay::GameScreenOverlay(const sf::Font& uiFont, const sf::Font& uiTitleFont)
     : font(uiFont), titleFont(uiTitleFont)
 {
     background.setPosition({0.0f, 0.0f});
     background.setSize({GameConfig::WindowWidth, GameConfig::WindowHeight});
 
+    // Fallback rectangular panel for non-textured overlay screens.
     windowPanel.setSize({820.0f, 420.0f});
     windowPanel.setPosition({GameConfig::WindowCenterX - 410.0f,
                              GameConfig::WindowCenterY - 210.0f});
@@ -25,13 +37,16 @@ GameScreenOverlay::GameScreenOverlay(const sf::Font& uiFont, const sf::Font& uiT
     windowPanel.setOutlineColor(sf::Color(180, 150, 100, 255));
     windowPanel.setOutlineThickness(4.0f);
 
+    // Pause popup placement. X is centered on the screen; Y can be nudged here.
     pauseTextPanel.setSize({PausePanelWidth, PausePanelHeight});
     pauseTextPanel.setOrigin({PausePanelWidth * 0.5f, PausePanelHeight * 0.5f});
-    pauseTextPanel.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY - 18.0f});
+    pauseTextPanel.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY - 10.0f});
     pauseTextPanel.setFillColor(sf::Color(6, 6, 8, 165));
     pauseTextPanel.setOutlineColor(sf::Color(244, 226, 146, 70));
     pauseTextPanel.setOutlineThickness(2.0f);
 
+    // Default title/subtitle sizes for menu, game over, and level complete screens.
+    // Pause overrides these sizes in Draw() because it uses a smaller textured popup.
     titleText.setFont(titleFont);
     titleText.setCharacterSize(64);
     titleText.setFillColor(sf::Color::White);
@@ -113,14 +128,16 @@ void GameScreenOverlay::SetText(const std::string& title, const std::string& sub
     titleText.setString(title);
     subtitleText.setString(subtitle);
 
+    // Default text placement for full-screen overlays.
+    // Pause text is repositioned in Draw() to fit the smaller popup.
     sf::FloatRect titleBounds = titleText.getLocalBounds();
-    titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
-                        titleBounds.top + titleBounds.height / 2.0f);
+    titleText.setOrigin(titleBounds.left + titleBounds.width * 0.5f,
+                        titleBounds.top + titleBounds.height * 0.5f);
     titleText.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY - 72.0f});
 
     sf::FloatRect subtitleBounds = subtitleText.getLocalBounds();
-    subtitleText.setOrigin(subtitleBounds.left + subtitleBounds.width / 2.0f,
-                           subtitleBounds.top + subtitleBounds.height / 2.0f);
+    subtitleText.setOrigin(subtitleBounds.left + subtitleBounds.width * 0.5f,
+                           subtitleBounds.top + subtitleBounds.height * 0.5f);
     subtitleText.setPosition({GameConfig::WindowCenterX, GameConfig::WindowCenterY + 34.0f});
 }
 
@@ -271,8 +288,13 @@ void GameScreenOverlay::DrawPausePanel(sf::RenderWindow& window, float enterOffs
     animatedPausePanel.move({0.0f, enterOffset * 0.55f});
     sf::FloatRect pausePanelBounds = animatedPausePanel.getGlobalBounds();
 
-    if (UITextureUtils::DrawTexture(window, "ui_popup_message", pausePanelBounds,
-                                    static_cast<sf::Uint8>(alpha * 0.86f)))
+    // The pause popup uses 9-slice drawing so the decorative corners do not stretch.
+    if (UITextureUtils::DrawNineSliceTexture(window, "ui_popup_message", pausePanelBounds,
+                                             PausePanelTextureMarginX,
+                                             PausePanelTextureMarginTop,
+                                             PausePanelTextureMarginX,
+                                             PausePanelTextureMarginBottom,
+                                             static_cast<sf::Uint8>(alpha * 0.88f)))
     {
         return;
     }
@@ -319,6 +341,17 @@ void GameScreenOverlay::Draw(sf::RenderWindow& window)
 
     sf::Text animatedTitle = titleText;
     sf::Text animatedSubtitle = subtitleText;
+
+    if (style == OverlayStyle::Pause)
+    {
+        // Pause-specific text tuning:
+        // - character sizes are in GameScreenOverlay.h;
+        // - Y offsets below move text inside the popup.
+        animatedTitle.setCharacterSize(PauseTitleCharacterSize);
+        animatedSubtitle.setCharacterSize(PauseSubtitleCharacterSize);
+        CenterText(animatedTitle, {GameConfig::WindowCenterX, GameConfig::WindowCenterY - 52.0f});
+        CenterText(animatedSubtitle, {GameConfig::WindowCenterX, GameConfig::WindowCenterY + 20.0f});
+    }
 
     animatedTitle.move({0.0f, enterOffset});
     animatedSubtitle.move({0.0f, enterOffset * 0.65f});
