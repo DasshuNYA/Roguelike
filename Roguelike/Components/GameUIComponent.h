@@ -31,6 +31,7 @@ class GameUIComponent : public Engine::Component
     void SetPlayer(Engine::GameObject* player);
     void SetLevelObjective(const std::vector<Engine::GameObject*>& enemies, int level);
 
+    void HandleEvent(const sf::Event& event) override;
     void Update(float deltaTime) override;
     void Render() override;
 
@@ -47,17 +48,23 @@ class GameUIComponent : public Engine::Component
     int GetKnownItemCount(const ItemData* itemData) const;
 
     // Modal input flow. Game over, level complete, main menu, and pause consume input first.
-    void HandleInput(sf::RenderWindow& window);
-    void HandleMainMenuInput();
-    void HandlePauseInput();
-    void HandleInventoryInput(sf::RenderWindow& window);
-    void HandleHotbarInput();
+    void HandleKeyPressed(sf::Keyboard::Key key);
+    void HandleMouseButtonPressed(const sf::Event::MouseButtonEvent& mouseButton,
+                                  sf::RenderWindow& window);
+    void HandleStartPressed();
+    void HandlePausePressed();
+    void HandleInventoryTogglePressed();
+    void HandleInventoryClick(sf::Vector2f mousePosition);
+    void HandleInventoryCancelPressed();
+    void HandleHotbarKey(sf::Keyboard::Key key);
     void HandleDeathState();
-    void HandleGameOverInput();
-    void HandleLevelCompleteInput();
+    void HandleGameOverRestartPressed();
+    void HandleLevelCompleteNextPressed();
 
     // Consumable effects and run persistence between levels.
-    std::string ApplyHotbarItemEffect(const std::string& itemName);
+    std::string ApplyHotbarItemEffect(const ItemData& itemData);
+    void ApplyEquipmentChange(const ItemData* equippedItem, const ItemData* replacedItem);
+    void ApplyEquipmentBonuses(const ItemData* itemData, float direction);
     void RestorePlayerRunState();
     void SavePlayerRunState();
 
@@ -67,6 +74,8 @@ class GameUIComponent : public Engine::Component
     void ClearSelectedItem();
     void SelectItem(const UIItemView& item);
     bool TryPlaceSelectedItem(sf::Vector2f mousePosition);
+    bool TryEquipSelectedItem(sf::Vector2f mousePosition);
+    bool TryAssignSelectedItemToHotbar(sf::Vector2f mousePosition);
     void ShowPopupMessage(const std::string& message, float duration = 1.5f);
     void DrawDraggedItem(sf::RenderWindow& window);
 
@@ -104,12 +113,5 @@ class GameUIComponent : public Engine::Component
     bool isPauseOpen = false;
     bool isGameOver = false;
 
-    // Input edge flags prevent one held key/mouse button from firing every frame.
-    bool wasStartPressed = false;
-    bool wasRestartPressed = false;
-    bool wasInventoryPressed = false;
-    bool wasPausePressed = false;
-    bool wasLeftMousePressed = false;
-    bool wasRightMousePressed = false;
 };
 }  // namespace Roguelike

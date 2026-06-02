@@ -13,6 +13,17 @@ GameWorld* GameWorld::Instance()
     return &gameWorld;
 }
 
+void GameWorld::HandleEvent(const sf::Event& event)
+{
+    for (size_t i = 0; i < gameObjects.size(); i++)
+    {
+        if (ShouldUpdateGameObject(gameObjects[i]))
+        {
+            gameObjects[i]->HandleEvent(event);
+        }
+    }
+}
+
 void GameWorld::Update(float deltaTime)
 {
     for (size_t i = 0; i < gameObjects.size(); i++)

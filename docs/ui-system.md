@@ -10,19 +10,20 @@ The UI is built from separate screens and panels instead of one large UI file.
 - `HUD` draws health, armor, level, and enemy objective.
 - `InventoryPanel` draws paged inventory slots.
 - `EquipmentPanel` accepts equipment items.
-- `HotbarPanel` stores usable consumables for number-key shortcuts.
+- `HotbarPanel` stores number-key shortcuts to usable consumables.
 - `PopupMessage` shows short feedback messages.
 - `GameScreenOverlay` shows main menu, pause, game over, and level-cleared screens.
 
 ## State Handling
 
-`GameUIComponent` handles modal states first:
+The engine forwards SFML events through `GameWorld` to active game objects. `GameUIComponent`
+receives those events and handles modal states first:
 
 1. game over;
 2. level complete;
 3. main menu;
 4. pause;
-5. inventory and hotbar input.
+5. inventory, equipment, and hotbar input.
 
 This order prevents gameplay input from leaking through menu screens. When inventory,
 pause, game over, or level-complete screens are active, `GameWorld::SetPaused(true)` blocks
@@ -59,6 +60,15 @@ Inventory data lives in `InventoryComponent` as `std::vector<ItemStack>`. The UI
 that list through `InventoryPanel::SetItems` and renders slots with loops, so the drawing
 logic is not tied to a fixed item count.
 
+The inventory remains the source of truth for carried items:
+
+- `InventoryPanel` reads and selects inventory stacks;
+- `HotbarPanel` stores `ItemData` shortcuts only, and reads counts from inventory every update;
+- `EquipmentPanel` stores equipped items only after `GameUIComponent` removes one item from
+  inventory; replaced equipment is returned to inventory before the slot is committed;
+- equipment bonuses are applied by `GameUIComponent` when a slot changes, and removed when
+  that slot is replaced.
+
 Inventory supports:
 
 - open/close with `I`;
@@ -68,6 +78,9 @@ Inventory supports:
 - hotbar placement for consumables;
 - right-click drag cancel;
 - popup feedback for invalid actions.
+
+Item visuals and hotbar effects are data-driven through `ItemData::textureKey` and
+`ItemData::effectType`, so item display and use do not depend on localized item names.
 
 ## Animation
 
@@ -85,7 +98,8 @@ for extra motion where it helps readability:
   movement code and sprite-selection code stay separate;
 - the death screen cross-fades two background textures with a slightly uneven light fade;
 - popup messages fade in with a small upward motion and float out near the end of their lifetime;
-- hotbar slots pulse when a number key is pressed.
+- hotbar slots pulse when a number key is pressed;
+- inventory page arrows pulse on click, and page contents slide/fade so page changes are readable.
 
 ## Defense Notes
 

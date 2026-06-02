@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "PhysicsSystem.h"
 
+#include <SFML/Window/Event.hpp>
+
 #include <string>
 #include <vector>
 
@@ -15,6 +17,7 @@ class GameWorld
    public:
     static GameWorld* Instance();
 
+    void HandleEvent(const sf::Event& event);
     void Update(float deltaTime);
     void FixedUpdate(float deltaTime);
     void Render();

@@ -30,33 +30,11 @@ inline bool CanEquip(const UIItemView& item) { return CanEquip(item.stack); }
 
 inline std::string GetItemTextureKey(const ItemStack& item)
 {
-    const std::string name = item.GetName();
-
-    if (name == "Armor")
+    if (item.data == nullptr || item.data->textureKey == nullptr)
     {
-        return "ui_item_armor";
-    }
-    if (name == "Helmet")
-    {
-        return "ui_item_helmet";
-    }
-    if (name == "Boots")
-    {
-        return "ui_item_boots";
-    }
-    if (name == "Speed Potion")
-    {
-        return "ui_item_speed_potion";
-    }
-    if (name == "Health Potion")
-    {
-        return "ui_item_health_potion";
-    }
-    if (name == "Attack Potion")
-    {
-        return "ui_item_attack_potion";
+        return "";
     }
 
-    return "";
+    return item.data->textureKey;
 }
 }  // namespace Roguelike

@@ -25,6 +25,14 @@ enum class EquipmentSlotType
     Ring
 };
 
+enum class ItemEffectType
+{
+    None,
+    RestoreHealth,
+    IncreaseAttack,
+    IncreaseSpeed
+};
+
 struct ItemData
 {
     const char* name;
@@ -35,6 +43,14 @@ struct ItemData
     unsigned char colorR;
     unsigned char colorG;
     unsigned char colorB;
+
+    // UI and use-effect metadata stay with item data so panels never branch on display names.
+    const char* textureKey = "";
+    ItemEffectType effectType = ItemEffectType::None;
+    float effectAmount = 0.0f;
+    float armorBonus = 0.0f;
+    float attackBonus = 0.0f;
+    float speedBonus = 0.0f;
 };
 
 struct ItemStack

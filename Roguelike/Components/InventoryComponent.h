@@ -16,8 +16,10 @@ class InventoryComponent : public Engine::Component
     explicit InventoryComponent(Engine::GameObject* gameObject);
 
     bool AddItem(const ItemStack& item);
+    bool RemoveOneItem(const ItemData* itemData);
     bool RemoveOneItem(const std::string& itemName);
     bool HasSpaceFor(const ItemStack& item) const;
+    int GetItemCount(const ItemData* itemData) const;
     const std::vector<ItemStack>& GetItems() const;
     void SetItems(const std::vector<ItemStack>& newItems);
 

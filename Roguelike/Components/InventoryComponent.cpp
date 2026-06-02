@@ -56,6 +56,33 @@ bool InventoryComponent::RemoveOneItem(const std::string& itemName)
     return false;
 }
 
+bool InventoryComponent::RemoveOneItem(const ItemData* itemData)
+{
+    if (itemData == nullptr)
+    {
+        return false;
+    }
+
+    for (auto item = items.begin(); item != items.end(); ++item)
+    {
+        if (item->data != itemData)
+        {
+            continue;
+        }
+
+        item->count--;
+
+        if (item->count <= 0)
+        {
+            items.erase(item);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 bool InventoryComponent::HasSpaceFor(const ItemStack& item) const
 {
     if (!item.IsValid())
@@ -72,6 +99,24 @@ bool InventoryComponent::HasSpaceFor(const ItemStack& item) const
     }
 
     return items.size() < GameConfig::InventorySlotCount;
+}
+
+int InventoryComponent::GetItemCount(const ItemData* itemData) const
+{
+    if (itemData == nullptr)
+    {
+        return 0;
+    }
+
+    for (const ItemStack& item : items)
+    {
+        if (item.data == itemData)
+        {
+            return item.count;
+        }
+    }
+
+    return 0;
 }
 
 const std::vector<ItemStack>& InventoryComponent::GetItems() const { return items; }

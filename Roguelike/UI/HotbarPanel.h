@@ -9,7 +9,7 @@
 
 #include <array>
 #include <optional>
-#include <string>
+#include <vector>
 
 namespace Roguelike
 {
@@ -23,7 +23,7 @@ enum class HotbarUseState
 struct HotbarUseResult
 {
     HotbarUseState state = HotbarUseState::None;
-    std::string itemName;
+    const ItemData* itemData = nullptr;
 };
 
 class HotbarPanel : public Engine::UIElement
@@ -32,11 +32,12 @@ class HotbarPanel : public Engine::UIElement
     explicit HotbarPanel(const sf::Font& font);
 
     bool TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item);
-    bool TryAutoPlaceItem(const UIItemView& item);
+    bool TryAutoPlaceItem(const ItemStack& item);
     bool ContainsPoint(sf::Vector2f mousePosition) const;
     void SetHighlightedItem(const std::optional<UIItemView>& item);
     void ClearHighlightedItem();
-    HotbarUseResult TryUseHotkey();
+    HotbarUseResult TryUseHotkey(sf::Keyboard::Key key);
+    void SetInventoryItems(const std::vector<ItemStack>& items);
     std::array<std::optional<ItemStack>, 6> GetSavedSlots() const;
     void SetSavedSlots(const std::array<std::optional<ItemStack>, 6>& savedSlots);
 
@@ -46,16 +47,20 @@ class HotbarPanel : public Engine::UIElement
    private:
     void DrawSlot(sf::RenderWindow& window, int index);
     sf::FloatRect GetSlotBounds(int index) const;
+    int GetSlotIndexForKey(sf::Keyboard::Key key) const;
+    int GetInventoryCount(const ItemData* itemData) const;
+    void RemoveMissingShortcuts();
 
    private:
     const sf::Font& font;
 
-    // Six visible slots mapped to keyboard keys 1..6.
-    std::array<std::optional<UIItemView>, 6> slots;
+    // Six visible shortcuts mapped to keyboard keys 1..6. Counts come from inventoryItems.
+    std::array<const ItemData*, 6> slots = {nullptr, nullptr, nullptr,
+                                            nullptr, nullptr, nullptr};
+    const std::vector<ItemStack>* inventoryItems = nullptr;
     std::optional<UIItemView> highlightedItem;
 
-    // Per-key debounce and per-slot pulse animation timers.
-    std::array<bool, 6> wasKeyPressed = {false, false, false, false, false, false};
+    // Per-slot pulse animation timers.
     std::array<float, 6> pulseTimers = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
     // Hotbar row geometry in screen-space.

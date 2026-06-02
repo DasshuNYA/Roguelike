@@ -180,17 +180,23 @@ inline constexpr float StartMenuFireHeight = 234.0f;
 // Data table for generated item pickups.
 inline constexpr std::array<ItemData, 6> Items = {
     {{"Armor", "A worn breastplate. Heavy, honest protection.", ItemTag::Equipment,
-      EquipmentSlotType::Armor, 1, 135, 150, 170},
+      EquipmentSlotType::Armor, 1, 135, 150, 170, "ui_item_armor", ItemEffectType::None, 0.0f,
+      2.0f},
      {"Helmet", "A dented helmet that still knows its job.", ItemTag::Equipment,
-      EquipmentSlotType::Head, 1, 185, 180, 150},
+      EquipmentSlotType::Head, 1, 185, 180, 150, "ui_item_helmet", ItemEffectType::None, 0.0f,
+      1.0f},
      {"Speed Potion", "A bright draught that makes every step lighter.", ItemTag::Consumable,
-      EquipmentSlotType::None, 1, 80, 190, 235},
+      EquipmentSlotType::None, 1, 80, 190, 235, "ui_item_speed_potion",
+      ItemEffectType::IncreaseSpeed, SpeedPotionBonus},
      {"Health Potion", "A warm red potion with a reassuring glow.", ItemTag::Consumable,
-      EquipmentSlotType::None, 1, 205, 55, 75},
+      EquipmentSlotType::None, 1, 205, 55, 75, "ui_item_health_potion",
+      ItemEffectType::RestoreHealth, HealthPotionRestore},
      {"Attack Potion", "A sharp bitter brew that wakes up your weapon hand.", ItemTag::Consumable,
-      EquipmentSlotType::None, 1, 220, 105, 50},
+      EquipmentSlotType::None, 1, 220, 105, 50, "ui_item_attack_potion",
+      ItemEffectType::IncreaseAttack, AttackPotionBonus},
      {"Boots", "Soft leather boots made for quick exits.", ItemTag::Equipment,
-      EquipmentSlotType::Boots, 1, 150, 95, 55}}};
+      EquipmentSlotType::Boots, 1, 150, 95, 55, "ui_item_boots", ItemEffectType::None, 0.0f,
+      0.0f, 0.0f, 40.0f}}};
 
 }  // namespace GameConfig
 }  // namespace Roguelike

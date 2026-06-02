@@ -27,7 +27,6 @@ const std::array<sf::Vector2f, 5> EquipmentSlotOffsets = {{{356.0f, 60.0f},
 const sf::FloatRect EquipmentItemIconBounds = {12.0f, 12.0f, 52.0f, 52.0f};
 const sf::Vector2f EquipmentFallbackIconPosition = {18.0f, 18.0f};
 const sf::Vector2f EquipmentFallbackIconSize = {40.0f, 40.0f};
-const sf::Vector2f EquipmentCountPosition = {54.0f, 54.0f};
 
 // Fallback avatar is only used if ui_player_avatar is missing.
 const float FallbackAvatarHeadRadius = 28.0f;
@@ -59,36 +58,51 @@ void EquipmentPanel::SetOpen(bool value)
 
 bool EquipmentPanel::IsOpen() const { return isOpen; }
 
-bool EquipmentPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item)
+EquipmentPlacementPreview EquipmentPanel::PreviewPlacement(sf::Vector2f mousePosition,
+                                                           const UIItemView& item) const
 {
+    EquipmentPlacementPreview preview;
+
     if (!isOpen || !CanEquip(item))
     {
-        return false;
+        return preview;
     }
 
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
     {
         if (GetSlotBounds(i).contains(mousePosition))
         {
+            preview.handled = true;
+            preview.slotIndex = i;
+
             if (!CanEquipInSlot(item.stack, slotTypes[i]))
             {
-                return false;
+                return preview;
             }
 
-            for (auto& slot : slots)
+            preview.canPlace = true;
+            if (slots[i].has_value())
             {
-                if (slot.has_value() && slot->stack.GetName() == item.stack.GetName())
-                {
-                    slot.reset();
-                }
+                preview.replacedItem = slots[i]->stack;
             }
 
-            slots[i] = item;
-            return true;
+            return preview;
         }
     }
 
-    return false;
+    return preview;
+}
+
+void EquipmentPanel::CommitPlacement(const EquipmentPlacementPreview& preview,
+                                     const UIItemView& item)
+{
+    if (!preview.canPlace || preview.slotIndex < 0 ||
+        preview.slotIndex >= static_cast<int>(slots.size()))
+    {
+        return;
+    }
+
+    slots[preview.slotIndex] = UIItemView::FromStack(ItemStack{item.stack.data, 1});
 }
 
 bool EquipmentPanel::ContainsPoint(sf::Vector2f mousePosition) const
@@ -130,8 +144,9 @@ void EquipmentPanel::SetSavedSlots(const std::array<std::optional<ItemStack>, 5>
 {
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
     {
-        slots[i] = savedSlots[i].has_value()
-                       ? std::optional<UIItemView>(UIItemView::FromStack(savedSlots[i].value()))
+        slots[i] = savedSlots[i].has_value() && savedSlots[i]->IsValid()
+                       ? std::optional<UIItemView>(
+                             UIItemView::FromStack(ItemStack{savedSlots[i]->data, 1}))
                        : std::nullopt;
     }
 }
@@ -218,16 +233,6 @@ void EquipmentPanel::DrawSlot(sf::RenderWindow& window, int index)
 
         window.draw(icon);
     }
-
-    sf::Text countText;
-    countText.setFont(font);
-    countText.setCharacterSize(13);
-    countText.setString(std::to_string(item.stack.count));
-    countText.setFillColor(sf::Color(238, 214, 142, alpha));
-    countText.setPosition({bounds.left + EquipmentCountPosition.x,
-                           bounds.top + EquipmentCountPosition.y});
-
-    window.draw(countText);
 }
 
 void EquipmentPanel::DrawCharacterPreview(sf::RenderWindow& window)

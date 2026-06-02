@@ -37,11 +37,11 @@ bool HotbarPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& ite
         return false;
     }
 
-    for (auto& slot : slots)
+    for (const ItemData*& slot : slots)
     {
-        if (slot.has_value() && slot->stack.GetName() == item.stack.GetName())
+        if (slot == item.stack.data)
         {
-            slot.reset();
+            slot = nullptr;
         }
     }
 
@@ -49,7 +49,7 @@ bool HotbarPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& ite
     {
         if (GetSlotBounds(i).contains(mousePosition))
         {
-            slots[i] = item;
+            slots[i] = item.stack.data;
             return true;
         }
     }
@@ -57,27 +57,26 @@ bool HotbarPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& ite
     return false;
 }
 
-bool HotbarPanel::TryAutoPlaceItem(const UIItemView& item)
+bool HotbarPanel::TryAutoPlaceItem(const ItemStack& item)
 {
     if (!CanUseOnHotbar(item))
     {
         return false;
     }
 
-    for (auto& slot : slots)
+    for (const ItemData* slot : slots)
     {
-        if (slot.has_value() && slot->stack.GetName() == item.stack.GetName())
+        if (slot == item.data)
         {
-            slot = item;
             return true;
         }
     }
 
-    for (auto& slot : slots)
+    for (const ItemData*& slot : slots)
     {
-        if (!slot.has_value())
+        if (slot == nullptr)
         {
-            slot = item;
+            slot = item.data;
             return true;
         }
     }
@@ -108,45 +107,31 @@ void HotbarPanel::ClearHighlightedItem()
     highlightedItem.reset();
 }
 
-HotbarUseResult HotbarPanel::TryUseHotkey()
+HotbarUseResult HotbarPanel::TryUseHotkey(sf::Keyboard::Key key)
 {
-    std::array<sf::Keyboard::Key, 6> keys = {sf::Keyboard::Num1, sf::Keyboard::Num2,
-                                             sf::Keyboard::Num3, sf::Keyboard::Num4,
-                                             sf::Keyboard::Num5, sf::Keyboard::Num6};
+    int slotIndex = GetSlotIndexForKey(key);
 
-    for (int i = 0; i < 6; ++i)
+    if (slotIndex < 0)
     {
-        bool isPressed = sf::Keyboard::isKeyPressed(keys[i]);
-
-        if (isPressed && !wasKeyPressed[i])
-        {
-            wasKeyPressed[i] = true;
-            pulseTimers[i] = HotbarPulseSeconds;
-
-            if (slots[i].has_value())
-            {
-                std::string itemName = slots[i]->stack.GetName();
-
-                slots[i]->stack.count--;
-
-                if (slots[i]->stack.count <= 0)
-                {
-                    slots[i].reset();
-                }
-
-                return {HotbarUseState::Used, itemName};
-            }
-
-            return {HotbarUseState::Empty, ""};
-        }
-
-        if (!isPressed)
-        {
-            wasKeyPressed[i] = false;
-        }
+        return {};
     }
 
-    return {};
+    pulseTimers[slotIndex] = HotbarPulseSeconds;
+
+    const ItemData* itemData = slots[slotIndex];
+    if (itemData == nullptr || GetInventoryCount(itemData) <= 0)
+    {
+        slots[slotIndex] = nullptr;
+        return {HotbarUseState::Empty, nullptr};
+    }
+
+    return {HotbarUseState::Used, itemData};
+}
+
+void HotbarPanel::SetInventoryItems(const std::vector<ItemStack>& items)
+{
+    inventoryItems = &items;
+    RemoveMissingShortcuts();
 }
 
 std::array<std::optional<ItemStack>, 6> HotbarPanel::GetSavedSlots() const
@@ -155,9 +140,9 @@ std::array<std::optional<ItemStack>, 6> HotbarPanel::GetSavedSlots() const
 
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
     {
-        if (slots[i].has_value())
+        if (slots[i] != nullptr)
         {
-            savedSlots[i] = slots[i]->stack;
+            savedSlots[i] = ItemStack{slots[i], 1};
         }
     }
 
@@ -168,10 +153,11 @@ void HotbarPanel::SetSavedSlots(const std::array<std::optional<ItemStack>, 6>& s
 {
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
     {
-        slots[i] = savedSlots[i].has_value()
-                       ? std::optional<UIItemView>(UIItemView::FromStack(savedSlots[i].value()))
-                       : std::nullopt;
+        slots[i] = savedSlots[i].has_value() && savedSlots[i]->IsValid() ? savedSlots[i]->data
+                                                                         : nullptr;
     }
+
+    RemoveMissingShortcuts();
 }
 
 void HotbarPanel::Update(float deltaTime)
@@ -209,8 +195,7 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
     float pulse = pulseTimers[index] / HotbarPulseSeconds;
     float inflate = HotbarPulseInflate * pulse;
     bool isTargetSlot = highlightedItem.has_value() && CanUseOnHotbar(highlightedItem->stack) &&
-                        (!slots[index].has_value() ||
-                         slots[index]->stack.GetName() == highlightedItem->stack.GetName());
+                        (slots[index] == nullptr || slots[index] == highlightedItem->stack.data);
 
     bool drewSlotTexture =
         UITextureUtils::DrawTexture(window, "ui_slot_hotbar",
@@ -257,12 +242,15 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
 
     window.draw(numberText);
 
-    if (!slots[index].has_value())
+    const ItemData* itemData = slots[index];
+    int itemCount = GetInventoryCount(itemData);
+
+    if (itemData == nullptr || itemCount <= 0)
     {
         return;
     }
 
-    const UIItemView& item = slots[index].value();
+    UIItemView item = UIItemView::FromStack(ItemStack{itemData, itemCount});
 
     if (!UITextureUtils::DrawItemTexture(window, item,
                                          {bounds.left + HotbarItemIconBounds.left,
@@ -285,7 +273,7 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
     sf::Text countText;
     countText.setFont(font);
     countText.setCharacterSize(12);
-    countText.setString(std::to_string(item.stack.count));
+    countText.setString(std::to_string(itemCount));
     countText.setFillColor(sf::Color(255, 255, 255, alpha));
     countText.setPosition(bounds.left + HotbarCountPosition.x, bounds.top + HotbarCountPosition.y);
 
@@ -298,5 +286,56 @@ sf::FloatRect HotbarPanel::GetSlotBounds(int index) const
     float y = position.y;
 
     return {x, y, slotSize, slotSize};
+}
+
+int HotbarPanel::GetSlotIndexForKey(sf::Keyboard::Key key) const
+{
+    static const std::array<sf::Keyboard::Key, 6> keys = {sf::Keyboard::Num1, sf::Keyboard::Num2,
+                                                          sf::Keyboard::Num3, sf::Keyboard::Num4,
+                                                          sf::Keyboard::Num5, sf::Keyboard::Num6};
+
+    for (int i = 0; i < static_cast<int>(keys.size()); ++i)
+    {
+        if (keys[i] == key)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int HotbarPanel::GetInventoryCount(const ItemData* itemData) const
+{
+    if (itemData == nullptr || inventoryItems == nullptr)
+    {
+        return 0;
+    }
+
+    for (const ItemStack& item : *inventoryItems)
+    {
+        if (item.data == itemData)
+        {
+            return item.count;
+        }
+    }
+
+    return 0;
+}
+
+void HotbarPanel::RemoveMissingShortcuts()
+{
+    if (inventoryItems == nullptr)
+    {
+        return;
+    }
+
+    for (const ItemData*& slot : slots)
+    {
+        if (slot != nullptr && GetInventoryCount(slot) <= 0)
+        {
+            slot = nullptr;
+        }
+    }
 }
 }  // namespace Roguelike

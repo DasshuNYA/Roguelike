@@ -33,6 +33,7 @@ void Engine::Run()
     scene->Start();
 
     sf::RenderWindow& window = RenderSystem::Instance()->GetMainWindow();
+    window.setKeyRepeatEnabled(false);
 
     sf::Clock clock;
 
@@ -46,6 +47,8 @@ void Engine::Run()
             {
                 window.close();
             }
+
+            GameWorld::Instance()->HandleEvent(event);
         }
 
         float deltaTime = clock.restart().asSeconds();

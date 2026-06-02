@@ -4,6 +4,8 @@
 
 #include "TransformComponent.h"
 
+#include <SFML/Window/Event.hpp>
+
 #include <iostream>
 #include <string>
 #include <type_traits>
@@ -24,6 +26,7 @@ class GameObject
     std::string GetName() const;
     void Print(int depth = 0) const;
 
+    void HandleEvent(const sf::Event& event);
     void Update(float deltaTime);
     void Render();
 

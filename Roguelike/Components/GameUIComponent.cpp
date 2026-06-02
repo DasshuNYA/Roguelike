@@ -84,12 +84,27 @@ void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& 
     }
 }
 
+void GameUIComponent::HandleEvent(const sf::Event& event)
+{
+    uiManager.HandleEvent(event);
+
+    if (event.type == sf::Event::KeyPressed)
+    {
+        HandleKeyPressed(event.key.code);
+        return;
+    }
+
+    if (event.type == sf::Event::MouseButtonPressed)
+    {
+        sf::RenderWindow& window = Engine::RenderSystem::Instance()->GetMainWindow();
+        HandleMouseButtonPressed(event.mouseButton, window);
+    }
+}
+
 void GameUIComponent::Update(float deltaTime)
 {
-    sf::RenderWindow& window = Engine::RenderSystem::Instance()->GetMainWindow();
-
     UpdateLevelObjective(deltaTime);
-    HandleInput(window);
+    HandleDeathState();
     UpdateHUD();
     UpdateInventory();
 
@@ -171,7 +186,6 @@ void GameUIComponent::UpdateLevelObjective(float deltaTime)
     }
 
     isLevelComplete = true;
-    wasRestartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
     CloseInventory();
 
     if (overlay != nullptr)
@@ -191,6 +205,12 @@ void GameUIComponent::UpdateInventory()
 
     const std::vector<ItemStack>& items = playerInventory->GetItems();
     inventory->SetItems(items);
+
+    if (hotbar != nullptr)
+    {
+        hotbar->SetInventoryItems(items);
+    }
+
     AutoPlaceNewHotbarItems(items);
 }
 
@@ -209,7 +229,7 @@ void GameUIComponent::AutoPlaceNewHotbarItems(const std::vector<ItemStack>& item
             continue;
         }
 
-        hotbar->TryAutoPlaceItem(UIItemView::FromStack(item));
+        hotbar->TryAutoPlaceItem(item);
     }
 
     knownInventoryItems = items;
@@ -228,192 +248,208 @@ int GameUIComponent::GetKnownItemCount(const ItemData* itemData) const
     return 0;
 }
 
-void GameUIComponent::HandleInput(sf::RenderWindow& window)
+void GameUIComponent::HandleKeyPressed(sf::Keyboard::Key key)
 {
+    bool wasGameOver = isGameOver;
     HandleDeathState();
+    if (!wasGameOver && isGameOver)
+    {
+        return;
+    }
 
-    // Modal UI states are handled first so gameplay input cannot leak through them.
+    // Modal screens consume keys before gameplay-facing UI can react.
     if (isGameOver)
     {
-        HandleGameOverInput();
+        if (key == sf::Keyboard::Space)
+        {
+            HandleGameOverRestartPressed();
+        }
         return;
     }
 
     if (isLevelComplete)
     {
-        HandleLevelCompleteInput();
+        if (key == sf::Keyboard::Space)
+        {
+            HandleLevelCompleteNextPressed();
+        }
         return;
     }
 
     if (isMainMenuOpen)
     {
-        HandleMainMenuInput();
+        if (key == sf::Keyboard::Space)
+        {
+            HandleStartPressed();
+        }
         return;
     }
 
-    HandlePauseInput();
+    if (key == sf::Keyboard::Escape)
+    {
+        HandlePausePressed();
+        return;
+    }
 
     if (isPauseOpen)
     {
-        wasInventoryPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::I);
         return;
     }
 
-    HandleInventoryInput(window);
-    HandleHotbarInput();
+    if (key == sf::Keyboard::I)
+    {
+        HandleInventoryTogglePressed();
+        return;
+    }
+
+    HandleHotbarKey(key);
 }
 
-void GameUIComponent::HandleMainMenuInput()
+void GameUIComponent::HandleMouseButtonPressed(const sf::Event::MouseButtonEvent& mouseButton,
+                                               sf::RenderWindow& window)
 {
-    bool isStartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-
-    if (isStartPressed && !wasStartPressed)
+    if (isMainMenuOpen || isPauseOpen || isGameOver || isLevelComplete ||
+        inventory == nullptr || !inventory->IsOpen())
     {
-        isMainMenuOpen = false;
+        return;
+    }
 
+    sf::Vector2f mousePosition =
+        window.mapPixelToCoords({mouseButton.x, mouseButton.y}, window.getDefaultView());
+
+    if (mouseButton.button == sf::Mouse::Right)
+    {
+        HandleInventoryCancelPressed();
+        return;
+    }
+
+    if (mouseButton.button == sf::Mouse::Left)
+    {
+        HandleInventoryClick(mousePosition);
+    }
+}
+
+void GameUIComponent::HandleStartPressed()
+{
+    isMainMenuOpen = false;
+
+    if (overlay != nullptr)
+    {
+        overlay->HideOverlay();
+    }
+
+    Engine::GameWorld::Instance()->SetPaused(false);
+
+    if (popup != nullptr)
+    {
+        popup->ShowMessage("Press I to open inventory", TutorialPopupSeconds);
+    }
+}
+
+void GameUIComponent::HandlePausePressed()
+{
+    if (inventory != nullptr && inventory->IsOpen())
+    {
+        CloseInventory();
+        Engine::GameWorld::Instance()->SetPaused(false);
+        return;
+    }
+
+    isPauseOpen = !isPauseOpen;
+
+    if (isPauseOpen)
+    {
         if (overlay != nullptr)
         {
-            overlay->HideOverlay();
+            overlay->ShowPause();
         }
 
-        Engine::GameWorld::Instance()->SetPaused(false);
-
-        if (popup != nullptr)
-        {
-            popup->ShowMessage("Press I to open inventory", TutorialPopupSeconds);
-        }
+        Engine::GameWorld::Instance()->SetPaused(true);
+        return;
     }
 
-    wasStartPressed = isStartPressed;
+    if (overlay != nullptr)
+    {
+        overlay->HideOverlay();
+    }
+
+    Engine::GameWorld::Instance()->SetPaused(false);
 }
 
-void GameUIComponent::HandlePauseInput()
+void GameUIComponent::HandleInventoryTogglePressed()
 {
-    bool isPausePressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Escape);
-
-    if (isPausePressed && !wasPausePressed)
-    {
-        if (inventory != nullptr && inventory->IsOpen())
-        {
-            CloseInventory();
-            Engine::GameWorld::Instance()->SetPaused(false);
-            wasPausePressed = isPausePressed;
-            return;
-        }
-
-        isPauseOpen = !isPauseOpen;
-
-        if (isPauseOpen)
-        {
-            if (overlay != nullptr)
-            {
-                overlay->ShowPause();
-            }
-
-            Engine::GameWorld::Instance()->SetPaused(true);
-        }
-        else
-        {
-            if (overlay != nullptr)
-            {
-                overlay->HideOverlay();
-            }
-
-            Engine::GameWorld::Instance()->SetPaused(false);
-        }
-    }
-
-    wasPausePressed = isPausePressed;
-}
-
-void GameUIComponent::HandleInventoryInput(sf::RenderWindow& window)
-{
-    bool isInventoryPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::I);
-
-    if (isInventoryPressed && !wasInventoryPressed && inventory != nullptr)
-    {
-        ToggleInventory();
-        Engine::GameWorld::Instance()->SetPaused(inventory->IsOpen());
-    }
-
-    wasInventoryPressed = isInventoryPressed;
-
-    if (inventory == nullptr || !inventory->IsOpen())
+    if (inventory == nullptr)
     {
         return;
     }
 
-    bool isLeftMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
-    bool isRightMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+    ToggleInventory();
+    Engine::GameWorld::Instance()->SetPaused(inventory->IsOpen());
+}
 
-    sf::Vector2i pixelMousePosition = sf::Mouse::getPosition(window);
-    sf::Vector2f mousePosition =
-        window.mapPixelToCoords(pixelMousePosition, window.getDefaultView());
+void GameUIComponent::HandleInventoryClick(sf::Vector2f mousePosition)
+{
+    if (inventory == nullptr)
+    {
+        return;
+    }
 
-    if (isRightMousePressed && !wasRightMousePressed && draggedItem.has_value())
+    if (inventory->TryChangePage(mousePosition))
+    {
+        return;
+    }
+
+    std::optional<UIItemView> selectedItem = inventory->TryPickItem(mousePosition);
+
+    if (selectedItem.has_value())
+    {
+        SelectItem(selectedItem.value());
+        return;
+    }
+
+    if (TryPlaceSelectedItem(mousePosition) || draggedItem.has_value())
+    {
+        ClearSelectedItem();
+    }
+}
+
+void GameUIComponent::HandleInventoryCancelPressed()
+{
+    if (draggedItem.has_value())
     {
         // Right click cancels drag-and-drop without touching inventory data.
         ClearSelectedItem();
-        wasRightMousePressed = isRightMousePressed;
-        return;
     }
-
-    wasRightMousePressed = isRightMousePressed;
-
-    if (isLeftMousePressed && !wasLeftMousePressed)
-    {
-        if (inventory->TryChangePage(mousePosition))
-        {
-            wasLeftMousePressed = isLeftMousePressed;
-            return;
-        }
-
-        std::optional<UIItemView> selectedItem = inventory->TryPickItem(mousePosition);
-
-        if (selectedItem.has_value())
-        {
-            SelectItem(selectedItem.value());
-            wasLeftMousePressed = isLeftMousePressed;
-            return;
-        }
-
-        if (TryPlaceSelectedItem(mousePosition) || draggedItem.has_value())
-        {
-            ClearSelectedItem();
-            wasLeftMousePressed = isLeftMousePressed;
-            return;
-        }
-    }
-
-    wasLeftMousePressed = isLeftMousePressed;
 }
 
-void GameUIComponent::HandleHotbarInput()
+void GameUIComponent::HandleHotbarKey(sf::Keyboard::Key key)
 {
     if (hotbar == nullptr || popup == nullptr)
     {
         return;
     }
 
-    HotbarUseResult useResult = hotbar->TryUseHotkey();
+    HotbarUseResult useResult = hotbar->TryUseHotkey(key);
 
-    if (useResult.state == HotbarUseState::Empty)
+    if (useResult.state == HotbarUseState::None)
+    {
+        return;
+    }
+
+    if (useResult.state == HotbarUseState::Empty || useResult.itemData == nullptr)
     {
         popup->ShowMessage("Empty slot", QuickFeedbackSeconds);
         return;
     }
 
-    if (useResult.state == HotbarUseState::Used)
+    std::string effectMessage = ApplyHotbarItemEffect(*useResult.itemData);
+
+    if (playerInventory != nullptr)
     {
-        std::string effectMessage = ApplyHotbarItemEffect(useResult.itemName);
-
-        if (playerInventory != nullptr)
-        {
-            playerInventory->RemoveOneItem(useResult.itemName);
-        }
-
-        popup->ShowMessage(effectMessage, QuickFeedbackSeconds);
+        playerInventory->RemoveOneItem(useResult.itemData);
     }
+
+    popup->ShowMessage(effectMessage, QuickFeedbackSeconds);
 }
 
 void GameUIComponent::HandleDeathState()
@@ -431,7 +467,6 @@ void GameUIComponent::HandleDeathState()
     }
 
     isGameOver = true;
-    wasRestartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
     if (inventory != nullptr && inventory->IsOpen())
     {
@@ -448,65 +483,97 @@ void GameUIComponent::HandleDeathState()
     Engine::GameWorld::Instance()->SetPaused(true);
 }
 
-void GameUIComponent::HandleGameOverInput()
+void GameUIComponent::HandleGameOverRestartPressed()
 {
-    bool isRestartPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-
-    if (isRestartPressed && !wasRestartPressed)
-    {
-        Engine::SaveSystem::Instance()->RemoveValue(PlayerRunSnapshotKey);
-        LevelProgress::Reset();
-        Engine::Engine::Instance()->RequestSceneRestart();
-    }
-
-    wasRestartPressed = isRestartPressed;
+    Engine::SaveSystem::Instance()->RemoveValue(PlayerRunSnapshotKey);
+    LevelProgress::Reset();
+    Engine::Engine::Instance()->RequestSceneRestart();
 }
 
-void GameUIComponent::HandleLevelCompleteInput()
+void GameUIComponent::HandleLevelCompleteNextPressed()
 {
-    bool isNextLevelPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-
-    if (isNextLevelPressed && !wasRestartPressed)
-    {
-        SavePlayerRunState();
-        LevelProgress::Advance();
-        Engine::Engine::Instance()->RequestSceneRestart();
-    }
-
-    wasRestartPressed = isNextLevelPressed;
+    SavePlayerRunState();
+    LevelProgress::Advance();
+    Engine::Engine::Instance()->RequestSceneRestart();
 }
 
-std::string GameUIComponent::ApplyHotbarItemEffect(const std::string& itemName)
+std::string GameUIComponent::ApplyHotbarItemEffect(const ItemData& itemData)
 {
     Engine::StatsComponent* stats =
         playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
 
-    if (itemName == "Health Potion" && stats != nullptr)
+    if (itemData.effectType == ItemEffectType::RestoreHealth && stats != nullptr)
     {
         float restoredHealth =
-            std::min(GameConfig::PlayerHealth, stats->GetHealth() + GameConfig::HealthPotionRestore);
+            std::min(GameConfig::PlayerHealth, stats->GetHealth() + itemData.effectAmount);
         stats->SetStats(restoredHealth, stats->GetArmor());
         return "Health restored";
     }
 
-    if (itemName == "Attack Potion" && stats != nullptr)
+    if (itemData.effectType == ItemEffectType::IncreaseAttack && stats != nullptr)
     {
-        stats->SetAttackPower(stats->GetAttackPower() + GameConfig::AttackPotionBonus);
+        stats->SetAttackPower(stats->GetAttackPower() + itemData.effectAmount);
         return "Attack increased";
     }
 
-    if (itemName == "Speed Potion" && playerObject != nullptr)
+    if (itemData.effectType == ItemEffectType::IncreaseSpeed && playerObject != nullptr)
     {
         PlayerMovementComponent* movement = playerObject->GetComponent<PlayerMovementComponent>();
 
         if (movement != nullptr)
         {
-            movement->SetSpeed(movement->GetSpeed() + GameConfig::SpeedPotionBonus);
+            movement->SetSpeed(
+                std::min(GameConfig::MaxPlayerMoveSpeed,
+                         movement->GetSpeed() + itemData.effectAmount));
             return "Speed increased";
         }
     }
 
-    return "Used: " + itemName;
+    return "Used: " + std::string(itemData.name);
+}
+
+void GameUIComponent::ApplyEquipmentChange(const ItemData* equippedItem,
+                                           const ItemData* replacedItem)
+{
+    ApplyEquipmentBonuses(replacedItem, -1.0f);
+    ApplyEquipmentBonuses(equippedItem, 1.0f);
+}
+
+void GameUIComponent::ApplyEquipmentBonuses(const ItemData* itemData, float direction)
+{
+    if (itemData == nullptr || playerObject == nullptr)
+    {
+        return;
+    }
+
+    Engine::StatsComponent* stats = playerObject->GetComponent<Engine::StatsComponent>();
+    if (stats != nullptr)
+    {
+        if (itemData->armorBonus != 0.0f)
+        {
+            stats->SetStats(stats->GetHealth(),
+                            std::max(0.0f, stats->GetArmor() +
+                                               itemData->armorBonus * direction));
+        }
+
+        if (itemData->attackBonus != 0.0f)
+        {
+            stats->SetAttackPower(std::max(0.0f, stats->GetAttackPower() +
+                                                     itemData->attackBonus * direction));
+        }
+    }
+
+    if (itemData->speedBonus != 0.0f)
+    {
+        PlayerMovementComponent* movement = playerObject->GetComponent<PlayerMovementComponent>();
+
+        if (movement != nullptr)
+        {
+            movement->SetSpeed(std::clamp(movement->GetSpeed() +
+                                              itemData->speedBonus * direction,
+                                          0.0f, GameConfig::MaxPlayerMoveSpeed));
+        }
+    }
 }
 
 void GameUIComponent::RestorePlayerRunState()
@@ -684,31 +751,68 @@ bool GameUIComponent::TryPlaceSelectedItem(sf::Vector2f mousePosition)
         return false;
     }
 
-    if (equipment != nullptr && equipment->ContainsPoint(mousePosition))
-    {
-        if (equipment->TryPlaceItem(mousePosition, draggedItem.value()))
-        {
-            ShowPopupMessage("Equipped: " + draggedItem->stack.GetName());
-            return true;
-        }
+    return TryEquipSelectedItem(mousePosition) || TryAssignSelectedItemToHotbar(mousePosition);
+}
 
+bool GameUIComponent::TryEquipSelectedItem(sf::Vector2f mousePosition)
+{
+    if (!draggedItem.has_value() || equipment == nullptr ||
+        !equipment->ContainsPoint(mousePosition))
+    {
+        return false;
+    }
+
+    EquipmentPlacementPreview preview =
+        equipment->PreviewPlacement(mousePosition, draggedItem.value());
+
+    if (!preview.handled)
+    {
+        return false;
+    }
+
+    if (!preview.canPlace || draggedItem->stack.data == nullptr)
+    {
         ShowPopupMessage("Wrong equipment slot");
         return true;
     }
 
-    if (hotbar != nullptr && hotbar->ContainsPoint(mousePosition))
-    {
-        if (hotbar->TryPlaceItem(mousePosition, draggedItem.value()))
-        {
-            ShowPopupMessage("Added to hotbar: " + draggedItem->stack.GetName());
-            return true;
-        }
+    ItemStack equippedItem{draggedItem->stack.data, 1};
 
-        ShowPopupMessage("Only potions fit the hotbar");
+    if (playerInventory == nullptr || !playerInventory->RemoveOneItem(equippedItem.data))
+    {
+        ShowPopupMessage("Item missing");
         return true;
     }
 
-    return false;
+    if (preview.replacedItem.has_value() && !playerInventory->AddItem(preview.replacedItem.value()))
+    {
+        playerInventory->AddItem(equippedItem);
+        ShowPopupMessage("Inventory is full");
+        return true;
+    }
+
+    equipment->CommitPlacement(preview, draggedItem.value());
+    ApplyEquipmentChange(equippedItem.data,
+                         preview.replacedItem.has_value() ? preview.replacedItem->data : nullptr);
+    ShowPopupMessage("Equipped: " + equippedItem.GetName());
+    return true;
+}
+
+bool GameUIComponent::TryAssignSelectedItemToHotbar(sf::Vector2f mousePosition)
+{
+    if (!draggedItem.has_value() || hotbar == nullptr || !hotbar->ContainsPoint(mousePosition))
+    {
+        return false;
+    }
+
+    if (hotbar->TryPlaceItem(mousePosition, draggedItem.value()))
+    {
+        ShowPopupMessage("Added to hotbar: " + draggedItem->stack.GetName());
+        return true;
+    }
+
+    ShowPopupMessage("Only potions fit the hotbar");
+    return true;
 }
 
 void GameUIComponent::ShowPopupMessage(const std::string& message, float duration)

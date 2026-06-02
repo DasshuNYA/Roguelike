@@ -13,6 +13,14 @@
 
 namespace Roguelike
 {
+struct EquipmentPlacementPreview
+{
+    bool handled = false;
+    bool canPlace = false;
+    int slotIndex = -1;
+    std::optional<ItemStack> replacedItem;
+};
+
 class EquipmentPanel : public FramedPanel
 {
    public:
@@ -21,7 +29,9 @@ class EquipmentPanel : public FramedPanel
     void SetOpen(bool value);
     bool IsOpen() const;
 
-    bool TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item);
+    EquipmentPlacementPreview PreviewPlacement(sf::Vector2f mousePosition,
+                                               const UIItemView& item) const;
+    void CommitPlacement(const EquipmentPlacementPreview& preview, const UIItemView& item);
     bool ContainsPoint(sf::Vector2f mousePosition) const;
     void SetHighlightedItem(const std::optional<UIItemView>& item);
     void ClearHighlightedItem();

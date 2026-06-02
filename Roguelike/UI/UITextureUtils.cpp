@@ -11,6 +11,12 @@ namespace Roguelike::UITextureUtils
 {
 namespace
 {
+sf::Sprite& GetReusableSprite()
+{
+    static sf::Sprite sprite;
+    return sprite;
+}
+
 // Draws one texture fragment into one destination fragment. Nine-slice and progress bars
 // both rely on this small primitive so texture math stays in one place.
 void DrawTexturePatch(sf::RenderWindow& window,
@@ -26,7 +32,7 @@ void DrawTexturePatch(sf::RenderWindow& window,
         return;
     }
 
-    sf::Sprite sprite;
+    sf::Sprite& sprite = GetReusableSprite();
     sprite.setTexture(texture);
     sprite.setTextureRect(source);
     sprite.setPosition({destination.left, destination.top});
@@ -67,10 +73,15 @@ bool DrawTexture(sf::RenderWindow& window,
 
     // fillRatio crops the source from the right. HUD health fill uses this for progress.
     fillRatio = std::clamp(fillRatio, 0.0f, 1.0f);
+    if (fillRatio <= 0.0f)
+    {
+        return true;
+    }
+
     const int sourceWidth =
         std::max(1, static_cast<int>(static_cast<float>(textureSize.x) * fillRatio));
 
-    sf::Sprite sprite;
+    sf::Sprite& sprite = GetReusableSprite();
     sprite.setTexture(*texture);
     sprite.setTextureRect({0, 0, sourceWidth, static_cast<int>(textureSize.y)});
     sprite.setPosition({bounds.left, bounds.top});
