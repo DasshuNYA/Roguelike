@@ -130,7 +130,9 @@ void HUD::Draw(sf::RenderWindow& window)
         DrawTexturedBar(window, HealthBarBounds, currentHealth, maximumHealth, alpha,
                         sf::Color::White);
     bool drewArmor = false;
-    int armorIconCount = static_cast<int>(std::max(0.0f, currentArmor));
+    int armorIconCount =
+        static_cast<int>(std::min(std::max(0.0f, currentArmor),
+                                  std::max(0.0f, maximumArmor)));
 
     if (UITextureUtils::HasTexture("ui_player_armor"))
     {

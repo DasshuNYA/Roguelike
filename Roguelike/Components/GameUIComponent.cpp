@@ -31,6 +31,11 @@ const sf::Uint8 DraggedItemFallbackAlpha = 220;
 const float LevelPopupSeconds = 2.0f;
 const float TutorialPopupSeconds = 3.0f;
 const float QuickFeedbackSeconds = 1.5f;
+
+float ClampPlayerArmor(float armor)
+{
+    return std::clamp(armor, 0.0f, GameConfig::PlayerArmor);
+}
 }  // namespace
 
 GameUIComponent::GameUIComponent(Engine::GameObject* gameObject) : Component(gameObject)
@@ -160,7 +165,8 @@ void GameUIComponent::UpdateHUDStats(float health, float armor)
         return;
     }
 
-    hud->SetStats(health, GameConfig::PlayerHealth, armor, GameConfig::PlayerArmor);
+    hud->SetStats(health, GameConfig::PlayerHealth, ClampPlayerArmor(armor),
+                  GameConfig::PlayerArmor);
 }
 
 void GameUIComponent::UpdateLevelObjective(float deltaTime)
@@ -506,7 +512,7 @@ std::string GameUIComponent::ApplyHotbarItemEffect(const ItemData& itemData)
     {
         float restoredHealth =
             std::min(GameConfig::PlayerHealth, stats->GetHealth() + itemData.effectAmount);
-        stats->SetStats(restoredHealth, stats->GetArmor());
+        stats->SetStats(restoredHealth, ClampPlayerArmor(stats->GetArmor()));
         return "Health restored";
     }
 
@@ -552,8 +558,8 @@ void GameUIComponent::ApplyEquipmentBonuses(const ItemData* itemData, float dire
         if (itemData->armorBonus != 0.0f)
         {
             stats->SetStats(stats->GetHealth(),
-                            std::max(0.0f, stats->GetArmor() +
-                                               itemData->armorBonus * direction));
+                            ClampPlayerArmor(stats->GetArmor() +
+                                             itemData->armorBonus * direction));
         }
 
         if (itemData->attackBonus != 0.0f)
@@ -609,7 +615,7 @@ void GameUIComponent::RestorePlayerRunState()
 
     if (stats != nullptr)
     {
-        stats->SetStats(snapshot->health, snapshot->armor);
+        stats->SetStats(snapshot->health, ClampPlayerArmor(snapshot->armor));
         stats->SetAttackPower(snapshot->attackPower);
     }
 
@@ -648,7 +654,7 @@ void GameUIComponent::SavePlayerRunState()
     if (stats != nullptr)
     {
         snapshot.health = stats->GetHealth();
-        snapshot.armor = stats->GetArmor();
+        snapshot.armor = ClampPlayerArmor(stats->GetArmor());
         snapshot.attackPower = stats->GetAttackPower();
     }
 
