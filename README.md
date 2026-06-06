@@ -14,7 +14,7 @@ The project is intentionally kept easy to explain: game objects are composed fro
 - inventory, equipment, hotbar, and HUD UI;
 - level progression and background music;
 - logger system;
-- combat system documentation.
+- combat and UI system documentation.
 
 ## Controls
 
@@ -62,6 +62,14 @@ Player attacks are projectile-based. Enemies use detection triggers, pathfinding
 
 More details are documented in `docs/combat-system.md`.
 
+### UI And Run State
+
+The UI is split into HUD, inventory, equipment, hotbar, popup, and screen overlay panels.
+Run state between levels is stored through `SaveSystem`, so inventory, equipment, hotbar, health,
+armor, attack power, and movement speed can carry into the next generated level.
+
+More details are documented in `docs/ui-system.md`.
+
 ## Build
 
 Recommended environment:
@@ -74,8 +82,29 @@ Build the `Roguelike` project in `Debug|x64` or `Release|x64`.
 
 The project copies `Roguelike/Resources` to the output folders after build, so textures, UI assets, fonts, and sounds are available when the game starts.
 
+Convenience scripts from the repository root:
+
+- `build.bat` - builds `Debug|x64`;
+- `build-debug.bat` - builds `Debug|x64`;
+- `build-release.bat` - builds `Release|x64`.
+
+Pass `--no-pause` to any script when running from an existing terminal or CI-like shell.
+
+## Tests
+
+After building, run:
+
+```powershell
+.\x64\Debug\EngineTest.exe
+.\x64\Release\EngineTest.exe
+```
+
+The current test suite covers vector math and typed `SaveSystem` behavior.
+
 ## Logs
 
 Logs are written to:
 
 `Roguelike/Saved/Logs/log.txt`
+
+Build outputs, `dist/`, and runtime logs are generated artifacts and are ignored by git.

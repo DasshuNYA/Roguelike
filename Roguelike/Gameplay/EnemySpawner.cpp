@@ -13,7 +13,6 @@
 #include "Warrior.h"
 
 #include <cstdlib>
-#include <ctime>
 
 namespace Roguelike
 {
@@ -33,14 +32,6 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
     {
         LOG_ERROR("EnemySpawner failed. No floor positions.");
         return spawnedEnemies;
-    }
-
-    static bool isRandomSeedInitialized = false;
-
-    if (!isRandomSeedInitialized)
-    {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
-        isRandomSeedInitialized = true;
     }
 
     int spawnedCount = 0;

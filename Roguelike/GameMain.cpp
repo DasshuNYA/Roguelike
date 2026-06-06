@@ -2,6 +2,8 @@
 
 #include "pch.h"
 
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 
 #include "Engine.h"
@@ -23,6 +25,8 @@ static void SetupLogger()
 
 int main()
 {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
     SetupLogger();
 
     LOG_INFO("Logger initialized.");

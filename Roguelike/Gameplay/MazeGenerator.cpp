@@ -11,7 +11,6 @@
 #include "Wall.h"
 
 #include <cstdlib>
-#include <ctime>
 #include <stack>
 
 namespace Roguelike
@@ -37,8 +36,6 @@ MazeGenerator::MazeGenerator(int newWidth, int newHeight, DeveloperLevel* newLev
 void MazeGenerator::Generate()
 {
     LOG_INFO("Maze generation started.");
-
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     // Start from the same inner cell as the player spawn area so the first corridor is reachable.
     int startX = 1;

@@ -67,7 +67,7 @@ void GameResourceLoader::Load()
     LoadNumberedTileTextures("floor", "Floors", "Floor",
                              static_cast<int>(GameConfig::FloorTextureKeys.size()));
 
-    // Compatibility fallback for older output folders that still contain Wall.png/Floor.png.
+    // Compatibility fallback for older output folders if Wall_1.png/Floor_1.png are missing.
     Engine::ResourceSystem::Instance()->LoadTexture("wall_1", "Resources/Textures/Wall.png");
     Engine::ResourceSystem::Instance()->LoadTexture("floor_1", "Resources/Textures/Floor.png");
 

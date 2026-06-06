@@ -188,6 +188,8 @@ bool GameWorld::IsPauseIgnored(GameObject* gameObject) const
 
 void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)
 {
+    RemovePauseIgnoredGameObject(gameObject);
+
     gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(),
                                      [gameObject](GameObject* obj) { return obj == gameObject; }),
                       gameObjects.end());

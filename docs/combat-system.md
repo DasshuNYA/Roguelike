@@ -39,7 +39,7 @@ When a projectile hits a wall:
 
 Important methods:
 
-- `SetStats(float health, float armor)` sets base defensive stats;
+- `SetStats(float health, float armor)` sets current health and armor values;
 - `SetAttackPower(float attackPower)` sets attack damage;
 - `TakeDamage(float damage)` applies armor reduction and changes health;
 - `AddStatsChangedListener(...)` lets UI or gameplay helpers react when health or armor changes;

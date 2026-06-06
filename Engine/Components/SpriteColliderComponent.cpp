@@ -15,8 +15,6 @@ SpriteColliderComponent::SpriteColliderComponent(GameObject* gameObject)
     if (spriteRenderer == nullptr)
     {
         LOG_ERROR("SpriteRenderer required to SpriteCollider.");
-
-        gameObject->RemoveComponent(this);
         return;
     }
 
