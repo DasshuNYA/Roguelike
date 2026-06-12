@@ -13,8 +13,7 @@ Debug/
 Release/
 bin/
 obj/
-*.tlog
-*.lastbuildstate
+dist/
 
 # CMake
 CMakeFiles/
