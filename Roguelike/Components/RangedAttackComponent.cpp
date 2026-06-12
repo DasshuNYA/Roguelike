@@ -8,6 +8,7 @@
 #include "GameWorld.h"
 #include "ProjectileComponent.h"
 #include "RenderSystem.h"
+#include "StatsComponent.h"
 #include "TransformComponent.h"
 #include "Vector.h"
 
@@ -60,6 +61,11 @@ void RangedAttackComponent::SetObstacles(const std::vector<Engine::GameObject*>&
     obstacles = newObstacles;
 }
 
+void RangedAttackComponent::SetProjectileTextureKey(const std::string& newTextureKey)
+{
+    projectileTextureKey = newTextureKey;
+}
+
 void RangedAttackComponent::Shoot()
 {
     if (transform == nullptr)
@@ -82,6 +88,7 @@ void RangedAttackComponent::Shoot()
 
     if (length <= 0.01f)
     {
+        // Ignore clicks exactly on the player to avoid a zero-length projectile direction.
         return;
     }
 
@@ -96,10 +103,16 @@ void RangedAttackComponent::Shoot()
     ProjectileComponent* projectileComponent = projectile->AddComponent<ProjectileComponent>();
 
     projectileComponent->SetDirection(direction);
-    projectileComponent->SetDamage(GameConfig::PlayerAttackPower);
+    Engine::StatsComponent* stats = gameObject->GetComponent<Engine::StatsComponent>();
+    // Attack potion modifies StatsComponent, so projectile damage is read at shot time.
+    projectileComponent->SetDamage(stats != nullptr ? stats->GetAttackPower()
+                                                     : GameConfig::PlayerAttackPower);
     projectileComponent->SetSpeed(GameConfig::ProjectileSpeed);
     projectileComponent->SetRadius(GameConfig::ProjectileRadius);
     projectileComponent->SetLifeTime(GameConfig::ProjectileLifeTime);
+    projectileComponent->SetTextureKey(projectileTextureKey);
+    projectileComponent->SetTextureSize(GameConfig::ProjectileTextureWidth,
+                                        GameConfig::ProjectileTextureHeight);
     projectileComponent->SetTargets(targets);
     projectileComponent->SetObstacles(obstacles);
 }

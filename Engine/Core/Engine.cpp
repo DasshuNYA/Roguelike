@@ -20,6 +20,8 @@ Engine* Engine::Instance()
 
 void Engine::SetScene(Scene* newScene) { scene = newScene; }
 
+void Engine::RequestSceneRestart() { isSceneRestartRequested = true; }
+
 void Engine::Run()
 {
     if (scene == nullptr)
@@ -31,6 +33,7 @@ void Engine::Run()
     scene->Start();
 
     sf::RenderWindow& window = RenderSystem::Instance()->GetMainWindow();
+    window.setKeyRepeatEnabled(false);
 
     sf::Clock clock;
 
@@ -44,6 +47,8 @@ void Engine::Run()
             {
                 window.close();
             }
+
+            GameWorld::Instance()->HandleEvent(event);
         }
 
         float deltaTime = clock.restart().asSeconds();
@@ -58,8 +63,21 @@ void Engine::Run()
         window.display();
 
         GameWorld::Instance()->LateUpdate();
+
+        ProcessSceneRestart();
     }
 
     scene->Stop();
+}
+
+void Engine::ProcessSceneRestart()
+{
+    if (!isSceneRestartRequested || scene == nullptr)
+    {
+        return;
+    }
+
+    isSceneRestartRequested = false;
+    scene->Restart();
 }
 }  // namespace Engine

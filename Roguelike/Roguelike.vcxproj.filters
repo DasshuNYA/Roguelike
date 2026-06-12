@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="GameMain.cpp" />
-    <ClCompile Include="GameStateData.cpp" />
     <ClCompile Include="Characters\Character.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
@@ -27,7 +26,7 @@
     <ClCompile Include="Components\DetectionTriggerComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\GameHudComponent.cpp">
+    <ClCompile Include="Components\DirectionalSpriteComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Components\PlayerMovementComponent.cpp">
@@ -69,13 +68,60 @@
     <ClCompile Include="Gameplay\Wall.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="UI\GameScreenOverlay.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\HUD.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\InventoryPanel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\PopupMessage.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\GameUIComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\HotbarPanel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\ItemDescriptionPanel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\EquipmentPanel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\InventoryComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\ItemPickupComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameplay\ItemSpawner.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UITextUtils.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UITextureUtils.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\FramedPanel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\PickupComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameplay\GameNotifications.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameplay\LevelProgress.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameStateData.h" />
     <ClInclude Include="Config\GameConfig.h">
-      <Filter>Config</Filter>
-    </ClInclude>
-    <ClInclude Include="Config\GameSettings.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="Characters\Character.h">
@@ -102,7 +148,7 @@
     <ClInclude Include="Components\DetectionTriggerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Components\GameHudComponent.h">
+    <ClInclude Include="Components\DirectionalSpriteComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\PlayerMovementComponent.h">
@@ -144,6 +190,66 @@
     <ClInclude Include="Gameplay\Wall.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="UI\GameScreenOverlay.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\HUD.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\InventoryPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\PopupMessage.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\GameUIComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\HotbarPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIItemView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\ItemDescriptionPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\EquipmentPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\InventoryComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ItemPickupComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\ItemSpawner.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\ItemData.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UITextUtils.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UITextureUtils.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\FramedPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\PickupComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\GameNotifications.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\LevelProgress.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay\PlayerRunSnapshot.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Config">
@@ -157,6 +263,9 @@
     </Filter>
     <Filter Include="Gameplay">
       <UniqueIdentifier>{f236597c-6f14-46ef-bd06-843acae5b67a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{8795b7ae-4438-4bd7-b618-f25ba6f45f56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

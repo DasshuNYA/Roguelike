@@ -6,6 +6,7 @@
 #include "Floor.h"
 #include "Player.h"
 #include "Scene.h"
+#include "Vector.h"
 #include "Wall.h"
 
 #include <memory>
@@ -21,11 +22,10 @@ namespace Roguelike
 class DeveloperLevel : public Engine::Scene
 {
    public:
-    void Start() override;
-    void Restart() override;
-    void Stop() override;
+    void Start();
+    void Restart();
+    void Stop();
 
-   public:
     std::vector<std::unique_ptr<Floor>> floors;
     std::vector<std::unique_ptr<Wall>> walls;
 
@@ -34,17 +34,18 @@ class DeveloperLevel : public Engine::Scene
     void GenerateMaze();
     void CreatePlayer();
     void SpawnEnemies();
+    void SpawnItems();
     void RegisterPlayerTargets();
     void RegisterProjectileObstacles();
-    void CreateHud();
     void CreateMusic();
+    const char* ChooseBackgroundTrack() const;
+    void CreateUI();
 
    private:
-    std::shared_ptr<Player> player;
-    std::vector<std::unique_ptr<Character>> enemies;
-
+    std::shared_ptr<Player> player = nullptr;
     Engine::GameObject* playerObject = nullptr;
 
+    std::vector<std::unique_ptr<Character>> enemies;
     std::vector<Engine::Vector2Df> floorPositions;
 };
 }  // namespace Roguelike

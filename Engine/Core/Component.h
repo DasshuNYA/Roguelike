@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <SFML/Window/Event.hpp>
+
 namespace Engine
 {
 class GameObject;
@@ -14,6 +16,7 @@ class Component
 
     virtual void Update(float deltaTime) = 0;
     virtual void Render() = 0;
+    virtual void HandleEvent(const sf::Event& event);
 
     GameObject* GetGameObject() const;
 

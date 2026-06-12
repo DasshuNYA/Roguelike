@@ -6,6 +6,8 @@
 #include "AttackComponent.h"
 #include "DeathComponent.h"
 #include "DetectionTriggerComponent.h"
+#include "DirectionalSpriteComponent.h"
+#include "GameConfig.h"
 #include "GameObject.h"
 #include "GameWorld.h"
 #include "Logger.h"
@@ -34,13 +36,26 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
 
     renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
 
-    renderer->SetPixelSize(48, 48);
+    renderer->SetPixelSize(GameConfig::CharacterPixelSize, GameConfig::CharacterPixelSize);
 
     gameObject->AddComponent<Engine::SpriteColliderComponent>();
 
     auto rigidbody = gameObject->AddComponent<Engine::RigidbodyComponent>();
 
     rigidbody->SetLinearDamping(1.f);
+
+    auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
+
+    if (textureKey == "creeper")
+    {
+        directionalSprite->SetTextures("creeper_default", "creeper_down", "creeper_right",
+                                       "creeper_up", "creeper_left");
+    }
+    else
+    {
+        directionalSprite->SetTextures("warrior_default", "warrior_down", "warrior_right",
+                                       "warrior_up", "warrior_left");
+    }
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
     stats->SetStats(health, armor);

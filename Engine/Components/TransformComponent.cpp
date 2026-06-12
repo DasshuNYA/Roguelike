@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "TransformComponent.h"
 
+#include "GameObject.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -194,7 +196,7 @@ const Vector2Df& TransformComponent::GetLocalPosition() const
     return localPosition;
 }
 
-const float TransformComponent::GetWorldRotation() const
+float TransformComponent::GetWorldRotation() const
 {
     updateLocalTransform();
 
@@ -207,7 +209,7 @@ const float TransformComponent::GetWorldRotation() const
     return rotation;
 }
 
-const float TransformComponent::GetLocalRotation() const
+float TransformComponent::GetLocalRotation() const
 {
     updateLocalTransform();
     return localRotation;
@@ -261,7 +263,7 @@ void TransformComponent::SetParent(TransformComponent* newParent)
 
 TransformComponent* TransformComponent::GetParent() const { return parent; }
 
-const Matrix2D TransformComponent::GetWorldTransform() const
+Matrix2D TransformComponent::GetWorldTransform() const
 {
     updateLocalTransform();
 
@@ -327,16 +329,6 @@ void TransformComponent::updateLocalTransform() const
     if (!isUpdated)
     {
         localTransform = createTransform(localPosition, localRotation, localScale);
-        isUpdated = true;
-    }
-}
-
-void TransformComponent::updateLocalTransform(const Vector2Df& position, float rotation,
-                                              const Vector2Df& scale) const
-{
-    if (!isUpdated)
-    {
-        localTransform = createTransform(position, rotation, scale);
         isUpdated = true;
     }
 }

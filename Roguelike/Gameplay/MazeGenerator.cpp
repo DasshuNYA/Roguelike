@@ -11,7 +11,6 @@
 #include "Wall.h"
 
 #include <cstdlib>
-#include <ctime>
 #include <stack>
 
 namespace Roguelike
@@ -29,6 +28,7 @@ MazeGenerator::MazeGenerator(int newWidth, int newHeight, DeveloperLevel* newLev
         height++;
     }
 
+    // Recursive backtracking works on odd cells with wall cells between corridors.
     visited.resize(height, std::vector<bool>(width, false));
     isWall.resize(height, std::vector<bool>(width, true));
 }
@@ -37,8 +37,7 @@ void MazeGenerator::Generate()
 {
     LOG_INFO("Maze generation started.");
 
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
+    // Start from the same inner cell as the player spawn area so the first corridor is reachable.
     int startX = 1;
     int startY = 1;
 
@@ -86,6 +85,7 @@ const std::vector<Engine::Vector2Df>& MazeGenerator::GetFloorPositions() const
 
 std::vector<std::pair<int, int>> MazeGenerator::GetAvailableDirections(int x, int y)
 {
+    // Move two grid cells at a time so the cell between can be carved as a corridor.
     std::vector<std::pair<int, int>> directions = {{0, -2}, {0, 2}, {-2, 0}, {2, 0}};
 
     std::vector<std::pair<int, int>> available;
@@ -119,6 +119,7 @@ void MazeGenerator::CarvePath(int x1, int y1, int x2, int y2)
     int wallX = (x1 + x2) / 2;
     int wallY = (y1 + y2) / 2;
 
+    // Open both target cells and the wall between them.
     isWall[y1][x1] = false;
     isWall[wallY][wallX] = false;
     isWall[y2][x2] = false;
@@ -141,7 +142,8 @@ void MazeGenerator::BuildObjects()
             float worldX = x * tileSize;
             float worldY = y * tileSize;
 
-            level->floors.push_back(std::make_unique<Floor>(worldX, worldY));
+            level->floors.push_back(
+                std::make_unique<Floor>(worldX, worldY, GetRandomFloorTextureKey()));
 
             if (!isWall[y][x])
             {
@@ -150,7 +152,8 @@ void MazeGenerator::BuildObjects()
 
             if (isWall[y][x])
             {
-                level->walls.push_back(std::make_unique<Wall>(worldX, worldY));
+                level->walls.push_back(
+                    std::make_unique<Wall>(worldX, worldY, GetRandomWallTextureKey()));
             }
         }
     }
@@ -167,5 +170,20 @@ void MazeGenerator::BuildObjects()
     }
 
     MazeNavigation::Instance()->SetMap(walkableGrid, tileSize);
+
+    LOG_INFO("Maze objects created. Floors: " + std::to_string(level->floors.size()) +
+             ", walls: " + std::to_string(level->walls.size()));
+}
+
+const char* MazeGenerator::GetRandomFloorTextureKey() const
+{
+    // Tile variants are data-driven: add loaded texture keys to GameConfig to extend visuals.
+    return GameConfig::FloorTextureKeys[std::rand() % GameConfig::FloorTextureKeys.size()];
+}
+
+const char* MazeGenerator::GetRandomWallTextureKey() const
+{
+    // Keeping random choice here lets Floor and Wall stay simple renderable objects.
+    return GameConfig::WallTextureKeys[std::rand() % GameConfig::WallTextureKeys.size()];
 }
 }  // namespace Roguelike

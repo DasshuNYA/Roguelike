@@ -3,7 +3,10 @@
 #include "pch.h"
 #include "PlayerMovementComponent.h"
 
+#include "GameConfig.h"
 #include "StatsComponent.h"
+
+#include <algorithm>
 
 namespace Roguelike
 {
@@ -35,6 +38,7 @@ void PlayerMovementComponent::Update(float deltaTime)
 
     if (length > 0.01f)
     {
+        // Normalize so diagonal movement is not faster than horizontal/vertical movement.
         direction.x /= length;
         direction.y /= length;
     }
@@ -43,4 +47,12 @@ void PlayerMovementComponent::Update(float deltaTime)
 }
 
 void PlayerMovementComponent::Render() {}
+
+void PlayerMovementComponent::SetSpeed(float newSpeed)
+{
+    // Speed potions can increase movement, but the cap prevents runaway saved values.
+    speed = std::clamp(newSpeed, 0.0f, GameConfig::MaxPlayerMoveSpeed);
+}
+
+float PlayerMovementComponent::GetSpeed() const { return speed; }
 }  // namespace Roguelike

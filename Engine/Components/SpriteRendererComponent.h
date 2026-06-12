@@ -19,6 +19,7 @@ class SpriteRendererComponent : public Component
     void Render() override;
 
     const sf::Sprite* GetSprite() const;
+    void SyncSpriteTransform();
     void SetTexture(const sf::Texture& newTexture);
     void SetPixelSize(int newWidth, int newHeight);
 

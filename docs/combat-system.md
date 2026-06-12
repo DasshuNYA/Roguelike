@@ -1,354 +1,172 @@
 # Combat System Documentation
 
-## Overview
+This document describes the gameplay systems that are involved in combat, enemy detection, and enemy movement.
 
-The combat system is built using a component-based architecture.
+## Main Components
 
-Characters are assembled from reusable gameplay components instead of storing
-all logic inside one class.
+- `StatsComponent` stores health, armor, and attack power.
+- `AttackComponent` handles melee attacks.
+- `RangedAttackComponent` creates player projectiles.
+- `ProjectileComponent` controls projectile movement, lifetime, and hit checks.
+- `DetectionTriggerComponent` detects when the player enters or leaves enemy vision radius.
+- `PlayerSearchComponent` moves enemies toward the detected player.
+- `EnemySpawner` creates enemies on safe floor positions.
+- `MazeNavigation` provides paths through generated maze corridors.
 
-The system supports:
+## Damage System
 
-- melee enemy attacks;
-- ranged player attacks;
-- health and armor;
-- enemy AI;
-- enemy spawning;
-- death handling;
-- projectile collisions;
-- maze navigation.
+`AttackComponent` and `RangedAttackComponent` both use the stats system to apply damage.
 
----
+Enemies use melee attacks when they are close enough to the player. The player uses ranged projectile attacks.
 
-# Character Hierarchy
+When a projectile hits an enemy:
 
-## Character
+- the enemy receives damage;
+- the projectile is destroyed.
 
-Base gameplay class for all living entities.
+When a projectile hits a wall:
 
-Responsibilities:
+- the projectile is destroyed;
+- the wall is not damaged.
 
-- owns GameObject;
-- stores common gameplay logic;
-- used as parent class for Player and Enemy.
+## Health System
 
----
-
-## Player
-
-Derived from Character.
-
-Responsibilities:
-
-- movement;
-- ranged attacks;
-- receiving damage;
-- interaction with enemies.
-
-Uses:
-
-- PlayerMovementComponent
-- RangedAttackComponent
-- StatsComponent
-- DeathComponent
-
----
-
-## Enemy
-
-Derived from Character.
-
-Base class for all enemy types.
-
-Responsibilities:
-
-- movement toward player;
-- attacking player;
-- enemy AI behavior.
-
-Uses:
-
-- PlayerSearchComponent
-- AttackComponent
-- DetectionTriggerComponent
-- StatsComponent
-- DeathComponent
-
-Derived enemy types:
-
-- Creeper
-- Warrior
-
----
-
-## Creeper
-
-Derived from Enemy.
-
-Fast aggressive enemy with lower health.
-
-Features:
-
-- high movement speed;
-- short detection radius;
-- aggressive chase behavior.
-
----
-
-## Warrior
-
-Derived from Enemy.
-
-Balanced melee enemy.
-
-Features:
-
-- higher health;
-- increased armor;
-- slower movement speed.
-
----
-
-# Components
-
-## StatsComponent
-
-Stores combat statistics.
-
-Responsibilities:
+`StatsComponent` stores:
 
 - health;
 - armor;
-- damage processing;
-- death state checks.
+- attack power.
 
-Main methods:
+Important methods:
 
-- `TakeDamage()`
-- `IsDead()`
-- `GetHealth()`
+- `SetStats(float health, float armor)` sets current health and armor values;
+- `SetAttackPower(float attackPower)` sets attack damage;
+- `TakeDamage(float damage)` applies armor reduction and changes health;
+- `AddStatsChangedListener(...)` lets UI or gameplay helpers react when health or armor changes;
+- `GetHealth()` returns current health;
+- `IsDead()` checks whether health reached zero.
 
-Damage is reduced using armor values.
+HUD health and armor are event-driven. `GameUIComponent` subscribes to the player's
+`StatsComponent`, so damage immediately updates the HUD without polling player stats every
+frame.
 
----
+When health reaches zero, `DeathComponent` marks the object for destruction and `GameWorld` removes it later.
 
-## AttackComponent
+## Character Structure
 
-Universal melee attack component.
+The character hierarchy is intentionally small:
 
-Responsibilities:
+- `Character`
+- `Player`
+- `Enemy`
+- `Creeper`
+- `Warrior`
 
-- deal melee damage;
-- attack nearby targets;
-- process attack cooldowns.
+Most behavior comes from components, not from deep inheritance. This keeps enemy types easy to extend and explain.
 
-Used by enemies.
+## Player
 
----
+The player uses:
 
-## RangedAttackComponent
+- `PlayerMovementComponent`;
+- `SpriteRendererComponent`;
+- `SpriteColliderComponent`;
+- `RigidbodyComponent`;
+- `InventoryComponent`;
+- `RangedAttackComponent`;
+- `StatsComponent`;
+- `DeathComponent`.
 
-Handles player ranged attacks.
+The player can move, shoot, collect items, receive damage, and die.
 
-Responsibilities:
+## Enemy
 
-- create projectiles;
-- launch projectiles;
-- manage attack cooldown.
+Enemies use:
 
-Attack flow:
+- `SpriteRendererComponent`;
+- `SpriteColliderComponent`;
+- `RigidbodyComponent`;
+- `AttackComponent`;
+- `DetectionTriggerComponent`;
+- `PlayerSearchComponent`;
+- `StatsComponent`;
+- `DeathComponent`.
 
-1. Player presses LMB.
-2. Projectile is created.
-3. Projectile moves toward mouse position.
-4. Projectile checks collisions.
-5. Damage is applied on hit.
-6. Projectile is destroyed.
+Enemies can detect the player, request a path through the maze, move along that path, and attack in melee range.
 
----
+## Detection Triggers
 
-## ProjectileComponent
+`DetectionTriggerComponent` is a collider marked as a trigger.
 
-Controls projectile behavior.
+The physics system stores active trigger pairs, so `OnTriggerEnter` is fired once when two colliders start touching and `OnTriggerExit` is fired when they separate. This prevents repeated detection events every frame and clears stale trigger pairs when colliders are removed.
 
-Responsibilities:
+Enemy detection uses this flow:
 
-- projectile movement;
-- collision detection;
-- projectile lifetime;
-- damage delivery.
+1. Player enters enemy trigger radius.
+2. `DetectionTriggerComponent` notifies `PlayerSearchComponent`.
+3. `PlayerSearchComponent` starts requesting paths to the player.
+4. Player leaves the trigger radius.
+5. Enemy clears its current path and stops chasing.
 
-Projectiles are destroyed when:
+## Maze Navigation
 
-- hitting enemy;
-- colliding with wall;
-- lifetime expires.
+`MazeGenerator` creates a boolean walkable grid after generating the maze:
 
-Walls block projectiles, so enemies cannot be damaged through maze walls.
+- `true` means floor/walkable tile;
+- `false` means wall/blocked tile.
 
----
+`MazeNavigation` stores this grid and uses A* search with four-direction movement. Four-direction movement matches the maze corridors and avoids diagonal wall clipping.
 
-## DetectionTriggerComponent
+If an actor is slightly off-grid after physics movement, navigation tries to snap the start or target to the nearest walkable cell. This makes enemy movement more stable around walls and corners.
 
-Detects nearby objects using trigger radius.
+## Projectile System
 
-Responsibilities:
+`ProjectileComponent` controls:
 
-- detect player entering range;
-- detect player leaving range;
-- notify enemy AI.
+- movement direction;
+- speed;
+- damage;
+- collision checks against enemies;
+- collision checks against walls;
+- lifetime timeout.
 
-Used by enemies for player detection.
+When the player presses Left Mouse Button:
 
----
+1. `RangedAttackComponent` creates a projectile object.
+2. The projectile receives direction, damage, speed, radius, lifetime, targets, and obstacles.
+3. The projectile moves every frame.
+4. It is destroyed after hitting an enemy, hitting a wall, or reaching its lifetime limit.
 
-## PlayerSearchComponent
+## Wall Collision
 
-Controls enemy search and navigation.
+Walls use two separate responsibilities:
 
-Responsibilities:
+- `SpriteRendererComponent` draws the selected wall texture;
+- `BoxColliderComponent` provides stable tile collision.
 
-- search player position;
-- move toward player;
-- navigate around maze walls.
-
-Uses maze navigation system.
-
----
-
-## DeathComponent
-
-Handles object destruction.
-
-Responsibilities:
-
-- detect death state;
-- mark object for destruction;
-- print debug logs.
-
-When health reaches zero:
-
-- object becomes destroyed;
-- GameWorld removes object safely later.
-
----
-
-# Enemy Spawning
+This is important because wall textures can now have variants. Collision should not depend on the exact source image size or on whether a specific texture variant loaded correctly.
 
 ## EnemySpawner
 
-Separate system responsible for enemy creation.
+`EnemySpawner` creates enemies after maze generation.
 
-Responsibilities:
+Spawner responsibilities:
 
-- spawn enemies;
-- configure enemy count;
-- configure enemy type;
-- configure spawn distance.
+- choose enemy types;
+- create the requested amount of enemies;
+- use floor positions from the generated maze;
+- keep enemies away from the player spawn;
+- avoid placing several enemies on the same position.
 
-Supports:
+Currently used enemy types:
 
-- Creeper spawning;
-- Warrior spawning;
-- random floor tile selection;
-- safe spawn distance from player.
+- `Creeper`;
+- `Warrior`.
 
-Example configurable settings:
+To add a new enemy type:
 
-- enemy count;
-- minimum distance from player;
-- enemy type.
-
----
-
-# Maze Navigation
-
-## MazeNavigation
-
-Tile-based navigation system for enemies.
-
-Responsibilities:
-
-- avoid walls;
-- move through maze corridors;
-- navigate generated labyrinth.
-
-Features:
-
-- tile-based pathfinding;
-- walkable tile checks;
-- direction updates;
-- maze-aware enemy movement.
-
----
-
-# HUD
-
-## GameHudComponent
-
-Displays gameplay information.
-
-Responsibilities:
-
-- display player HP;
-- display enemies remaining;
-- display GAME OVER state;
-- display YOU WIN state.
-
----
-
-# Logging
-
-The project actively uses Logger for debugging.
-
-Examples:
-
-- enemy detected player;
-- enemy attacked player;
-- projectile destroyed;
-- player died;
-- object destroyed;
-- maze generated successfully.
-
----
-
-# Combat Flow
-
-## Player Attack Flow
-
-1. Player presses LMB.
-2. RangedAttackComponent creates projectile.
-3. Projectile moves toward cursor.
-4. Projectile checks collisions.
-5. StatsComponent applies damage.
-6. DeathComponent destroys enemy if HP <= 0.
-
----
-
-## Enemy Attack Flow
-
-1. Enemy detects player.
-2. Enemy navigates through maze.
-3. Enemy reaches attack distance.
-4. AttackComponent deals damage.
-5. Player receives damage.
-6. Player dies if HP reaches zero.
-
----
-
-# Architecture Notes
-
-The project follows a modular architecture:
-
-- gameplay logic is split into reusable components;
-- enemies inherit from common base classes;
-- systems are configurable through GameConfig;
-- enemy spawning is fully data-driven;
-- gameplay systems are separated from rendering logic.
-
-This architecture makes the project easier to:
-
-- extend;
-- maintain;
-- debug;
-- scale with new enemy types and mechanics.
+1. Create a class derived from `Enemy`.
+2. Add configuration values in `GameConfig`.
+3. Load the enemy texture in `GameResourceLoader`.
+4. Add the type to `EnemySpawner`.
+5. Reuse the same component setup unless the enemy needs special behavior.
