@@ -43,6 +43,9 @@ class EnemySpawner
     bool IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& position,
                                        Engine::GameObject* player, float minDistance) const;
 
+    bool IsPositionReachableFromPlayer(const Engine::Vector2Df& position,
+                                       Engine::GameObject* player) const;
+
     bool IsPositionAlreadyUsed(const Engine::Vector2Df& position,
                                const std::vector<Engine::Vector2Df>& usedPositions) const;
 

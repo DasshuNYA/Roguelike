@@ -22,6 +22,7 @@ class SpriteColliderComponent : public ColliderComponent
     void SetShowDebug(bool value);
 
    private:
+    SpriteRendererComponent* spriteRenderer = nullptr;
     const sf::Sprite* sprite = nullptr;
     bool showDebug = false;
 };

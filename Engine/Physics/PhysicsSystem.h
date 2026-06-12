@@ -2,16 +2,14 @@
 
 #pragma once
 
-#include <map>
-#include <iostream>
+#include <set>
+#include <utility>
 #include <vector>
-
-#include "ColliderComponent.h"
-#include "RigidbodyComponent.h"
-#include "Vector.h"
 
 namespace Engine
 {
+class ColliderComponent;
+
 class PhysicsSystem
 {
    public:
@@ -31,8 +29,15 @@ class PhysicsSystem
     PhysicsSystem(PhysicsSystem const&) = delete;
     PhysicsSystem& operator=(PhysicsSystem const&) = delete;
 
+    using TriggerPair = std::pair<ColliderComponent*, ColliderComponent*>;
+
+    // Trigger contacts belong to a collider pair, not to one collider.
+    TriggerPair MakeTriggerPair(ColliderComponent* first, ColliderComponent* second) const;
+    bool IsTriggerPairActive(ColliderComponent* first, ColliderComponent* second) const;
+    void RemoveTriggerPairsWith(ColliderComponent* collider);
+
     std::vector<ColliderComponent*> colliders;
-    std::map<ColliderComponent*, ColliderComponent*> triggersEnteredPair;
+    std::set<TriggerPair> activeTriggerPairs;
 
     float fixedDeltaTime = 0.02f;
 };

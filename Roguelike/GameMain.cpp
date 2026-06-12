@@ -2,9 +2,12 @@
 
 #include "pch.h"
 
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 
 #include "Engine.h"
+#include "GameConfig.h"
 #include "RenderSystem.h"
 #include "Logger.h"
 #include "DeveloperLevel.h"
@@ -22,12 +25,16 @@ static void SetupLogger()
 
 int main()
 {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
     SetupLogger();
 
     LOG_INFO("Logger initialized.");
     LOG_INFO("Game started.");
 
-    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Roguelike");
+    sf::RenderWindow* window = new sf::RenderWindow(
+        sf::VideoMode(Roguelike::GameConfig::WindowWidth, Roguelike::GameConfig::WindowHeight),
+        "Roguelike");
 
     Engine::RenderSystem::Instance()->SetMainWindow(window);
 

@@ -42,6 +42,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -58,6 +59,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -72,6 +74,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -89,6 +92,7 @@
       <PreprocessorDefinitions>X64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

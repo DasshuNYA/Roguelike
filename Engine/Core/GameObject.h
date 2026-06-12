@@ -3,7 +3,13 @@
 #pragma once
 
 #include "TransformComponent.h"
+
+#include <SFML/Window/Event.hpp>
+
 #include <iostream>
+#include <string>
+#include <type_traits>
+#include <vector>
 
 namespace Engine
 {
@@ -20,17 +26,14 @@ class GameObject
     std::string GetName() const;
     void Print(int depth = 0) const;
 
+    void HandleEvent(const sf::Event& event);
     void Update(float deltaTime);
     void Render();
 
     template <typename T>
     T* AddComponent()
     {
-        if constexpr (!std::is_base_of<Component, T>::value)
-        {
-            std::cout << "T must be derived from Component." << std::endl;
-            return nullptr;
-        }
+        static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component.");
 
         if constexpr (std::is_same<T, TransformComponent>::value)
         {
@@ -55,7 +58,6 @@ class GameObject
                                         [component](Component* obj) { return obj == component; }),
                          components.end());
         delete component;
-        std::cout << "Deleted component";
     }
 
     template <typename T>

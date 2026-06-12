@@ -95,12 +95,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config;$(ProjectDir)UI;$(SolutionDir)Engine\UI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -110,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config;$(ProjectDir)UI;$(SolutionDir)Engine\UI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +122,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -125,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config;$(ProjectDir)UI;$(SolutionDir)Engine\UI</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,6 +145,10 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -146,7 +158,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.5.1\include;$(SolutionDir)Engine;$(SolutionDir)Engine\Core;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Physics;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\Resources;$(SolutionDir)Engine\Math;$(SolutionDir)Engine\Audio;$(ProjectDir);$(ProjectDir)Characters;$(ProjectDir)Components;$(ProjectDir)Gameplay;$(ProjectDir)Config;$(ProjectDir)UI;$(SolutionDir)Engine\UI</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +172,10 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(OutDir)Resources\" /E /I /Y
+$(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platform)\$(Configuration)\Resources\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -174,7 +191,11 @@
     <ClCompile Include="Components\AttackComponent.cpp" />
     <ClCompile Include="Components\DeathComponent.cpp" />
     <ClCompile Include="Components\DetectionTriggerComponent.cpp" />
-    <ClCompile Include="Components\GameHudComponent.cpp" />
+    <ClCompile Include="Components\DirectionalSpriteComponent.cpp" />
+    <ClCompile Include="Components\GameUIComponent.cpp" />
+    <ClCompile Include="Components\InventoryComponent.cpp" />
+    <ClCompile Include="Components\ItemPickupComponent.cpp" />
+    <ClCompile Include="Components\PickupComponent.cpp" />
     <ClCompile Include="Components\PlayerMovementComponent.cpp" />
     <ClCompile Include="Components\PlayerSearchComponent.cpp" />
     <ClCompile Include="Components\ProjectileComponent.cpp" />
@@ -184,12 +205,24 @@
     <ClCompile Include="Gameplay\DeveloperLevel.cpp" />
     <ClCompile Include="Gameplay\EnemySpawner.cpp" />
     <ClCompile Include="Gameplay\Floor.cpp" />
+    <ClCompile Include="Gameplay\GameNotifications.cpp" />
     <ClCompile Include="Gameplay\GameResourceLoader.cpp" />
+    <ClCompile Include="Gameplay\ItemSpawner.cpp" />
     <ClCompile Include="Gameplay\LevelBuilder.cpp" />
+    <ClCompile Include="Gameplay\LevelProgress.cpp" />
     <ClCompile Include="Gameplay\MazeGenerator.cpp" />
     <ClCompile Include="Gameplay\MazeNavigation.cpp" />
     <ClCompile Include="Gameplay\Wall.cpp" />
-    <ClCompile Include="GameStateData.cpp" />
+    <ClCompile Include="UI\EquipmentPanel.cpp" />
+    <ClCompile Include="UI\FramedPanel.cpp" />
+    <ClCompile Include="UI\GameScreenOverlay.cpp" />
+    <ClCompile Include="UI\HotbarPanel.cpp" />
+    <ClCompile Include="UI\HUD.cpp" />
+    <ClCompile Include="UI\InventoryPanel.cpp" />
+    <ClCompile Include="UI\ItemDescriptionPanel.cpp" />
+    <ClCompile Include="UI\PopupMessage.cpp" />
+    <ClCompile Include="UI\UITextureUtils.cpp" />
+    <ClCompile Include="UI\UITextUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Characters\Character.h" />
@@ -200,23 +233,41 @@
     <ClInclude Include="Components\AttackComponent.h" />
     <ClInclude Include="Components\DeathComponent.h" />
     <ClInclude Include="Components\DetectionTriggerComponent.h" />
-    <ClInclude Include="Components\GameHudComponent.h" />
+    <ClInclude Include="Components\DirectionalSpriteComponent.h" />
+    <ClInclude Include="Components\GameUIComponent.h" />
+    <ClInclude Include="Components\InventoryComponent.h" />
+    <ClInclude Include="Components\ItemPickupComponent.h" />
+    <ClInclude Include="Components\PickupComponent.h" />
     <ClInclude Include="Components\PlayerMovementComponent.h" />
     <ClInclude Include="Components\PlayerSearchComponent.h" />
     <ClInclude Include="Components\ProjectileComponent.h" />
     <ClInclude Include="Components\RangedAttackComponent.h" />
     <ClInclude Include="Components\StatsComponent.h" />
     <ClInclude Include="Config\GameConfig.h" />
-    <ClInclude Include="Config\GameSettings.h" />
     <ClInclude Include="Gameplay\DeveloperLevel.h" />
     <ClInclude Include="Gameplay\EnemySpawner.h" />
     <ClInclude Include="Gameplay\Floor.h" />
+    <ClInclude Include="Gameplay\GameNotifications.h" />
     <ClInclude Include="Gameplay\GameResourceLoader.h" />
+    <ClInclude Include="Gameplay\ItemData.h" />
+    <ClInclude Include="Gameplay\ItemSpawner.h" />
     <ClInclude Include="Gameplay\LevelBuilder.h" />
+    <ClInclude Include="Gameplay\LevelProgress.h" />
     <ClInclude Include="Gameplay\MazeGenerator.h" />
     <ClInclude Include="Gameplay\MazeNavigation.h" />
+    <ClInclude Include="Gameplay\PlayerRunSnapshot.h" />
     <ClInclude Include="Gameplay\Wall.h" />
-    <ClInclude Include="GameStateData.h" />
+    <ClInclude Include="UI\EquipmentPanel.h" />
+    <ClInclude Include="UI\FramedPanel.h" />
+    <ClInclude Include="UI\GameScreenOverlay.h" />
+    <ClInclude Include="UI\HotbarPanel.h" />
+    <ClInclude Include="UI\HUD.h" />
+    <ClInclude Include="UI\InventoryPanel.h" />
+    <ClInclude Include="UI\ItemDescriptionPanel.h" />
+    <ClInclude Include="UI\PopupMessage.h" />
+    <ClInclude Include="UI\UIItemView.h" />
+    <ClInclude Include="UI\UITextureUtils.h" />
+    <ClInclude Include="UI\UITextUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

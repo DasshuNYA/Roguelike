@@ -22,11 +22,15 @@ class Engine
 
     void SetScene(Scene* newScene);
     void Run();
+    void RequestSceneRestart();
 
    private:
     Engine();
     ~Engine() = default;
 
+    void ProcessSceneRestart();
+
     Scene* scene = nullptr;
+    bool isSceneRestartRequested = false;
 };
 }  // namespace Engine

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "pch.h"
+#include "SaveSystem.h"
 #include "Vector.h"
 
 TEST(VectorTests, ZeroContructor)
@@ -106,4 +107,42 @@ TEST(VectorTests, GetLength)
     Engine::Vector2D<float> first(4.f, -3.f);
 
     EXPECT_EQ(first.GetLength(), 5.f);
+}
+
+TEST(SaveSystemTests, StoresTypedValues)
+{
+    Engine::SaveSystem* saveSystem = Engine::SaveSystem::Instance();
+    saveSystem->Clear();
+
+    saveSystem->SetValue("player.health", 75.0f);
+
+    std::optional<float> health = saveSystem->GetValue<float>("player.health");
+    EXPECT_TRUE(health.has_value());
+    EXPECT_EQ(health.value(), 75.0f);
+
+    saveSystem->Clear();
+}
+
+TEST(SaveSystemTests, ReturnsEmptyOptionalForWrongType)
+{
+    Engine::SaveSystem* saveSystem = Engine::SaveSystem::Instance();
+    saveSystem->Clear();
+
+    saveSystem->SetValue("player.health", 75.0f);
+
+    EXPECT_FALSE(saveSystem->GetValue<int>("player.health").has_value());
+
+    saveSystem->Clear();
+}
+
+TEST(SaveSystemTests, RemovesValues)
+{
+    Engine::SaveSystem* saveSystem = Engine::SaveSystem::Instance();
+    saveSystem->Clear();
+
+    saveSystem->SetValue("run.inventory", 3);
+    EXPECT_TRUE(saveSystem->HasValue("run.inventory"));
+
+    saveSystem->RemoveValue("run.inventory");
+    EXPECT_FALSE(saveSystem->HasValue("run.inventory"));
 }

@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Vector.h"
 
+#include <string>
 #include <vector>
 
 namespace Engine
@@ -29,6 +30,8 @@ class ProjectileComponent : public Engine::Component
     void SetSpeed(float newSpeed);
     void SetRadius(float newRadius);
     void SetLifeTime(float newLifeTime);
+    void SetTextureKey(const std::string& newTextureKey);
+    void SetTextureSize(float width, float height);
 
     void SetTargets(const std::vector<Engine::GameObject*>& newTargets);
     void SetObstacles(const std::vector<Engine::GameObject*>& newObstacles);
@@ -45,9 +48,12 @@ class ProjectileComponent : public Engine::Component
     std::vector<Engine::GameObject*> targets;
     std::vector<Engine::GameObject*> obstacles;
 
+    std::string textureKey;
     float damage = 10.f;
     float speed = 700.f;
     float radius = 8.f;
     float lifeTime = 1.5f;
+    float textureWidth = 64.f;
+    float textureHeight = 34.f;
 };
 }  // namespace Roguelike

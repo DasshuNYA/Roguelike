@@ -30,6 +30,14 @@ GameObject::~GameObject()
 
 std::string GameObject::GetName() const { return name; }
 
+void GameObject::HandleEvent(const sf::Event& event)
+{
+    for (auto& component : components)
+    {
+        component->HandleEvent(event);
+    }
+}
+
 void GameObject::Print(int depth) const
 {
     std::cout << std::string(depth * 2, ' ') << GetName() << std::endl;
