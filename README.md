@@ -108,3 +108,4 @@ Logs are written to:
 `Roguelike/Saved/Logs/log.txt`
 
 Build outputs, `dist/`, and runtime logs are generated artifacts and are ignored by git.
+Console output shows `INFO`, `WARN`, and `ERROR` messages, while the file log also keeps `DEBUG` messages and source locations.

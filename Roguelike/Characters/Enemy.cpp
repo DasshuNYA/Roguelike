@@ -92,6 +92,6 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
             }
         });
 
-    LOG_INFO(name + " created.");
+    LOG_DEBUG(name + " created.");
 }
 }  // namespace Roguelike

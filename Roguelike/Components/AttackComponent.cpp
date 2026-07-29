@@ -13,7 +13,7 @@ namespace Engine
 {
 AttackComponent::AttackComponent(GameObject* gameObject) : Component(gameObject)
 {
-    LOG_INFO(gameObject->GetName() + " AttackComponent created.");
+    LOG_DEBUG(gameObject->GetName() + " AttackComponent created.");
 }
 
 void AttackComponent::Update(float deltaTime) {}
@@ -30,7 +30,7 @@ void AttackComponent::SetAttackPower(float newAttackPower)
 
     attackPower = newAttackPower;
 
-    LOG_INFO(gameObject->GetName() + " attack power set to " + std::to_string(attackPower));
+    LOG_DEBUG(gameObject->GetName() + " attack power set to " + std::to_string(attackPower));
 }
 
 float AttackComponent::GetAttackPower() const { return attackPower; }
@@ -58,9 +58,9 @@ bool AttackComponent::Attack(GameObject* target)
 
     float finalDamage = targetStats->TakeDamage(attackPower);
 
-    LOG_INFO(gameObject->GetName() + " attacked " + target->GetName() +
-             ". Damage: " + std::to_string(finalDamage) +
-             ", target HP: " + std::to_string(targetStats->GetHealth()));
+    LOG_DEBUG(gameObject->GetName() + " attacked " + target->GetName() +
+              ". Damage: " + std::to_string(finalDamage) +
+              ", target HP: " + std::to_string(targetStats->GetHealth()));
 
     return true;
 }
