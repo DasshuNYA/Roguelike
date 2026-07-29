@@ -17,7 +17,8 @@ class Enemy : public Character
 {
    protected:
     void BuildEnemy(Engine::GameObject* player, const std::string& name,
-                    const std::string& textureKey, float x, float y, float health, float armor,
-                    float attackPower, float speed, float detectionRadius);
+                    const std::string& textureKey, const std::string& directionTexturePrefix,
+                    float x, float y, float health, float armor, float attackPower, float speed,
+                    float detectionRadius);
 };
 }  // namespace Roguelike

@@ -33,11 +33,7 @@ void UIProgressBar::SetValue(float current, float max)
     value = std::clamp(current / max, 0.0f, 1.0f);
 }
 
-void UIProgressBar::SetBackColor(sf::Color color) { backColor = color; }
-
 void UIProgressBar::SetFillColor(sf::Color color) { fillColor = color; }
-
-void UIProgressBar::SetOutlineColor(sf::Color color) { outlineColor = color; }
 
 void UIProgressBar::Draw(sf::RenderWindow& window)
 {

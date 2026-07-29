@@ -23,7 +23,6 @@ class PlayerSearchComponent : public Engine::Component
     PlayerSearchComponent(Engine::GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
     void SetPlayer(Engine::GameObject* newPlayer);
     void SetPlayerDetected(bool detected);

@@ -18,10 +18,6 @@ AudioComponent::~AudioComponent()
     delete sound;
 }
 
-void AudioComponent::Update(float deltaTime) {}
-
-void AudioComponent::Render() {}
-
 void AudioComponent::SetAudio(const sf::SoundBuffer& audio) { sound->setBuffer(audio); }
 
 void AudioComponent::SetLoop(bool loop) { sound->setLoop(loop); }
@@ -37,14 +33,4 @@ void AudioComponent::Play()
 }
 
 void AudioComponent::Stop() { sound->stop(); }
-
-void AudioComponent::Pause() { sound->pause(); }
-
-void AudioComponent::Resume()
-{
-    if (sound->getStatus() != sf::SoundSource::Playing)
-    {
-        sound->play();
-    }
-}
 }  // namespace Engine

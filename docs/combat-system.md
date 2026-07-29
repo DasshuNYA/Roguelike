@@ -156,7 +156,7 @@ Spawner responsibilities:
 - create the requested amount of enemies;
 - use floor positions from the generated maze;
 - keep enemies away from the player spawn;
-- avoid placing several enemies on the same position.
+- avoid placing several enemies, including enemies of different types, on the same position.
 
 Currently used enemy types:
 

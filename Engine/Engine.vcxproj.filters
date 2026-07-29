@@ -20,13 +20,7 @@
     <ClCompile Include="Core\SaveSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Matrix2D.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\ColliderComponent.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Collision.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
     <ClCompile Include="Physics\PhysicsSystem.cpp">
@@ -42,9 +36,6 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RenderSystem.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Sprite.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Resources\ResourceSystem.cpp">
@@ -107,13 +98,7 @@
     <ClInclude Include="Core\Scene.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Matrix2D.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\ColliderComponent.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Collision.h">
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Physics\PhysicsSystem.h">
@@ -129,9 +114,6 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RenderSystem.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Sprite.h">
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Resources\ResourceSystem.h">

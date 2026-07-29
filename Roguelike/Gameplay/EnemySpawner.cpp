@@ -12,6 +12,7 @@
 #include "TransformComponent.h"
 #include "Warrior.h"
 
+#include <algorithm>
 #include <cstdlib>
 
 namespace Roguelike
@@ -37,17 +38,15 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
     int spawnedCount = 0;
     int attempts = 0;
     int maxAttempts = settings.count * GameConfig::SpawnMaxAttemptsMultiplier;
-    std::vector<Engine::Vector2Df> usedPositions;
 
-    // Spawn selection is conservative: no duplicate tile, far enough from player,
-    // and reachable by pathfinding so the level cannot softlock enemy progress.
+    // Keep positions between calls so different enemy types cannot share one tile.
     while (spawnedCount < settings.count && attempts < maxAttempts)
     {
         attempts++;
 
         const Engine::Vector2Df& position = floorPositions[std::rand() % floorPositions.size()];
 
-        if (IsPositionAlreadyUsed(position, usedPositions))
+        if (std::find(usedPositions.begin(), usedPositions.end(), position) != usedPositions.end())
         {
             continue;
         }
@@ -116,20 +115,6 @@ bool EnemySpawner::IsPositionReachableFromPlayer(const Engine::Vector2Df& positi
     return !MazeNavigation::Instance()
                 ->FindPath(playerTransform->GetWorldPosition(), position)
                 .empty();
-}
-
-bool EnemySpawner::IsPositionAlreadyUsed(
-    const Engine::Vector2Df& position, const std::vector<Engine::Vector2Df>& usedPositions) const
-{
-    for (const Engine::Vector2Df& usedPosition : usedPositions)
-    {
-        if (usedPosition.x == position.x && usedPosition.y == position.y)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 std::unique_ptr<Character> EnemySpawner::CreateEnemy(EnemyType enemyType,

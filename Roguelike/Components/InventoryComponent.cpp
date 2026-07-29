@@ -83,47 +83,8 @@ bool InventoryComponent::RemoveOneItem(const ItemData* itemData)
     return false;
 }
 
-bool InventoryComponent::HasSpaceFor(const ItemStack& item) const
-{
-    if (!item.IsValid())
-    {
-        return false;
-    }
-
-    for (const ItemStack& storedItem : items)
-    {
-        if (storedItem.data == item.data)
-        {
-            return true;
-        }
-    }
-
-    return items.size() < GameConfig::InventorySlotCount;
-}
-
-int InventoryComponent::GetItemCount(const ItemData* itemData) const
-{
-    if (itemData == nullptr)
-    {
-        return 0;
-    }
-
-    for (const ItemStack& item : items)
-    {
-        if (item.data == itemData)
-        {
-            return item.count;
-        }
-    }
-
-    return 0;
-}
-
 const std::vector<ItemStack>& InventoryComponent::GetItems() const { return items; }
 
 void InventoryComponent::SetItems(const std::vector<ItemStack>& newItems) { items = newItems; }
 
-void InventoryComponent::Update(float deltaTime) {}
-
-void InventoryComponent::Render() {}
 }  // namespace Roguelike

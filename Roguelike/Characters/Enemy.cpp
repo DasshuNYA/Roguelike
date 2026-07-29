@@ -23,8 +23,9 @@
 namespace Roguelike
 {
 void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
-                       const std::string& textureKey, float x, float y, float health, float armor,
-                       float attackPower, float speed, float detectionRadius)
+                       const std::string& textureKey, const std::string& directionTexturePrefix,
+                       float x, float y, float health, float armor, float attackPower, float speed,
+                       float detectionRadius)
 {
     gameObject = Engine::GameWorld::Instance()->CreateGameObject(name);
 
@@ -45,17 +46,10 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
     rigidbody->SetLinearDamping(1.f);
 
     auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
-
-    if (textureKey == "creeper")
-    {
-        directionalSprite->SetTextures("creeper_default", "creeper_down", "creeper_right",
-                                       "creeper_up", "creeper_left");
-    }
-    else
-    {
-        directionalSprite->SetTextures("warrior_default", "warrior_down", "warrior_right",
-                                       "warrior_up", "warrior_left");
-    }
+    directionalSprite->SetTextures(
+        directionTexturePrefix + "_default", directionTexturePrefix + "_down",
+        directionTexturePrefix + "_right", directionTexturePrefix + "_up",
+        directionTexturePrefix + "_left");
 
     auto stats = gameObject->AddComponent<Engine::StatsComponent>();
     stats->SetStats(health, armor);

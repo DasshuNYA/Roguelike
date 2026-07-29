@@ -42,7 +42,7 @@ class DeveloperLevel : public Engine::Scene
     void CreateUI();
 
    private:
-    std::shared_ptr<Player> player = nullptr;
+    std::unique_ptr<Player> player = nullptr;
     Engine::GameObject* playerObject = nullptr;
 
     std::vector<std::unique_ptr<Character>> enemies;

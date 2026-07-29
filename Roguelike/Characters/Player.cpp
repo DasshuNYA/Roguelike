@@ -34,8 +34,7 @@ Player::Player()
 
     gameObject->AddComponent<Engine::InputComponent>();
 
-    auto body = gameObject->AddComponent<Engine::RigidbodyComponent>();
-    body->SetLinearDamping(0.f);
+    gameObject->AddComponent<Engine::RigidbodyComponent>();
 
     auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
     directionalSprite->SetTextures("player_default", "player_down", "player_right", "player_up",

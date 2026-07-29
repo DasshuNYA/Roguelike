@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "PlayerMovementComponent.h"
 
+#include "GameObject.h"
+
 #include "GameConfig.h"
 #include "StatsComponent.h"
 
@@ -45,8 +47,6 @@ void PlayerMovementComponent::Update(float deltaTime)
 
     rigidbody->SetLinearVelocity(direction * speed);
 }
-
-void PlayerMovementComponent::Render() {}
 
 void PlayerMovementComponent::SetSpeed(float newSpeed)
 {

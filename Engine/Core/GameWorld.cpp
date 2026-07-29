@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 
 #include <algorithm>
+#include <utility>
 
 namespace Engine
 {
@@ -17,7 +18,7 @@ void GameWorld::HandleEvent(const sf::Event& event)
 {
     for (size_t i = 0; i < gameObjects.size(); i++)
     {
-        if (ShouldUpdateGameObject(gameObjects[i]))
+        if (ShouldUpdateGameObject(gameObjects[i].get()))
         {
             gameObjects[i]->HandleEvent(event);
         }
@@ -28,7 +29,7 @@ void GameWorld::Update(float deltaTime)
 {
     for (size_t i = 0; i < gameObjects.size(); i++)
     {
-        if (ShouldUpdateGameObject(gameObjects[i]))
+        if (ShouldUpdateGameObject(gameObjects[i].get()))
         {
             gameObjects[i]->Update(deltaTime);
         }
@@ -69,20 +70,13 @@ void GameWorld::LateUpdate()
     markedToDestroyGameObjects.clear();
 }
 
-GameObject* GameWorld::CreateGameObject()
-{
-    GameObject* gameObject = new GameObject();
-    gameObjects.push_back(gameObject);
-
-    return gameObject;
-}
-
 GameObject* GameWorld::CreateGameObject(std::string name)
 {
-    GameObject* gameObject = new GameObject(name);
-    gameObjects.push_back(gameObject);
+    auto gameObject = std::make_unique<GameObject>(std::move(name));
+    GameObject* result = gameObject.get();
+    gameObjects.push_back(std::move(gameObject));
 
-    return gameObject;
+    return result;
 }
 
 void GameWorld::DestroyGameObject(GameObject* gameObject)
@@ -113,9 +107,8 @@ bool GameWorld::IsGameObjectAlive(GameObject* gameObject) const
         return false;
     }
 
-    auto iterator = std::find(gameObjects.begin(), gameObjects.end(), gameObject);
-
-    return iterator != gameObjects.end();
+    return std::any_of(gameObjects.begin(), gameObjects.end(),
+                       [gameObject](const auto& object) { return object.get() == gameObject; });
 }
 
 void GameWorld::SetPaused(bool value) { isPaused = value; }
@@ -147,25 +140,12 @@ void GameWorld::RemovePauseIgnoredGameObject(GameObject* gameObject)
 
 void GameWorld::Clear()
 {
-    for (size_t i = 0; i < gameObjects.size(); i++)
-    {
-        delete gameObjects[i];
-    }
-
     gameObjects.clear();
     markedToDestroyGameObjects.clear();
     pauseIgnoredGameObjects.clear();
 
     isPaused = false;
     fixedCounter = 0.0f;
-}
-
-void GameWorld::Print() const
-{
-    for (size_t i = 0; i < gameObjects.size(); i++)
-    {
-        gameObjects[i]->Print();
-    }
 }
 
 bool GameWorld::ShouldUpdateGameObject(GameObject* gameObject) const
@@ -190,10 +170,9 @@ void GameWorld::DestroyGameObjectImmediate(GameObject* gameObject)
 {
     RemovePauseIgnoredGameObject(gameObject);
 
-    gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(),
-                                     [gameObject](GameObject* obj) { return obj == gameObject; }),
-                      gameObjects.end());
-
-    delete gameObject;
+    gameObjects.erase(
+        std::remove_if(gameObjects.begin(), gameObjects.end(),
+                       [gameObject](const auto& object) { return object.get() == gameObject; }),
+        gameObjects.end());
 }
 }  // namespace Engine

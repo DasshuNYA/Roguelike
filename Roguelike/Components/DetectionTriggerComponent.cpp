@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "DetectionTriggerComponent.h"
 
+#include "GameObject.h"
+
 #include "RenderSystem.h"
 #include "PhysicsSystem.h"
 

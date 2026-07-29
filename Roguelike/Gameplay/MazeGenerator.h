@@ -17,8 +17,6 @@ class MazeGenerator
 
     void Generate();
 
-    float GetTileSize() const;
-
     const std::vector<Engine::Vector2Df>& GetFloorPositions() const;
 
    private:

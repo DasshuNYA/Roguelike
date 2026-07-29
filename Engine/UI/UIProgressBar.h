@@ -15,9 +15,7 @@ class UIProgressBar : public UIElement
     void SetSize(sf::Vector2f size);
     void SetValue(float current, float max);
 
-    void SetBackColor(sf::Color color);
     void SetFillColor(sf::Color color);
-    void SetOutlineColor(sf::Color color);
 
     void Draw(sf::RenderWindow& window) override;
 

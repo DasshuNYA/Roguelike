@@ -15,9 +15,6 @@ class AudioComponent : public Component
     AudioComponent(GameObject* gameObject);
     ~AudioComponent();
 
-    void Update(float deltaTime) override;
-    void Render() override;
-
     void SetAudio(const sf::SoundBuffer& audio);
     void SetLoop(bool loop);
 
@@ -25,8 +22,6 @@ class AudioComponent : public Component
 
     void Play();
     void Stop();
-    void Pause();
-    void Resume();
 
    private:
     sf::Sound* sound;

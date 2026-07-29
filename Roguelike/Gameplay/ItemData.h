@@ -59,9 +59,8 @@ struct ItemStack
     int count = 0;
 
     bool IsValid() const { return data != nullptr && count > 0; }
-    const std::string GetName() const { return data != nullptr ? data->name : ""; }
-    const std::string GetDescription() const { return data != nullptr ? data->description : ""; }
-    ItemTag GetTag() const { return data != nullptr ? data->tag : ItemTag::Consumable; }
+    std::string GetName() const { return data != nullptr ? data->name : ""; }
+    std::string GetDescription() const { return data != nullptr ? data->description : ""; }
     EquipmentSlotType GetEquipmentSlot() const
     {
         return data != nullptr ? data->equipmentSlot : EquipmentSlotType::None;

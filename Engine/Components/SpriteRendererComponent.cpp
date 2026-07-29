@@ -2,6 +2,8 @@
 
 #include "pch.h"
 #include "SpriteRendererComponent.h"
+
+#include "GameObject.h"
 #include "TransformComponent.h"
 #include "RenderSystem.h"
 #include "Logger.h"
@@ -26,8 +28,6 @@ SpriteRendererComponent::~SpriteRendererComponent()
     }
 }
 
-void SpriteRendererComponent::Update(float deltaTime) {}
-
 void SpriteRendererComponent::Render()
 {
     SyncSpriteTransform();
@@ -48,10 +48,7 @@ void SpriteRendererComponent::SyncSpriteTransform()
     }
 
     sprite->setPosition(Convert<sf::Vector2f, Vector2Df>(transform->GetWorldPosition()));
-    sprite->setRotation(transform->GetWorldRotation());
-
-    auto transformScale = Convert<sf::Vector2f, Vector2Df>(transform->GetWorldScale());
-    sprite->setScale({scale.x * transformScale.x, scale.y * transformScale.y});
+    sprite->setScale({scale.x, scale.y});
 }
 
 void SpriteRendererComponent::SetTexture(const sf::Texture& newTexture)
@@ -101,21 +98,4 @@ void SpriteRendererComponent::SetPixelSize(int newWidth, int newHeight)
     scale = {(float)newWidth / (float)originalSize.x, (float)newHeight / (float)originalSize.y};
 }
 
-void SpriteRendererComponent::FlipX(bool flip)
-{
-    if (flip != isFlipX)
-    {
-        scale = {-scale.x, scale.y};
-        isFlipX = flip;
-    }
-}
-
-void SpriteRendererComponent::FlipY(bool flip)
-{
-    if (flip != isFlipY)
-    {
-        scale = {scale.x, -scale.y};
-        isFlipY = flip;
-    }
-}
 }  // namespace Engine

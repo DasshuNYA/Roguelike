@@ -17,7 +17,6 @@ class UIAnimation
     void SetAlpha(float value);
 
     bool IsVisible() const;
-    bool IsFullyHidden() const;
 
     float GetAlpha() const;
 

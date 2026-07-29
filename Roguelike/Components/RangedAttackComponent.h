@@ -21,7 +21,6 @@ class RangedAttackComponent : public Engine::Component
     RangedAttackComponent(Engine::GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
     void AddTarget(Engine::GameObject* target);
     void SetTargets(const std::vector<Engine::GameObject*>& newTargets);

@@ -4,6 +4,7 @@
 #include "PhysicsSystem.h"
 
 #include "ColliderComponent.h"
+#include "GameObject.h"
 #include "RigidbodyComponent.h"
 #include "TransformComponent.h"
 
@@ -23,7 +24,7 @@ void PhysicsSystem::Update()
     {
         auto firstBody = colliders[i]->GetGameObject()->GetComponent<RigidbodyComponent>();
 
-        if (firstBody == nullptr || firstBody->GetKinematic())
+        if (firstBody == nullptr)
         {
             continue;
         }
@@ -65,7 +66,7 @@ void PhysicsSystem::Update()
 
             auto secondBody = colliders[j]->GetGameObject()->GetComponent<RigidbodyComponent>();
 
-            if (secondBody != nullptr && !secondBody->GetKinematic())
+            if (secondBody != nullptr)
             {
                 continue;
             }
@@ -104,11 +105,6 @@ void PhysicsSystem::Update()
             }
 
             firstBody->SetLinearVelocity(velocity);
-
-            Collision collision(colliders[i], colliders[j], intersection);
-
-            colliders[i]->OnCollision(collision);
-            colliders[j]->OnCollision(collision);
         }
     }
 

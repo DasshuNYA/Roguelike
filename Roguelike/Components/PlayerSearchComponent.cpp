@@ -126,8 +126,6 @@ void PlayerSearchComponent::Update(float deltaTime)
     MoveByPath();
 }
 
-void PlayerSearchComponent::Render() {}
-
 void PlayerSearchComponent::SetPlayer(Engine::GameObject* newPlayer) { player = newPlayer; }
 
 void PlayerSearchComponent::SetSpeed(float newSpeed) { speed = newSpeed; }

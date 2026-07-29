@@ -76,8 +76,6 @@ void MazeGenerator::Generate()
     LOG_INFO("Maze generation finished.");
 }
 
-float MazeGenerator::GetTileSize() const { return tileSize; }
-
 const std::vector<Engine::Vector2Df>& MazeGenerator::GetFloorPositions() const
 {
     return floorPositions;

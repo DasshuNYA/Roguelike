@@ -19,7 +19,6 @@ class UIElement
 
     void Show();
     void Hide();
-    void SetVisible(bool value);
 
     bool IsVisible() const;
 

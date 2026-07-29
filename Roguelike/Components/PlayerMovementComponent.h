@@ -16,7 +16,6 @@ class PlayerMovementComponent : public Engine::Component
     PlayerMovementComponent(Engine::GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
     void SetSpeed(float newSpeed);
     float GetSpeed() const;

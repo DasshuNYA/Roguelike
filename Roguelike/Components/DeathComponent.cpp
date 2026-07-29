@@ -37,5 +37,4 @@ void DeathComponent::Update(float deltaTime)
     }
 }
 
-void DeathComponent::Render() {}
 }  // namespace Engine

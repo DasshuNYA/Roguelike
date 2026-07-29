@@ -33,8 +33,6 @@ void InputComponent::Update(float deltaTime)
     }
 }
 
-void InputComponent::Render() {}
-
 float InputComponent::GetHorizontalAxis() const { return horizontalAxis; }
 
 float InputComponent::GetVerticalAxis() const { return verticalAxis; }

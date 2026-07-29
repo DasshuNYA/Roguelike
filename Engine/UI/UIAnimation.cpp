@@ -45,7 +45,5 @@ void UIAnimation::SetAlpha(float value)
 
 bool UIAnimation::IsVisible() const { return isVisible || alpha > 0.0f; }
 
-bool UIAnimation::IsFullyHidden() const { return alpha <= 0.0f; }
-
 float UIAnimation::GetAlpha() const { return alpha; }
 }  // namespace Engine

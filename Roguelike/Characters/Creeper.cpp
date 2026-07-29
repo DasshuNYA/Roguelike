@@ -9,7 +9,7 @@ namespace Roguelike
 {
 Creeper::Creeper(Engine::GameObject* player, float x, float y)
 {
-    BuildEnemy(player, "Creeper", "creeper", x, y, GameConfig::CreeperHealth,
+    BuildEnemy(player, "Creeper", "creeper", "creeper", x, y, GameConfig::CreeperHealth,
                GameConfig::CreeperArmor, GameConfig::CreeperAttackPower, GameConfig::CreeperSpeed,
                GameConfig::CreeperDetectionRadius);
 }

@@ -17,9 +17,6 @@ class StatsComponent : public Component
 
     explicit StatsComponent(GameObject* gameObject);
 
-    void Update(float deltaTime) override;
-    void Render() override;
-
     void SetStats(float newHealth, float newArmor);
     void SetAttackPower(float newAttackPower);
 

@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "BoxColliderComponent.h"
 
+#include "GameObject.h"
+
 #include "RenderSystem.h"
 
 namespace Engine
@@ -13,10 +15,7 @@ BoxColliderComponent::BoxColliderComponent(GameObject* gameObject) : ColliderCom
     PhysicsSystem::Instance()->Subscribe(this);
 }
 
-BoxColliderComponent::~BoxColliderComponent()
-{
-    PhysicsSystem::Instance()->Unsubscribe(this);
-}
+BoxColliderComponent::~BoxColliderComponent() { PhysicsSystem::Instance()->Unsubscribe(this); }
 
 void BoxColliderComponent::Update(float deltaTime)
 {
@@ -48,13 +47,7 @@ void BoxColliderComponent::Render()
     RenderSystem::Instance()->Render(rectangle);
 }
 
-void BoxColliderComponent::SetSize(float width, float height)
-{
-    size = {width, height};
-}
+void BoxColliderComponent::SetSize(float width, float height) { size = {width, height}; }
 
-void BoxColliderComponent::SetShowDebug(bool value)
-{
-    showDebug = value;
-}
+void BoxColliderComponent::SetShowDebug(bool value) { showDebug = value; }
 }  // namespace Engine

@@ -31,7 +31,7 @@ The project is intentionally kept easy to explain: game objects are composed fro
 
 Game entities are built from focused components:
 
-- `TransformComponent` stores position, rotation, and scale;
+- `TransformComponent` stores an object's world position;
 - `SpriteRendererComponent` draws textures;
 - collider components provide physics bounds;
 - `StatsComponent`, `AttackComponent`, and `DeathComponent` describe combat behavior;
@@ -91,6 +91,9 @@ Convenience scripts from the repository root:
 Pass `--no-pause` to any script when running from an existing terminal or CI-like shell.
 
 ## Tests
+
+Restore the solution's NuGet packages before the first test build so the GoogleTest libraries
+for the selected platform are available.
 
 After building, run:
 

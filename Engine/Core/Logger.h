@@ -7,12 +7,9 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <memory>
 #include <mutex>
 #include <sstream>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace Engine
 {
@@ -24,36 +21,57 @@ enum class LogLevel
     ERROR
 };
 
-struct LogRecord
-{
-    LogLevel level = LogLevel::INFO;
-    std::string message;
-    const char* file = nullptr;
-    int line = 0;
-    const char* function = nullptr;
-    std::chrono::system_clock::time_point time = std::chrono::system_clock::now();
-};
-
-class LogSink
+class Logger
 {
    public:
-    explicit LogSink(LogLevel minLevel = LogLevel::DEBUG) : minLevel(minLevel) {}
-    virtual ~LogSink() = default;
-    virtual void log(const LogRecord& record) = 0;
-
-    bool ShouldLog(LogLevel level) const
+    static Logger& Instance()
     {
-        return static_cast<int>(level) >= static_cast<int>(minLevel);
+        static Logger logger;
+        return logger;
+    }
+
+    void OpenFile(const std::string& filename)
+    {
+        std::filesystem::path path(filename);
+
+        if (path.has_parent_path())
+        {
+            std::filesystem::create_directories(path.parent_path());
+        }
+
+        file.open(filename, std::ios::out);
+    }
+
+    void Write(LogLevel level, const std::string& message, const char* sourceFile, int line,
+               const char* function)
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        const auto time = std::chrono::system_clock::now();
+
+        if (level != LogLevel::DEBUG)
+        {
+            std::cout << "[" << FormatTime(time, false) << "] [" << LevelName(level) << "] "
+                      << message << std::endl;
+        }
+
+        if (file)
+        {
+            file << "[" << FormatTime(time, true) << "] [" << LevelName(level) << "] "
+                 << ShortFileName(sourceFile) << ":" << line;
+
+            if (function != nullptr)
+            {
+                file << " (" << function << ")";
+            }
+
+            file << " | " << message << std::endl;
+        }
     }
 
    private:
-    LogLevel minLevel = LogLevel::DEBUG;
-};
+    Logger() = default;
 
-class LogFormatter
-{
-   public:
-    static std::string LevelToString(LogLevel level)
+    static const char* LevelName(LogLevel level)
     {
         switch (level)
         {
@@ -70,34 +88,11 @@ class LogFormatter
         }
     }
 
-    static std::string FormatConsole(const LogRecord& record)
-    {
-        return "[" + FormatTime(record.time, false) + "] [" + LevelToString(record.level) + "] " +
-               record.message;
-    }
-
-    static std::string FormatFile(const LogRecord& record)
-    {
-        std::ostringstream stream;
-        stream << "[" << FormatTime(record.time, true) << "] [" << LevelToString(record.level)
-               << "] " << ShortFileName(record.file) << ":" << record.line;
-
-        if (record.function != nullptr)
-        {
-            stream << " (" << record.function << ")";
-        }
-
-        stream << " | " << record.message;
-        return stream.str();
-    }
-
-   private:
     static std::string FormatTime(std::chrono::system_clock::time_point time, bool includeDate)
     {
         const auto timeValue = std::chrono::system_clock::to_time_t(time);
-        const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
-                                      time.time_since_epoch()) %
-                                  1000;
+        const auto milliseconds =
+            std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()) % 1000;
 
         std::tm localTime = {};
         localtime_s(&localTime, &timeValue);
@@ -109,164 +104,34 @@ class LogFormatter
             stream << std::put_time(&localTime, "%Y-%m-%d ");
         }
 
-        stream << std::put_time(&localTime, "%H:%M:%S") << "." << std::setfill('0')
-               << std::setw(3) << milliseconds.count();
-
+        stream << std::put_time(&localTime, "%H:%M:%S") << "." << std::setfill('0') << std::setw(3)
+               << milliseconds.count();
         return stream.str();
     }
 
-    static std::string ShortFileName(const char* file)
+    static std::string ShortFileName(const char* sourceFile)
     {
-        if (file == nullptr)
-        {
-            return "unknown";
-        }
-
-        std::filesystem::path path(file);
-        return path.filename().string();
-    }
-};
-
-class ConsoleSink : public LogSink
-{
-   public:
-    explicit ConsoleSink(LogLevel minLevel = LogLevel::INFO) : LogSink(minLevel) {}
-
-    void log(const LogRecord& record) override
-    {
-        std::cout << LogFormatter::FormatConsole(record) << std::endl;
-    }
-};
-
-class FileSink : public LogSink
-{
-   public:
-    explicit FileSink(const std::string& filename, LogLevel minLevel = LogLevel::DEBUG)
-        : LogSink(minLevel)
-    {
-        std::filesystem::path logPath(filename);
-        std::filesystem::create_directories(logPath.parent_path());
-
-        logFile.open(filename, std::ios::out);
+        return sourceFile != nullptr ? std::filesystem::path(sourceFile).filename().string()
+                                     : "unknown";
     }
 
-    ~FileSink() override
-    {
-        if (logFile.is_open())
-        {
-            logFile.close();
-        }
-    }
-
-    void log(const LogRecord& record) override
-    {
-        if (!logFile)
-        {
-            return;
-        }
-
-        logFile << LogFormatter::FormatFile(record) << std::endl;
-    }
-
-   private:
-    std::ofstream logFile;
-};
-
-class Logger
-{
-   public:
-    void addSink(std::shared_ptr<LogSink> sink) { sinks.push_back(sink); }
-
-    void log(LogLevel level,
-             const std::string& message,
-             const char* file = nullptr,
-             int line = 0,
-             const char* function = nullptr)
-    {
-        std::lock_guard<std::mutex> lock(logMutex);
-
-        LogRecord record{level, message, file, line, function, std::chrono::system_clock::now()};
-
-        for (auto& sink : sinks)
-        {
-            if (sink != nullptr && sink->ShouldLog(level))
-            {
-                sink->log(record);
-            }
-        }
-    }
-
-    void debug(const std::string& message, const char* file, int line, const char* function)
-    {
-        log(LogLevel::DEBUG, message, file, line, function);
-    }
-
-    void info(const std::string& message, const char* file, int line, const char* function)
-    {
-        log(LogLevel::INFO, message, file, line, function);
-    }
-
-    void warn(const std::string& message, const char* file, int line, const char* function)
-    {
-        log(LogLevel::WARNING, message, file, line, function);
-    }
-
-    void error(const std::string& message, const char* file, int line, const char* function)
-    {
-        log(LogLevel::ERROR, message, file, line, function);
-    }
-
-   private:
-    std::vector<std::shared_ptr<LogSink>> sinks;
-    std::mutex logMutex;
-};
-
-class LoggerRegistry
-{
-   public:
-    static LoggerRegistry& getInstance()
-    {
-        static LoggerRegistry instance;
-        return instance;
-    }
-
-    std::shared_ptr<Logger> getLogger(const std::string& name)
-    {
-        std::lock_guard<std::mutex> lock(registryMutex);
-
-        auto logger = loggers.find(name);
-
-        if (logger != loggers.end())
-        {
-            return logger->second;
-        }
-
-        return defaultLogger;
-    }
-
-    void setDefaultLogger(std::shared_ptr<Logger> logger) { defaultLogger = logger; }
-
-    void registerLogger(const std::string& name, std::shared_ptr<Logger> logger)
-    {
-        std::lock_guard<std::mutex> lock(registryMutex);
-        loggers[name] = logger;
-    }
-
-   private:
-    std::unordered_map<std::string, std::shared_ptr<Logger>> loggers;
-    std::shared_ptr<Logger> defaultLogger = std::make_shared<Logger>();
-    std::mutex registryMutex;
+    std::ofstream file;
+    std::mutex mutex;
 };
 }  // namespace Engine
 
-#define LOG_DEBUG(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->debug(message, __FILE__, __LINE__, __func__)
+#define LOG_DEBUG(message)                                                                     \
+    ::Engine::Logger::Instance().Write(::Engine::LogLevel::DEBUG, message, __FILE__, __LINE__, \
+                                       __func__)
 
-#define LOG_INFO(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->info(message, __FILE__, __LINE__, __func__)
+#define LOG_INFO(message)                                                                     \
+    ::Engine::Logger::Instance().Write(::Engine::LogLevel::INFO, message, __FILE__, __LINE__, \
+                                       __func__)
 
-#define LOG_WARN(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->warn(message, __FILE__, __LINE__, __func__)
+#define LOG_WARN(message)                                                                        \
+    ::Engine::Logger::Instance().Write(::Engine::LogLevel::WARNING, message, __FILE__, __LINE__, \
+                                       __func__)
 
-#define LOG_ERROR(message) \
-    ::Engine::LoggerRegistry::getInstance().getLogger("global")->error(message, __FILE__, __LINE__, __func__)
+#define LOG_ERROR(message)                                                                     \
+    ::Engine::Logger::Instance().Write(::Engine::LogLevel::ERROR, message, __FILE__, __LINE__, \
+                                       __func__)

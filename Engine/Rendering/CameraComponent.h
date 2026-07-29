@@ -15,7 +15,6 @@ class CameraComponent : public Component
     CameraComponent(GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
     void SetWindow(sf::RenderWindow* newWindow);
     void SetBaseResolution(float newBaseWidth, float newBaseHeight);

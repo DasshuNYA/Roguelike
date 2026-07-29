@@ -16,10 +16,6 @@ AttackComponent::AttackComponent(GameObject* gameObject) : Component(gameObject)
     LOG_DEBUG(gameObject->GetName() + " AttackComponent created.");
 }
 
-void AttackComponent::Update(float deltaTime) {}
-
-void AttackComponent::Render() {}
-
 void AttackComponent::SetAttackPower(float newAttackPower)
 {
     if (newAttackPower < 0.f)

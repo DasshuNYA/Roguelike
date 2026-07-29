@@ -4,6 +4,7 @@
 #include "PopupMessage.h"
 
 #include "UITextureUtils.h"
+#include "UITextUtils.h"
 
 #include <algorithm>
 
@@ -16,6 +17,9 @@ namespace
 const sf::Vector2f PopupBasePosition = {20.0f, 260.0f};
 const sf::Vector2f PopupTextBasePosition = {64.0f, 320.0f};
 const sf::Vector2f PopupFallbackSize = {320.0f, 140.0f};
+const unsigned int PopupTextSize = 18;
+const unsigned int PopupMinimumTextSize = 14;
+const float PopupTextMaxWidth = 240.0f;
 
 // Popup motion. The message slides in while fading, then floats upward near the end.
 const float PopupEnterOffsetY = 18.0f;
@@ -33,7 +37,7 @@ PopupMessage::PopupMessage(const sf::Font& uiFont) : font(uiFont)
     background.setOutlineThickness(2.0f);
 
     text.setFont(font);
-    text.setCharacterSize(18);
+    text.setCharacterSize(PopupTextSize);
     text.setFillColor(sf::Color::White);
     text.setPosition(PopupTextBasePosition);
 
@@ -43,7 +47,20 @@ PopupMessage::PopupMessage(const sf::Font& uiFont) : font(uiFont)
 
 void PopupMessage::ShowMessage(const std::string& message, float duration)
 {
+    unsigned int characterSize = PopupTextSize;
     text.setString(message);
+    text.setCharacterSize(characterSize);
+
+    while (characterSize > PopupMinimumTextSize && text.getLocalBounds().width > PopupTextMaxWidth)
+    {
+        text.setCharacterSize(--characterSize);
+    }
+
+    if (text.getLocalBounds().width > PopupTextMaxWidth)
+    {
+        text.setString(
+            UITextUtils::FitTextToWidth(font, message, characterSize, PopupTextMaxWidth));
+    }
 
     lifeTime = duration;
     timer = 0.0f;

@@ -77,7 +77,7 @@ void DeveloperLevel::GenerateMaze()
 
 void DeveloperLevel::CreatePlayer()
 {
-    player = std::make_shared<Player>();
+    player = std::make_unique<Player>();
     playerObject = player->GetGameObject();
 
     float startX = GameConfig::PlayerStartTileX * GameConfig::TileSize;

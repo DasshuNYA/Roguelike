@@ -56,9 +56,6 @@
     <ClCompile Include="Gameplay\GameResourceLoader.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="Gameplay\LevelBuilder.cpp">
-      <Filter>Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="Gameplay\MazeGenerator.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
@@ -176,9 +173,6 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Gameplay\GameResourceLoader.h">
-      <Filter>Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="Gameplay\LevelBuilder.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Gameplay\MazeGenerator.h">

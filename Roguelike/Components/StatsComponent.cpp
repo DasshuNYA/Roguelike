@@ -9,10 +9,6 @@ namespace Engine
 {
 StatsComponent::StatsComponent(GameObject* gameObject) : Component(gameObject) {}
 
-void StatsComponent::Update(float deltaTime) {}
-
-void StatsComponent::Render() {}
-
 void StatsComponent::SetStats(float newHealth, float newArmor)
 {
     health = newHealth;

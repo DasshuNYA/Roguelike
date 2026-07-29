@@ -17,10 +17,7 @@ struct Vector2D
 
     constexpr Vector2D(T newX, T newY) : x(newX), y(newY) {}
 
-    float GetLength() const
-    {
-        return std::sqrt(static_cast<float>(x * x + y * y));
-    }
+    float GetLength() const { return std::sqrt(static_cast<float>(x * x + y * y)); }
 
     T DotProduct(const Vector2D<T>& vector) const { return x * vector.x + y * vector.y; }
 };

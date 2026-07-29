@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "CameraComponent.h"
 
+#include "GameObject.h"
+
 namespace Engine
 {
 CameraComponent::CameraComponent(GameObject* gameObject) : Component(gameObject)
@@ -27,8 +29,6 @@ void CameraComponent::Update(float deltaTime)
 
     window->setView(view);
 }
-
-void CameraComponent::Render() {}
 
 void CameraComponent::SetWindow(sf::RenderWindow* newWindow) { window = newWindow; }
 

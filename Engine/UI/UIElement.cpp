@@ -13,18 +13,6 @@ void UIElement::Show() { animation.Show(); }
 
 void UIElement::Hide() { animation.Hide(); }
 
-void UIElement::SetVisible(bool value)
-{
-    if (value)
-    {
-        Show();
-    }
-    else
-    {
-        Hide();
-    }
-}
-
 bool UIElement::IsVisible() const { return animation.IsVisible(); }
 
 float UIElement::GetAlpha() const { return animation.GetAlpha(); }

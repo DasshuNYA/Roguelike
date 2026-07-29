@@ -13,7 +13,6 @@ class InputComponent : public Component
     InputComponent(GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
     float GetHorizontalAxis() const;
     float GetVerticalAxis() const;

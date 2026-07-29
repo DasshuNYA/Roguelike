@@ -180,17 +180,14 @@
     <ClInclude Include="Core\Logger.h" />
     <ClInclude Include="Core\SaveSystem.h" />
     <ClInclude Include="Core\Scene.h" />
-    <ClInclude Include="Math\Matrix2D.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Physics\BoxColliderComponent.h" />
     <ClInclude Include="Physics\ColliderComponent.h" />
-    <ClInclude Include="Physics\Collision.h" />
     <ClInclude Include="Physics\PhysicsSystem.h" />
     <ClInclude Include="Physics\Trigger.h" />
     <ClInclude Include="Rendering\CameraComponent.h" />
     <ClInclude Include="Rendering\RenderSystem.h" />
-    <ClInclude Include="Rendering\Sprite.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="UI\UIAnimation.h" />
     <ClInclude Include="UI\UIElement.h" />
@@ -209,7 +206,6 @@
     <ClCompile Include="Core\GameObject.cpp" />
     <ClCompile Include="Core\GameWorld.cpp" />
     <ClCompile Include="Core\SaveSystem.cpp" />
-    <ClCompile Include="Math\Matrix2D.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -218,12 +214,10 @@
     </ClCompile>
     <ClCompile Include="Physics\BoxColliderComponent.cpp" />
     <ClCompile Include="Physics\ColliderComponent.cpp" />
-    <ClCompile Include="Physics\Collision.cpp" />
     <ClCompile Include="Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Physics\Trigger.cpp" />
     <ClCompile Include="Rendering\CameraComponent.cpp" />
     <ClCompile Include="Rendering\RenderSystem.cpp" />
-    <ClCompile Include="Rendering\Sprite.cpp" />
     <ClCompile Include="Resources\ResourceSystem.cpp" />
     <ClCompile Include="UI\UIAnimation.cpp" />
     <ClCompile Include="UI\UIElement.cpp" />

@@ -7,44 +7,30 @@
 
 namespace Engine
 {
-namespace
-{
-template <typename ResourceMap>
-void DeleteResourceMap(ResourceMap& resources)
-{
-    for (auto& resourcePair : resources)
-    {
-        delete resourcePair.second;
-    }
-
-    resources.clear();
-}
-}  // namespace
-
 ResourceSystem* ResourceSystem::Instance()
 {
     static ResourceSystem resourceSystem;
     return &resourceSystem;
 }
 
-void ResourceSystem::LoadTexture(const std::string& name, std::string sourcePath, bool isSmooth)
+void ResourceSystem::LoadTexture(const std::string& name, const std::string& sourcePath,
+                                 bool isSmooth)
 {
-    if (textures.find(name) != textures.end())
+    auto [texture, inserted] = textures.try_emplace(name);
+
+    if (!inserted)
     {
         return;
     }
 
-    sf::Texture* newTexture = new sf::Texture();
-
-    if (newTexture->loadFromFile(sourcePath))
+    if (texture->second.loadFromFile(sourcePath))
     {
-        newTexture->setSmooth(isSmooth);
-        textures.emplace(name, newTexture);
+        texture->second.setSmooth(isSmooth);
     }
     else
     {
         LOG_ERROR("Texture load failed: " + name + " from " + sourcePath);
-        delete newTexture;
+        textures.erase(texture);
     }
 }
 
@@ -63,168 +49,22 @@ const sf::Texture* ResourceSystem::GetTextureShared(const std::string& name) con
         return nullptr;
     }
 
-    return texture->second;
+    return &texture->second;
 }
 
-sf::Texture* ResourceSystem::GetTextureCopy(const std::string& name) const
+void ResourceSystem::LoadSoundBuffer(const std::string& name, const std::string& sourcePath)
 {
-    const sf::Texture* texture = GetTextureShared(name);
-    return texture != nullptr ? new sf::Texture(*texture) : nullptr;
-}
+    auto [soundBuffer, inserted] = soundBuffers.try_emplace(name);
 
-void ResourceSystem::DeleteSharedTexture(const std::string& name)
-{
-    auto texturePair = textures.find(name);
-
-    if (texturePair == textures.end())
+    if (!inserted)
     {
         return;
     }
 
-    sf::Texture* deletingTexture = texturePair->second;
-    textures.erase(texturePair);
-    delete deletingTexture;
-}
-
-void ResourceSystem::LoadTextureMap(const std::string& name, std::string sourcePath,
-                                    sf::Vector2u elementPixelSize, int totalElements, bool isSmooth)
-{
-    if (textureMaps.find(name) != textureMaps.end())
-    {
-        return;
-    }
-
-    sf::Texture textureMap;
-
-    if (textureMap.loadFromFile(sourcePath))
-    {
-        std::vector<sf::Texture*> textureMapElements;
-
-        auto textureSize = textureMap.getSize();
-
-        if (textureSize.x < elementPixelSize.x || textureSize.y < elementPixelSize.y)
-        {
-            LOG_ERROR("Texture map is smaller than one element: " + name);
-            return;
-        }
-
-        int loadedElements = 0;
-
-        for (int y = 0; y <= static_cast<int>(textureSize.y - elementPixelSize.y);
-             y += elementPixelSize.y)
-        {
-            if (loadedElements == totalElements)
-            {
-                break;
-            }
-
-            for (int x = 0; x <= static_cast<int>(textureSize.x - elementPixelSize.x);
-                 x += elementPixelSize.x)
-            {
-                if (loadedElements == totalElements)
-                {
-                    break;
-                }
-
-                sf::Texture* newTextureMapElement = new sf::Texture();
-
-                if (newTextureMapElement->loadFromFile(
-                        sourcePath, sf::IntRect(x, y, elementPixelSize.x, elementPixelSize.y)))
-                {
-                    newTextureMapElement->setSmooth(isSmooth);
-                    textureMapElements.push_back(newTextureMapElement);
-                }
-                else
-                {
-                    delete newTextureMapElement;
-                }
-
-                loadedElements++;
-            }
-        }
-
-        textureMaps.emplace(name, textureMapElements);
-    }
-    else
-    {
-        LOG_ERROR("Texture map load failed: " + name + " from " + sourcePath);
-    }
-}
-
-const sf::Texture* ResourceSystem::GetTextureMapElementShared(const std::string& name,
-                                                              int elementIndex) const
-{
-    auto textureMap = textureMaps.find(name);
-
-    if (textureMap == textureMaps.end())
-    {
-        LOG_ERROR("Texture map not found: " + name);
-        return nullptr;
-    }
-
-    if (elementIndex < 0 || elementIndex >= static_cast<int>(textureMap->second.size()))
-    {
-        LOG_ERROR("Texture map element out of range: " + name);
-        return nullptr;
-    }
-
-    return textureMap->second[elementIndex];
-}
-
-sf::Texture* ResourceSystem::GetTextureMapElementCopy(const std::string& name,
-                                                      int elementIndex) const
-{
-    const sf::Texture* texture = GetTextureMapElementShared(name, elementIndex);
-    return texture != nullptr ? new sf::Texture(*texture) : nullptr;
-}
-
-int ResourceSystem::GetTextureMapElementsCount(const std::string& name) const
-{
-    auto textureMap = textureMaps.find(name);
-
-    if (textureMap == textureMaps.end())
-    {
-        LOG_ERROR("Texture map not found: " + name);
-        return 0;
-    }
-
-    return static_cast<int>(textureMap->second.size());
-}
-
-void ResourceSystem::DeleteSharedTextureMap(const std::string& name)
-{
-    auto textureMap = textureMaps.find(name);
-
-    if (textureMap == textureMaps.end())
-    {
-        return;
-    }
-
-    for (int i = 0; i < textureMap->second.size(); i++)
-    {
-        delete textureMap->second[i];
-    }
-
-    textureMaps.erase(textureMap);
-}
-
-void ResourceSystem::LoadSoundBuffer(const std::string& name, std::string sourcePath)
-{
-    if (soundBuffers.find(name) != soundBuffers.end())
-    {
-        return;
-    }
-
-    sf::SoundBuffer* newSoundBuffer = new sf::SoundBuffer();
-
-    if (newSoundBuffer->loadFromFile(sourcePath))
-    {
-        soundBuffers.emplace(name, newSoundBuffer);
-    }
-    else
+    if (!soundBuffer->second.loadFromFile(sourcePath))
     {
         LOG_ERROR("Sound buffer load failed: " + name + " from " + sourcePath);
-        delete newSoundBuffer;
+        soundBuffers.erase(soundBuffer);
     }
 }
 
@@ -243,50 +83,12 @@ const sf::SoundBuffer* ResourceSystem::GetSoundBufferShared(const std::string& n
         return nullptr;
     }
 
-    return soundBuffer->second;
-}
-
-void ResourceSystem::DeleteSharedSoundBuffer(const std::string& name)
-{
-    auto soundBufferPair = soundBuffers.find(name);
-
-    if (soundBufferPair == soundBuffers.end())
-    {
-        return;
-    }
-
-    sf::SoundBuffer* deletingSoundBuffer = soundBufferPair->second;
-    soundBuffers.erase(soundBufferPair);
-    delete deletingSoundBuffer;
+    return &soundBuffer->second;
 }
 
 void ResourceSystem::Clear()
 {
-    DeleteAllTextures();
-    DeleteAllTextureMaps();
-    DeleteAllSoundBuffers();
-}
-
-void ResourceSystem::DeleteAllTextures()
-{
-    DeleteResourceMap(textures);
-}
-
-void ResourceSystem::DeleteAllTextureMaps()
-{
-    for (auto& textureMapPair : textureMaps)
-    {
-        for (sf::Texture* texture : textureMapPair.second)
-        {
-            delete texture;
-        }
-    }
-
-    textureMaps.clear();
-}
-
-void ResourceSystem::DeleteAllSoundBuffers()
-{
-    DeleteResourceMap(soundBuffers);
+    textures.clear();
+    soundBuffers.clear();
 }
 }  // namespace Engine

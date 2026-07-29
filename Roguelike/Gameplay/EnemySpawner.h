@@ -40,14 +40,13 @@ class EnemySpawner
         Engine::GameObject* player);
 
    private:
+    std::vector<Engine::Vector2Df> usedPositions;
+
     bool IsPositionFarEnoughFromPlayer(const Engine::Vector2Df& position,
                                        Engine::GameObject* player, float minDistance) const;
 
     bool IsPositionReachableFromPlayer(const Engine::Vector2Df& position,
                                        Engine::GameObject* player) const;
-
-    bool IsPositionAlreadyUsed(const Engine::Vector2Df& position,
-                               const std::vector<Engine::Vector2Df>& usedPositions) const;
 
     std::unique_ptr<Character> CreateEnemy(EnemyType enemyType, Engine::GameObject* player,
                                            const Engine::Vector2Df& position) const;

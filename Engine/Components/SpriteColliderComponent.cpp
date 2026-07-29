@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "SpriteColliderComponent.h"
 
+#include "GameObject.h"
+
 #include "Logger.h"
 
 namespace Engine

@@ -7,7 +7,9 @@ namespace Engine
 {
 Component::Component(GameObject* newGameObject) { gameObject = newGameObject; }
 
-Component::~Component() {}
+void Component::Update(float deltaTime) {}
+
+void Component::Render() {}
 
 void Component::HandleEvent(const sf::Event& event) {}
 

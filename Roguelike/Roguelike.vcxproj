@@ -208,7 +208,6 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClCompile Include="Gameplay\GameNotifications.cpp" />
     <ClCompile Include="Gameplay\GameResourceLoader.cpp" />
     <ClCompile Include="Gameplay\ItemSpawner.cpp" />
-    <ClCompile Include="Gameplay\LevelBuilder.cpp" />
     <ClCompile Include="Gameplay\LevelProgress.cpp" />
     <ClCompile Include="Gameplay\MazeGenerator.cpp" />
     <ClCompile Include="Gameplay\MazeNavigation.cpp" />
@@ -251,7 +250,6 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClInclude Include="Gameplay\GameResourceLoader.h" />
     <ClInclude Include="Gameplay\ItemData.h" />
     <ClInclude Include="Gameplay\ItemSpawner.h" />
-    <ClInclude Include="Gameplay\LevelBuilder.h" />
     <ClInclude Include="Gameplay\LevelProgress.h" />
     <ClInclude Include="Gameplay\MazeGenerator.h" />
     <ClInclude Include="Gameplay\MazeNavigation.h" />

@@ -10,7 +10,7 @@ namespace Engine
 {
 class RigidbodyComponent;
 class SpriteRendererComponent;
-}
+}  // namespace Engine
 
 namespace Roguelike
 {
@@ -21,12 +21,9 @@ class DirectionalSpriteComponent : public Engine::Component
     explicit DirectionalSpriteComponent(Engine::GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
-    void SetTextures(const std::string& defaultTextureKey,
-                     const std::string& downTextureKey,
-                     const std::string& rightTextureKey,
-                     const std::string& upTextureKey,
+    void SetTextures(const std::string& defaultTextureKey, const std::string& downTextureKey,
+                     const std::string& rightTextureKey, const std::string& upTextureKey,
                      const std::string& leftTextureKey);
 
    private:

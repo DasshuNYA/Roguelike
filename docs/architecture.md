@@ -25,15 +25,16 @@ This split keeps the game logic from becoming tied to low-level engine details.
 5. destroy objects that were marked for removal;
 6. restart the scene if requested.
 
-`GameWorld` owns active `GameObject` instances. A paused world updates only objects that
-were explicitly marked as pause-ignored. The UI object uses this so menus and overlays
-continue to work while gameplay is paused.
+`GameWorld` owns active `GameObject` instances through `unique_ptr`, and each object owns
+its components the same way. A paused world updates only objects that were explicitly
+marked as pause-ignored. The UI object uses this so menus and overlays continue to work
+while gameplay is paused.
 
 ## Components
 
 Each `GameObject` is built from small components:
 
-- `TransformComponent` stores position, rotation, scale, and parent-child transforms;
+- `TransformComponent` stores an object's world position;
 - `SpriteRendererComponent` draws textured sprites;
 - collider components provide collision bounds;
 - `RigidbodyComponent` stores physics velocity;
@@ -45,12 +46,12 @@ different game components and configuration.
 
 ## Resources
 
-`ResourceSystem` stores shared textures, texture maps, and sound buffers by string keys.
+`ResourceSystem` stores shared textures and sound buffers by string keys.
 `GameResourceLoader` is the game-specific loading point and maps those keys to files in
 `Roguelike/Resources`.
 
-The resource system logs missing assets and returns `nullptr` for invalid requests instead
-of silently dereferencing missing data.
+Resources are stored by value, so their lifetime is automatic and no manual `new`/`delete`
+is needed. Missing assets are logged and invalid requests return `nullptr`.
 
 ## Configuration
 
@@ -69,6 +70,6 @@ coded deep inside gameplay classes.
 
 ## Tests
 
-`EngineTest` currently covers `Vector2D`, the small math type used by movement, physics,
-and gameplay helpers. The test project is intentionally separate from `Roguelike` so engine
-code can be verified without starting the full game.
+`EngineTest` covers `Vector2D` and typed `SaveSystem` behavior. The test project is
+intentionally separate from `Roguelike` so engine code can be verified without starting
+the full game.

@@ -7,6 +7,7 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -23,7 +24,6 @@ class GameWorld
     void Render();
     void LateUpdate();
 
-    GameObject* CreateGameObject();
     GameObject* CreateGameObject(std::string name);
 
     void DestroyGameObject(GameObject* gameObject);
@@ -36,7 +36,6 @@ class GameWorld
     void RemovePauseIgnoredGameObject(GameObject* gameObject);
 
     void Clear();
-    void Print() const;
 
    private:
     GameWorld() {}
@@ -55,8 +54,8 @@ class GameWorld
 
     float fixedCounter = 0.0f;
 
-    std::vector<GameObject*> gameObjects = {};
-    std::vector<GameObject*> markedToDestroyGameObjects = {};
-    std::vector<GameObject*> pauseIgnoredGameObjects = {};
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    std::vector<GameObject*> markedToDestroyGameObjects;
+    std::vector<GameObject*> pauseIgnoredGameObjects;
 };
 }  // namespace Engine

@@ -14,7 +14,6 @@ class DeathComponent : public Component
     DeathComponent(GameObject* gameObject);
 
     void Update(float deltaTime) override;
-    void Render() override;
 
    private:
     StatsComponent* stats = nullptr;

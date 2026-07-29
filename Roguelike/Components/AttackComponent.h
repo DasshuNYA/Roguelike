@@ -13,9 +13,6 @@ class AttackComponent : public Component
    public:
     AttackComponent(GameObject* gameObject);
 
-    void Update(float deltaTime) override;
-    void Render() override;
-
     void SetAttackPower(float newAttackPower);
     float GetAttackPower() const;
 

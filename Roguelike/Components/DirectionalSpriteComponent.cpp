@@ -35,8 +35,6 @@ void DirectionalSpriteComponent::Update(float deltaTime)
     ApplyTexture(GetDirectionFromVelocity());
 }
 
-void DirectionalSpriteComponent::Render() {}
-
 void DirectionalSpriteComponent::SetTextures(const std::string& defaultTexture,
                                              const std::string& downTexture,
                                              const std::string& rightTexture,
