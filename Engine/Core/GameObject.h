@@ -6,6 +6,7 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <type_traits>

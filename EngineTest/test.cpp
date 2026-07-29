@@ -3,14 +3,14 @@
 #include "SaveSystem.h"
 #include "Vector.h"
 
-TEST(VectorTests, ZeroContructor)
+TEST(VectorTests, ZeroConstructor)
 {
     Engine::Vector2D<float> vector;
     EXPECT_EQ(vector.x, 0);
     EXPECT_EQ(vector.y, 0);
 }
 
-TEST(VectorTests, Contructor)
+TEST(VectorTests, Constructor)
 {
     Engine::Vector2D<float> vector(5.f, -3.f);
     EXPECT_EQ(vector.x, 5.f);
@@ -106,7 +106,7 @@ TEST(VectorTests, GetLength)
 {
     Engine::Vector2D<float> first(4.f, -3.f);
 
-    EXPECT_EQ(first.GetLength(), 5.f);
+    EXPECT_FLOAT_EQ(first.GetLength(), 5.f);
 }
 
 TEST(SaveSystemTests, StoresTypedValues)
