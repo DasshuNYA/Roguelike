@@ -5,16 +5,10 @@
     <ClCompile Include="Characters\Character.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="Characters\Creeper.cpp">
-      <Filter>Characters</Filter>
-    </ClCompile>
     <ClCompile Include="Characters\Enemy.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
     <ClCompile Include="Characters\Player.cpp">
-      <Filter>Characters</Filter>
-    </ClCompile>
-    <ClCompile Include="Characters\Warrior.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
     <ClCompile Include="Components\AttackComponent.cpp">
@@ -30,6 +24,9 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Components\PlayerMovementComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\PlayerItemEffectsComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Components\PlayerSearchComponent.cpp">
@@ -124,16 +121,10 @@
     <ClInclude Include="Characters\Character.h">
       <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="Characters\Creeper.h">
-      <Filter>Characters</Filter>
-    </ClInclude>
     <ClInclude Include="Characters\Enemy.h">
       <Filter>Characters</Filter>
     </ClInclude>
     <ClInclude Include="Characters\Player.h">
-      <Filter>Characters</Filter>
-    </ClInclude>
-    <ClInclude Include="Characters\Warrior.h">
       <Filter>Characters</Filter>
     </ClInclude>
     <ClInclude Include="Components\AttackComponent.h">
@@ -149,6 +140,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\PlayerMovementComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\PlayerItemEffectsComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\PlayerSearchComponent.h">

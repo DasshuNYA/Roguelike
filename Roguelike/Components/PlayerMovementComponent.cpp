@@ -3,10 +3,12 @@
 #include "pch.h"
 #include "PlayerMovementComponent.h"
 
-#include "GameObject.h"
-
 #include "GameConfig.h"
+#include "GameObject.h"
+#include "InputComponent.h"
+#include "RigidbodyComponent.h"
 #include "StatsComponent.h"
+#include "Vector.h"
 
 #include <algorithm>
 
@@ -51,7 +53,7 @@ void PlayerMovementComponent::Update(float deltaTime)
 void PlayerMovementComponent::SetSpeed(float newSpeed)
 {
     // Speed potions can increase movement, but the cap prevents runaway saved values.
-    speed = std::clamp(newSpeed, 0.0f, GameConfig::MaxPlayerMoveSpeed);
+    speed = std::clamp(newSpeed, 0.0f, GameConfig::PlayerEntity.maxMoveSpeed);
 }
 
 float PlayerMovementComponent::GetSpeed() const { return speed; }

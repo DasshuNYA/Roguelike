@@ -4,13 +4,12 @@
 #include "EnemySpawner.h"
 
 #include "Character.h"
-#include "Creeper.h"
+#include "Enemy.h"
 #include "GameConfig.h"
 #include "GameObject.h"
 #include "Logger.h"
 #include "MazeNavigation.h"
 #include "TransformComponent.h"
-#include "Warrior.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -18,8 +17,8 @@
 namespace Roguelike
 {
 std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
-    const EnemySpawnSettings& settings, const std::vector<Engine::Vector2Df>& floorPositions,
-    Engine::GameObject* player)
+    const GameConfig::EnemyConfig& config, int count,
+    const std::vector<Engine::Vector2Df>& floorPositions, Engine::GameObject* player)
 {
     std::vector<std::unique_ptr<Character>> spawnedEnemies;
 
@@ -37,10 +36,10 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
 
     int spawnedCount = 0;
     int attempts = 0;
-    int maxAttempts = settings.count * GameConfig::SpawnMaxAttemptsMultiplier;
+    int maxAttempts = count * GameConfig::SpawnMaxAttemptsMultiplier;
 
     // Keep positions between calls so different enemy types cannot share one tile.
-    while (spawnedCount < settings.count && attempts < maxAttempts)
+    while (spawnedCount < count && attempts < maxAttempts)
     {
         attempts++;
 
@@ -51,7 +50,7 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
             continue;
         }
 
-        if (!IsPositionFarEnoughFromPlayer(position, player, settings.minDistanceFromPlayer))
+        if (!IsPositionFarEnoughFromPlayer(position, player, config.spawn.minDistanceFromPlayer))
         {
             continue;
         }
@@ -61,19 +60,14 @@ std::vector<std::unique_ptr<Character>> EnemySpawner::Spawn(
             continue;
         }
 
-        std::unique_ptr<Character> enemy = CreateEnemy(settings.enemyType, player, position);
-
-        if (enemy == nullptr)
-        {
-            continue;
-        }
+        auto enemy = std::make_unique<Enemy>(player, config, position.x, position.y);
 
         spawnedEnemies.push_back(std::move(enemy));
         usedPositions.push_back(position);
         spawnedCount++;
     }
 
-    LOG_INFO("EnemySpawner spawned enemies: " + std::to_string(spawnedCount));
+    LOG_INFO(std::string(config.character.name) + " spawned: " + std::to_string(spawnedCount));
 
     return spawnedEnemies;
 }
@@ -117,21 +111,4 @@ bool EnemySpawner::IsPositionReachableFromPlayer(const Engine::Vector2Df& positi
                 .empty();
 }
 
-std::unique_ptr<Character> EnemySpawner::CreateEnemy(EnemyType enemyType,
-                                                     Engine::GameObject* player,
-                                                     const Engine::Vector2Df& position) const
-{
-    switch (enemyType)
-    {
-        case EnemyType::Creeper:
-            return std::make_unique<Creeper>(player, position.x, position.y);
-
-        case EnemyType::Warrior:
-            return std::make_unique<Warrior>(player, position.x, position.y);
-
-        default:
-            LOG_WARN("EnemySpawner received unknown enemy type.");
-            return nullptr;
-    }
-}
 }  // namespace Roguelike

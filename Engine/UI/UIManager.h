@@ -24,10 +24,8 @@ class UIManager
         return reference;
     }
 
-    void HandleEvent(const sf::Event& event);
     void Update(float deltaTime);
     void Draw(sf::RenderWindow& window);
-    void Clear();
 
    private:
     std::vector<std::unique_ptr<UIElement>> elements;

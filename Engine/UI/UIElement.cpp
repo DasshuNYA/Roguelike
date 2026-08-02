@@ -5,8 +5,6 @@
 
 namespace Engine
 {
-void UIElement::HandleEvent(const sf::Event& event) {}
-
 void UIElement::Update(float deltaTime) { animation.Update(deltaTime); }
 
 void UIElement::Show() { animation.Show(); }

@@ -4,12 +4,22 @@
 #include "GameUIComponent.h"
 
 #include "Engine.h"
+#include "EquipmentPanel.h"
 #include "GameConfig.h"
 #include "GameNotifications.h"
+#include "GameObject.h"
+#include "GameScreenOverlay.h"
 #include "GameWorld.h"
+#include "HotbarPanel.h"
+#include "HUD.h"
+#include "InventoryComponent.h"
+#include "InventoryPanel.h"
+#include "ItemDescriptionPanel.h"
 #include "LevelProgress.h"
 #include "PlayerMovementComponent.h"
+#include "PlayerItemEffectsComponent.h"
 #include "PlayerRunSnapshot.h"
+#include "PopupMessage.h"
 #include "RenderSystem.h"
 #include "SaveSystem.h"
 #include "StatsComponent.h"
@@ -34,7 +44,24 @@ const float QuickFeedbackSeconds = 1.5f;
 
 float ClampPlayerArmor(float armor)
 {
-    return std::clamp(armor, 0.0f, GameConfig::PlayerArmor);
+    return std::clamp(armor, 0.0f, GameConfig::PlayerEntity.character.stats.maxArmor);
+}
+
+std::string GetItemEffectMessage(ItemEffectResult result, const ItemData& itemData)
+{
+    switch (result)
+    {
+        case ItemEffectResult::HealthRestored:
+            return "Health restored";
+        case ItemEffectResult::AttackIncreased:
+            return "Attack increased";
+        case ItemEffectResult::SpeedIncreased:
+            return "Speed increased";
+        case ItemEffectResult::None:
+            return "Used: " + std::string(itemData.name);
+    }
+
+    return "Used: " + std::string(itemData.name);
 }
 }  // namespace
 
@@ -43,25 +70,30 @@ GameUIComponent::GameUIComponent(Engine::GameObject* gameObject) : Component(gam
     font.loadFromFile(GameConfig::MainUIFontPath);
     titleFont.loadFromFile(GameConfig::TitleFontPath);
     CreateUI();
-
-    Engine::GameWorld::Instance()->SetPaused(true);
+    SetScreenState(ScreenState::MainMenu);
 }
+
+GameUIComponent::~GameUIComponent() = default;
 
 void GameUIComponent::SetPlayer(Engine::GameObject* player)
 {
     playerObject = player;
     playerInventory =
         playerObject != nullptr ? playerObject->GetComponent<InventoryComponent>() : nullptr;
-
-    Engine::StatsComponent* stats =
+    playerItemEffects = playerObject != nullptr
+                            ? playerObject->GetComponent<PlayerItemEffectsComponent>()
+                            : nullptr;
+    playerMovement =
+        playerObject != nullptr ? playerObject->GetComponent<PlayerMovementComponent>() : nullptr;
+    playerStats =
         playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
 
-    if (stats != nullptr)
+    if (playerStats != nullptr)
     {
         // Stats drive HUD updates by event; the frame update only refreshes objective text.
-        stats->AddStatsChangedListener(
-            [this](float health, float armor) { UpdateHUDStats(health, armor); });
-        UpdateHUDStats(stats->GetHealth(), stats->GetArmor());
+        playerStats->AddStatsChangedListener([this](float health, float armor)
+                                             { UpdateHUDStats(health, armor); });
+        UpdateHUDStats(playerStats->GetHealth(), playerStats->GetArmor());
     }
 
     RestorePlayerRunState();
@@ -73,26 +105,16 @@ void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& 
     levelNumber = level;
     totalEnemyCount = static_cast<int>(objectiveEnemies.size());
     aliveEnemyCount = totalEnemyCount;
-    isLevelComplete = false;
 
     if (levelNumber > 1)
     {
-        isMainMenuOpen = false;
-
-        if (overlay != nullptr)
-        {
-            overlay->HideOverlay();
-        }
-
-        Engine::GameWorld::Instance()->SetPaused(false);
+        SetScreenState(ScreenState::Playing);
         ShowPopupMessage("Level " + std::to_string(levelNumber), LevelPopupSeconds);
     }
 }
 
 void GameUIComponent::HandleEvent(const sf::Event& event)
 {
-    uiManager.HandleEvent(event);
-
     if (event.type == sf::Event::KeyPressed)
     {
         HandleKeyPressed(event.key.code);
@@ -144,8 +166,48 @@ void GameUIComponent::CreateUI()
     descriptionPanel = &uiManager.CreateElement<ItemDescriptionPanel>(font);
     popup = &uiManager.CreateElement<PopupMessage>(font);
     overlay = &uiManager.CreateElement<GameScreenOverlay>(font, titleFont);
+}
 
-    overlay->ShowMainMenu();
+void GameUIComponent::SetScreenState(ScreenState newState)
+{
+    screenState = newState;
+
+    if (newState != ScreenState::Playing)
+    {
+        CloseInventory();
+    }
+
+    if (overlay != nullptr)
+    {
+        switch (newState)
+        {
+            case ScreenState::MainMenu:
+                overlay->ShowMainMenu();
+                break;
+            case ScreenState::Paused:
+                overlay->ShowPause();
+                break;
+            case ScreenState::GameOver:
+                overlay->ShowGameOver();
+                break;
+            case ScreenState::LevelComplete:
+                overlay->ShowLevelCleared(levelNumber + 1);
+                break;
+            case ScreenState::Playing:
+                overlay->HideOverlay();
+                break;
+        }
+    }
+
+    SyncWorldPause();
+}
+
+bool GameUIComponent::IsGameplayScreen() const { return screenState == ScreenState::Playing; }
+
+void GameUIComponent::SyncWorldPause()
+{
+    bool isInventoryOpen = inventory != nullptr && inventory->IsOpen();
+    Engine::GameWorld::Instance()->SetPaused(!IsGameplayScreen() || isInventoryOpen);
 }
 
 void GameUIComponent::UpdateHUD()
@@ -165,13 +227,13 @@ void GameUIComponent::UpdateHUDStats(float health, float armor)
         return;
     }
 
-    hud->SetStats(health, GameConfig::PlayerHealth, ClampPlayerArmor(armor),
-                  GameConfig::PlayerArmor);
+    hud->SetStats(health, GameConfig::PlayerEntity.character.stats.maxHealth,
+                  ClampPlayerArmor(armor), GameConfig::PlayerEntity.character.stats.maxArmor);
 }
 
 void GameUIComponent::UpdateLevelObjective(float deltaTime)
 {
-    if (isMainMenuOpen || isPauseOpen || isGameOver || isLevelComplete)
+    if (!IsGameplayScreen())
     {
         return;
     }
@@ -191,15 +253,7 @@ void GameUIComponent::UpdateLevelObjective(float deltaTime)
         return;
     }
 
-    isLevelComplete = true;
-    CloseInventory();
-
-    if (overlay != nullptr)
-    {
-        overlay->ShowLevelCleared(levelNumber + 1);
-    }
-
-    Engine::GameWorld::Instance()->SetPaused(true);
+    SetScreenState(ScreenState::LevelComplete);
 }
 
 void GameUIComponent::UpdateInventory()
@@ -256,49 +310,50 @@ int GameUIComponent::GetKnownItemCount(const ItemData* itemData) const
 
 void GameUIComponent::HandleKeyPressed(sf::Keyboard::Key key)
 {
-    bool wasGameOver = isGameOver;
+    ScreenState previousState = screenState;
     HandleDeathState();
-    if (!wasGameOver && isGameOver)
+    if (previousState != ScreenState::GameOver && screenState == ScreenState::GameOver)
     {
         return;
     }
 
-    // Modal screens consume keys before gameplay-facing UI can react.
-    if (isGameOver)
+    switch (screenState)
     {
-        if (key == sf::Keyboard::Space)
-        {
-            HandleGameOverRestartPressed();
-        }
-        return;
-    }
+        case ScreenState::GameOver:
+            if (key == sf::Keyboard::Space)
+            {
+                HandleGameOverRestartPressed();
+            }
+            return;
 
-    if (isLevelComplete)
-    {
-        if (key == sf::Keyboard::Space)
-        {
-            HandleLevelCompleteNextPressed();
-        }
-        return;
-    }
+        case ScreenState::LevelComplete:
+            if (key == sf::Keyboard::Space)
+            {
+                HandleLevelCompleteNextPressed();
+            }
+            return;
 
-    if (isMainMenuOpen)
-    {
-        if (key == sf::Keyboard::Space)
-        {
-            HandleStartPressed();
-        }
-        return;
+        case ScreenState::MainMenu:
+            if (key == sf::Keyboard::Space)
+            {
+                HandleStartPressed();
+            }
+            return;
+
+        case ScreenState::Paused:
+            if (key == sf::Keyboard::Escape)
+            {
+                HandlePausePressed();
+            }
+            return;
+
+        case ScreenState::Playing:
+            break;
     }
 
     if (key == sf::Keyboard::Escape)
     {
         HandlePausePressed();
-        return;
-    }
-
-    if (isPauseOpen)
-    {
         return;
     }
 
@@ -314,8 +369,7 @@ void GameUIComponent::HandleKeyPressed(sf::Keyboard::Key key)
 void GameUIComponent::HandleMouseButtonPressed(const sf::Event::MouseButtonEvent& mouseButton,
                                                sf::RenderWindow& window)
 {
-    if (isMainMenuOpen || isPauseOpen || isGameOver || isLevelComplete ||
-        inventory == nullptr || !inventory->IsOpen())
+    if (!IsGameplayScreen() || inventory == nullptr || !inventory->IsOpen())
     {
         return;
     }
@@ -337,14 +391,7 @@ void GameUIComponent::HandleMouseButtonPressed(const sf::Event::MouseButtonEvent
 
 void GameUIComponent::HandleStartPressed()
 {
-    isMainMenuOpen = false;
-
-    if (overlay != nullptr)
-    {
-        overlay->HideOverlay();
-    }
-
-    Engine::GameWorld::Instance()->SetPaused(false);
+    SetScreenState(ScreenState::Playing);
 
     if (popup != nullptr)
     {
@@ -357,29 +404,11 @@ void GameUIComponent::HandlePausePressed()
     if (inventory != nullptr && inventory->IsOpen())
     {
         CloseInventory();
-        Engine::GameWorld::Instance()->SetPaused(false);
+        SyncWorldPause();
         return;
     }
 
-    isPauseOpen = !isPauseOpen;
-
-    if (isPauseOpen)
-    {
-        if (overlay != nullptr)
-        {
-            overlay->ShowPause();
-        }
-
-        Engine::GameWorld::Instance()->SetPaused(true);
-        return;
-    }
-
-    if (overlay != nullptr)
-    {
-        overlay->HideOverlay();
-    }
-
-    Engine::GameWorld::Instance()->SetPaused(false);
+    SetScreenState(screenState == ScreenState::Paused ? ScreenState::Playing : ScreenState::Paused);
 }
 
 void GameUIComponent::HandleInventoryTogglePressed()
@@ -390,7 +419,7 @@ void GameUIComponent::HandleInventoryTogglePressed()
     }
 
     ToggleInventory();
-    Engine::GameWorld::Instance()->SetPaused(inventory->IsOpen());
+    SyncWorldPause();
 }
 
 void GameUIComponent::HandleInventoryClick(sf::Vector2f mousePosition)
@@ -448,45 +477,32 @@ void GameUIComponent::HandleHotbarKey(sf::Keyboard::Key key)
         return;
     }
 
-    std::string effectMessage = ApplyHotbarItemEffect(*useResult.itemData);
+    ItemEffectResult effectResult = playerItemEffects != nullptr
+                                        ? playerItemEffects->ApplyConsumable(*useResult.itemData)
+                                        : ItemEffectResult::None;
 
     if (playerInventory != nullptr)
     {
         playerInventory->RemoveOneItem(useResult.itemData);
     }
 
-    popup->ShowMessage(effectMessage, QuickFeedbackSeconds);
+    popup->ShowMessage(GetItemEffectMessage(effectResult, *useResult.itemData),
+                       QuickFeedbackSeconds);
 }
 
 void GameUIComponent::HandleDeathState()
 {
-    if (isGameOver || playerObject == nullptr)
+    if (screenState == ScreenState::GameOver || playerObject == nullptr)
     {
         return;
     }
 
-    Engine::StatsComponent* stats = playerObject->GetComponent<Engine::StatsComponent>();
-
-    if (stats == nullptr || !stats->IsDead())
+    if (playerStats == nullptr || !playerStats->IsDead())
     {
         return;
     }
 
-    isGameOver = true;
-
-    if (inventory != nullptr && inventory->IsOpen())
-    {
-        CloseInventory();
-    }
-
-    ClearSelectedItem();
-
-    if (overlay != nullptr)
-    {
-        overlay->ShowGameOver();
-    }
-
-    Engine::GameWorld::Instance()->SetPaused(true);
+    SetScreenState(ScreenState::GameOver);
 }
 
 void GameUIComponent::HandleGameOverRestartPressed()
@@ -501,85 +517,6 @@ void GameUIComponent::HandleLevelCompleteNextPressed()
     SavePlayerRunState();
     LevelProgress::Advance();
     Engine::Engine::Instance()->RequestSceneRestart();
-}
-
-std::string GameUIComponent::ApplyHotbarItemEffect(const ItemData& itemData)
-{
-    Engine::StatsComponent* stats =
-        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
-
-    if (itemData.effectType == ItemEffectType::RestoreHealth && stats != nullptr)
-    {
-        float restoredHealth =
-            std::min(GameConfig::PlayerHealth, stats->GetHealth() + itemData.effectAmount);
-        stats->SetStats(restoredHealth, ClampPlayerArmor(stats->GetArmor()));
-        return "Health restored";
-    }
-
-    if (itemData.effectType == ItemEffectType::IncreaseAttack && stats != nullptr)
-    {
-        stats->SetAttackPower(stats->GetAttackPower() + itemData.effectAmount);
-        return "Attack increased";
-    }
-
-    if (itemData.effectType == ItemEffectType::IncreaseSpeed && playerObject != nullptr)
-    {
-        PlayerMovementComponent* movement = playerObject->GetComponent<PlayerMovementComponent>();
-
-        if (movement != nullptr)
-        {
-            movement->SetSpeed(
-                std::min(GameConfig::MaxPlayerMoveSpeed,
-                         movement->GetSpeed() + itemData.effectAmount));
-            return "Speed increased";
-        }
-    }
-
-    return "Used: " + std::string(itemData.name);
-}
-
-void GameUIComponent::ApplyEquipmentChange(const ItemData* equippedItem,
-                                           const ItemData* replacedItem)
-{
-    ApplyEquipmentBonuses(replacedItem, -1.0f);
-    ApplyEquipmentBonuses(equippedItem, 1.0f);
-}
-
-void GameUIComponent::ApplyEquipmentBonuses(const ItemData* itemData, float direction)
-{
-    if (itemData == nullptr || playerObject == nullptr)
-    {
-        return;
-    }
-
-    Engine::StatsComponent* stats = playerObject->GetComponent<Engine::StatsComponent>();
-    if (stats != nullptr)
-    {
-        if (itemData->armorBonus != 0.0f)
-        {
-            stats->SetStats(stats->GetHealth(),
-                            ClampPlayerArmor(stats->GetArmor() +
-                                             itemData->armorBonus * direction));
-        }
-
-        if (itemData->attackBonus != 0.0f)
-        {
-            stats->SetAttackPower(std::max(0.0f, stats->GetAttackPower() +
-                                                     itemData->attackBonus * direction));
-        }
-    }
-
-    if (itemData->speedBonus != 0.0f)
-    {
-        PlayerMovementComponent* movement = playerObject->GetComponent<PlayerMovementComponent>();
-
-        if (movement != nullptr)
-        {
-            movement->SetSpeed(std::clamp(movement->GetSpeed() +
-                                              itemData->speedBonus * direction,
-                                          0.0f, GameConfig::MaxPlayerMoveSpeed));
-        }
-    }
 }
 
 void GameUIComponent::RestorePlayerRunState()
@@ -610,21 +547,15 @@ void GameUIComponent::RestorePlayerRunState()
         equipment->SetSavedSlots(snapshot->equipmentSlots);
     }
 
-    Engine::StatsComponent* stats =
-        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
-
-    if (stats != nullptr)
+    if (playerStats != nullptr)
     {
-        stats->SetStats(snapshot->health, ClampPlayerArmor(snapshot->armor));
-        stats->SetAttackPower(snapshot->attackPower);
+        playerStats->SetStats(snapshot->health, ClampPlayerArmor(snapshot->armor));
+        playerStats->SetAttackPower(snapshot->attackPower);
     }
 
-    PlayerMovementComponent* movement =
-        playerObject != nullptr ? playerObject->GetComponent<PlayerMovementComponent>() : nullptr;
-
-    if (movement != nullptr)
+    if (playerMovement != nullptr)
     {
-        movement->SetSpeed(snapshot->movementSpeed);
+        playerMovement->SetSpeed(snapshot->movementSpeed);
     }
 }
 
@@ -648,22 +579,16 @@ void GameUIComponent::SavePlayerRunState()
         snapshot.equipmentSlots = equipment->GetSavedSlots();
     }
 
-    Engine::StatsComponent* stats =
-        playerObject != nullptr ? playerObject->GetComponent<Engine::StatsComponent>() : nullptr;
-
-    if (stats != nullptr)
+    if (playerStats != nullptr)
     {
-        snapshot.health = stats->GetHealth();
-        snapshot.armor = ClampPlayerArmor(stats->GetArmor());
-        snapshot.attackPower = stats->GetAttackPower();
+        snapshot.health = playerStats->GetHealth();
+        snapshot.armor = ClampPlayerArmor(playerStats->GetArmor());
+        snapshot.attackPower = playerStats->GetAttackPower();
     }
 
-    PlayerMovementComponent* movement =
-        playerObject != nullptr ? playerObject->GetComponent<PlayerMovementComponent>() : nullptr;
-
-    if (movement != nullptr)
+    if (playerMovement != nullptr)
     {
-        snapshot.movementSpeed = movement->GetSpeed();
+        snapshot.movementSpeed = playerMovement->GetSpeed();
     }
 
     Engine::SaveSystem::Instance()->SetValue(PlayerRunSnapshotKey, snapshot);
@@ -798,8 +723,12 @@ bool GameUIComponent::TryEquipSelectedItem(sf::Vector2f mousePosition)
     }
 
     equipment->CommitPlacement(preview, draggedItem.value());
-    ApplyEquipmentChange(equippedItem.data,
-                         preview.replacedItem.has_value() ? preview.replacedItem->data : nullptr);
+    if (playerItemEffects != nullptr)
+    {
+        playerItemEffects->ApplyEquipmentChange(equippedItem.data, preview.replacedItem.has_value()
+                                                                       ? preview.replacedItem->data
+                                                                       : nullptr);
+    }
     ShowPopupMessage("Equipped: " + equippedItem.GetName());
     return true;
 }
@@ -843,12 +772,11 @@ void GameUIComponent::DrawDraggedItem(sf::RenderWindow& window)
     const std::string textureKey = GetItemTextureKey(draggedItem->stack);
 
     if (!textureKey.empty() &&
-        UITextureUtils::DrawTexture(
-            window, textureKey,
-            {mousePosition.x - DraggedItemTextureSize * 0.5f,
-             mousePosition.y - DraggedItemTextureSize * 0.5f, DraggedItemTextureSize,
-             DraggedItemTextureSize},
-            DraggedItemTextureAlpha))
+        UITextureUtils::DrawTexture(window, textureKey,
+                                    {mousePosition.x - DraggedItemTextureSize * 0.5f,
+                                     mousePosition.y - DraggedItemTextureSize * 0.5f,
+                                     DraggedItemTextureSize, DraggedItemTextureSize},
+                                    DraggedItemTextureAlpha))
     {
         return;
     }

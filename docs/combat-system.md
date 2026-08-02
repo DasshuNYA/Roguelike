@@ -59,10 +59,11 @@ The character hierarchy is intentionally small:
 - `Character`
 - `Player`
 - `Enemy`
-- `Creeper`
-- `Warrior`
 
-Most behavior comes from components, not from deep inheritance. This keeps enemy types easy to extend and explain.
+`Character::BuildCharacter` adds rendering, physics, directional sprites, collision, stats, and
+death behavior shared by all characters. `Player` and `Enemy` add only their specific components.
+`Creeper` and `Warrior` are gameplay archetypes stored as rows in `GameConfig::EnemyTypes`, not
+empty subclasses. Most behavior therefore comes from components and data rather than inheritance.
 
 ## Player
 
@@ -152,7 +153,7 @@ This is important because wall textures can now have variants. Collision should 
 
 Spawner responsibilities:
 
-- choose enemy types;
+- receive an enemy configuration from the data table;
 - create the requested amount of enemies;
 - use floor positions from the generated maze;
 - keep enemies away from the player spawn;
@@ -165,8 +166,10 @@ Currently used enemy types:
 
 To add a new enemy type:
 
-1. Create a class derived from `Enemy`.
-2. Add configuration values in `GameConfig`.
-3. Load the enemy texture in `GameResourceLoader`.
-4. Add the type to `EnemySpawner`.
-5. Reuse the same component setup unless the enemy needs special behavior.
+1. Add the texture files and a `CharacterTextureSet` entry in `GameConfig`.
+2. Increase the size of `EnemyTypes` and append an `EnemyConfig` entry.
+3. Rebuild the project; `GameResourceLoader`, `DeveloperLevel`, and `EnemySpawner` already iterate
+   the configuration tables.
+
+A separate subclass is only justified when an enemy needs genuinely different behavior or
+components, not just different numbers or sprites.

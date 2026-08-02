@@ -91,30 +91,19 @@ void DeveloperLevel::SpawnEnemies()
     EnemySpawner enemySpawner;
     int extraEnemies = LevelProgress::GetLevel() - 1;
 
-    EnemySpawnSettings creeperSettings;
-    creeperSettings.count = GameConfig::CreeperSpawnCount + extraEnemies / 2;
-    creeperSettings.minDistanceFromPlayer = GameConfig::EnemyMinSpawnDistanceFromPlayer;
-    creeperSettings.enemyType = EnemyType::Creeper;
-
-    std::vector<std::unique_ptr<Character>> spawnedCreepers =
-        enemySpawner.Spawn(creeperSettings, floorPositions, playerObject);
-
-    EnemySpawnSettings warriorSettings;
-    warriorSettings.count = GameConfig::WarriorSpawnCount + extraEnemies;
-    warriorSettings.minDistanceFromPlayer = GameConfig::EnemyMinSpawnDistanceFromPlayer;
-    warriorSettings.enemyType = EnemyType::Warrior;
-
-    std::vector<std::unique_ptr<Character>> spawnedWarriors =
-        enemySpawner.Spawn(warriorSettings, floorPositions, playerObject);
-
-    for (auto& enemy : spawnedCreepers)
+    for (const GameConfig::EnemyConfig& config : GameConfig::EnemyTypes)
     {
-        enemies.push_back(std::move(enemy));
-    }
+        int additionalCount = config.spawn.levelsPerAdditionalEnemy > 0
+                                  ? extraEnemies / config.spawn.levelsPerAdditionalEnemy
+                                  : 0;
 
-    for (auto& enemy : spawnedWarriors)
-    {
-        enemies.push_back(std::move(enemy));
+        std::vector<std::unique_ptr<Character>> spawned = enemySpawner.Spawn(
+            config, config.spawn.baseCount + additionalCount, floorPositions, playerObject);
+
+        for (auto& enemy : spawned)
+        {
+            enemies.push_back(std::move(enemy));
+        }
     }
 }
 

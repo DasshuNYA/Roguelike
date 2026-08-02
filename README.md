@@ -37,7 +37,9 @@ Game entities are built from focused components:
 - `StatsComponent`, `AttackComponent`, and `DeathComponent` describe combat behavior;
 - UI panels are separate `UIElement` classes.
 
-This keeps classes small and avoids large inheritance chains. Inheritance is used mainly for broad game concepts such as `Character`, `Player`, `Enemy`, `Creeper`, and `Warrior`.
+This keeps classes small and avoids large inheritance chains. Inheritance is used only for the broad
+`Character`, `Player`, and `Enemy` concepts. `Creeper` and `Warrior` are data-driven enemy
+configurations rather than empty subclasses.
 
 ### Maze And Navigation
 

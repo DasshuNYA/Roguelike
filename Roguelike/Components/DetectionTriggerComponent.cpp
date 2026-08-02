@@ -5,8 +5,9 @@
 
 #include "GameObject.h"
 
-#include "RenderSystem.h"
 #include "PhysicsSystem.h"
+#include "RenderSystem.h"
+#include "TransformComponent.h"
 
 namespace Roguelike
 {

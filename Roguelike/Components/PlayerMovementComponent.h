@@ -3,10 +3,12 @@
 #pragma once
 
 #include "Component.h"
-#include "GameConfig.h"
-#include "InputComponent.h"
-#include "RigidbodyComponent.h"
-#include "Vector.h"
+
+namespace Engine
+{
+class InputComponent;
+class RigidbodyComponent;
+}  // namespace Engine
 
 namespace Roguelike
 {
@@ -24,6 +26,6 @@ class PlayerMovementComponent : public Engine::Component
     Engine::InputComponent* input = nullptr;
     Engine::RigidbodyComponent* rigidbody = nullptr;
 
-    float speed = GameConfig::PlayerMoveSpeed;
+    float speed = 0.0f;
 };
 }  // namespace Roguelike

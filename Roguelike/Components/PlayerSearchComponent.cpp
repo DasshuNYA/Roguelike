@@ -4,9 +4,12 @@
 #include "PlayerSearchComponent.h"
 
 #include "AttackComponent.h"
+#include "GameObject.h"
 #include "GameWorld.h"
 #include "MazeNavigation.h"
+#include "RigidbodyComponent.h"
 #include "StatsComponent.h"
+#include "TransformComponent.h"
 
 #include <algorithm>
 

@@ -39,6 +39,58 @@ struct CharacterTextureSet
     const char* upPath;
 };
 
+struct CharacterTextureConfig
+{
+    const char* baseTextureKey;
+    const char* idleTextureKey;
+    const char* downTextureKey;
+    const char* rightTextureKey;
+    const char* upTextureKey;
+    const char* leftTextureKey;
+};
+
+struct CharacterStatsConfig
+{
+    float maxHealth;
+    float maxArmor;
+    float attackPower;
+};
+
+struct CharacterMovementConfig
+{
+    float moveSpeed;
+    float linearDamping;
+};
+
+struct CharacterConfig
+{
+    const char* name;
+    CharacterTextureConfig textures;
+    CharacterStatsConfig stats;
+    CharacterMovementConfig movement;
+};
+
+struct PlayerConfig
+{
+    CharacterConfig character;
+    float maxMoveSpeed;
+    const char* projectileTextureKey;
+};
+
+struct EnemySpawnConfig
+{
+    int baseCount;
+    int levelsPerAdditionalEnemy;
+    float minDistanceFromPlayer;
+};
+
+struct EnemyConfig
+{
+    CharacterConfig character;
+    float detectionRadius;
+    EnemySpawnConfig spawn;
+};
+
 // Audio balance and playlist. Loader skips tracks that fail to load.
 inline constexpr float MusicVolume = 25.f;
 inline constexpr std::array<BackgroundTrackConfig, 4> BackgroundTracks = {
@@ -70,24 +122,20 @@ inline constexpr std::array<const char*, 8> WallTextureKeys = {
     {"wall_1", "wall_2", "wall_3", "wall_4", "wall_5", "wall_6", "wall_7", "wall_8"}};
 
 inline constexpr std::array<CharacterTextureSet, 3> CharacterTextures = {
-    {{"player", "Resources/Textures/Player.png",
-      "player_default", "Resources/Textures/Player_default.png",
-      "player_down", "Resources/Textures/Player_down.png",
-      "player_left", "Resources/Textures/Player_left.png",
-      "player_right", "Resources/Textures/Player_right.png",
-      "player_up", "Resources/Textures/Player_top.png"},
-     {"creeper", "Resources/Textures/Creeper.png",
-      "creeper_default", "Resources/Textures/Creeper_default.png",
-      "creeper_down", "Resources/Textures/Creeper_default.png",
-      "creeper_left", "Resources/Textures/Creeper_left.png",
-      "creeper_right", "Resources/Textures/Creeper_right.png",
-      "creeper_up", "Resources/Textures/Creeper_top.png"},
-     {"enemy", "Resources/Textures/Enemy.png",
-      "warrior_default", "Resources/Textures/Warrior_default.png",
-      "warrior_down", "Resources/Textures/Warrior_default.png",
-      "warrior_left", "Resources/Textures/Warrior_left.png",
-      "warrior_right", "Resources/Textures/Warrior_right.png",
-      "warrior_up", "Resources/Textures/Warrior_top.png"}}};
+    {{"player", "Resources/Textures/Player.png", "player_default",
+      "Resources/Textures/Player_default.png", "player_down", "Resources/Textures/Player_down.png",
+      "player_left", "Resources/Textures/Player_left.png", "player_right",
+      "Resources/Textures/Player_right.png", "player_up", "Resources/Textures/Player_top.png"},
+     {"creeper", "Resources/Textures/Creeper.png", "creeper_default",
+      "Resources/Textures/Creeper_default.png", "creeper_down",
+      "Resources/Textures/Creeper_default.png", "creeper_left",
+      "Resources/Textures/Creeper_left.png", "creeper_right",
+      "Resources/Textures/Creeper_right.png", "creeper_up", "Resources/Textures/Creeper_top.png"},
+     {"enemy", "Resources/Textures/Enemy.png", "warrior_default",
+      "Resources/Textures/Warrior_default.png", "warrior_down",
+      "Resources/Textures/Warrior_default.png", "warrior_left",
+      "Resources/Textures/Warrior_left.png", "warrior_right",
+      "Resources/Textures/Warrior_right.png", "warrior_up", "Resources/Textures/Warrior_top.png"}}};
 
 inline constexpr std::array<TextureConfig, 24> UITextures = {
     {{"player_projectile", "Resources/Textures/player_projectile.png", false},
@@ -120,12 +168,96 @@ inline constexpr TextureConfig DeadLightBackgroundTexture = {
 inline constexpr TextureConfig NextLevelBackgroundTexture = {
     "ui_next_level_background", "Resources/UI/next_level_background.png", false};
 
-// Player stats and initial maze cell.
-inline constexpr float PlayerHealth = 100.f;
-inline constexpr float PlayerArmor = 4.f;
-inline constexpr float PlayerAttackPower = 25.f;
-inline constexpr float PlayerMoveSpeed = 500.f;
-inline constexpr float MaxPlayerMoveSpeed = 740.f;
+// Entity definitions keep visuals, stats, movement, and spawn rules in data.
+inline constexpr PlayerConfig PlayerEntity = {
+    // Character.
+    {
+        "Player",
+        {
+            "player",          // Base texture.
+            "player_default",  // Standing still.
+            "player_down",
+            "player_right",
+            "player_up",
+            "player_left",
+        },
+        {
+            100.f,  // Maximum health.
+            4.f,    // Maximum armor.
+            25.f,   // Projectile attack power.
+        },
+        {
+            500.f,  // Movement speed.
+            0.f,    // No velocity damping for direct player input.
+        },
+    },
+    740.f,               // Maximum speed after bonuses.
+    "player_projectile"  // Projectile texture.
+};
+
+inline constexpr EnemyConfig CreeperEntity = {
+    // Character.
+    {
+        "Creeper",
+        {
+            "creeper",          // Base texture.
+            "creeper_default",  // Standing still.
+            "creeper_down",
+            "creeper_right",
+            "creeper_up",
+            "creeper_left",
+        },
+        {
+            50.f,  // Maximum health.
+            0.f,   // Maximum armor.
+            30.f,  // Melee attack power.
+        },
+        {
+            180.f,  // Movement speed.
+            1.f,    // Velocity damping.
+        },
+    },
+    250.f,  // Player detection radius.
+    // Spawn rules.
+    {
+        1,      // Enemies on the first level.
+        2,      // Add one enemy every two levels.
+        300.f,  // Minimum spawn distance from the player.
+    }};
+
+inline constexpr EnemyConfig WarriorEntity = {
+    // Character.
+    {
+        "Warrior",
+        {
+            "enemy",            // Base texture.
+            "warrior_default",  // Standing still.
+            "warrior_down",
+            "warrior_right",
+            "warrior_up",
+            "warrior_left",
+        },
+        {
+            100.f,  // Maximum health.
+            0.f,    // Maximum armor.
+            15.f,   // Melee attack power.
+        },
+        {
+            130.f,  // Movement speed.
+            1.f,    // Velocity damping.
+        },
+    },
+    250.f,  // Player detection radius.
+    // Spawn rules.
+    {
+        4,      // Enemies on the first level.
+        1,      // Add one enemy every level.
+        300.f,  // Minimum spawn distance from the player.
+    }};
+
+inline constexpr std::array<EnemyConfig, 2> EnemyTypes = {{CreeperEntity, WarriorEntity}};
+
+// Player effects and initial maze cell.
 inline constexpr float HealthPotionRestore = 35.f;
 inline constexpr float AttackPotionBonus = 10.f;
 inline constexpr float SpeedPotionBonus = 60.f;
@@ -136,28 +268,9 @@ inline constexpr float PlayerStartTileY = 1.f;
 inline constexpr float ProjectileSpeed = 700.f;
 inline constexpr float ProjectileLifeTime = 1.5f;
 inline constexpr float ProjectileRadius = 4.f;
-inline constexpr const char* PlayerProjectileTextureKey = "player_projectile";
 inline constexpr float ProjectileTextureWidth = 64.f;
 inline constexpr float ProjectileTextureHeight = 34.f;
-
-// Enemy stats. Detection radius controls when enemies start pathfinding toward the player.
-inline constexpr float CreeperHealth = 50.f;
-inline constexpr float CreeperArmor = 0.f;
-inline constexpr float CreeperAttackPower = 30.f;
-inline constexpr float CreeperSpeed = 180.f;
-inline constexpr float CreeperDetectionRadius = 250.f;
-
-inline constexpr float WarriorHealth = 100.f;
-inline constexpr float WarriorArmor = 0.f;
-inline constexpr float WarriorAttackPower = 15.f;
-inline constexpr float WarriorSpeed = 130.f;
-inline constexpr float WarriorDetectionRadius = 250.f;
-
-// Spawn counts are baseline values; higher levels add extra enemies.
-inline constexpr int CreeperSpawnCount = 1;
-inline constexpr int WarriorSpawnCount = 4;
 inline constexpr int SpawnMaxAttemptsMultiplier = 40;
-inline constexpr float EnemyMinSpawnDistanceFromPlayer = 300.f;
 
 // Items and inventory layout.
 inline constexpr int ItemSpawnCount = 18;
@@ -195,8 +308,8 @@ inline constexpr std::array<ItemData, 6> Items = {
       EquipmentSlotType::None, 1, 220, 105, 50, "ui_item_attack_potion",
       ItemEffectType::IncreaseAttack, AttackPotionBonus},
      {"Boots", "Soft leather boots made for quick exits.", ItemTag::Equipment,
-      EquipmentSlotType::Boots, 1, 150, 95, 55, "ui_item_boots", ItemEffectType::None, 0.0f,
-      0.0f, 0.0f, 40.0f}}};
+      EquipmentSlotType::Boots, 1, 150, 95, 55, "ui_item_boots", ItemEffectType::None, 0.0f, 0.0f,
+      0.0f, 40.0f}}};
 
 }  // namespace GameConfig
 }  // namespace Roguelike

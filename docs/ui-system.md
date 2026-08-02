@@ -7,6 +7,7 @@ The UI is built from separate screens and panels instead of one large UI file.
 - `Engine::UIElement` is the base class for drawable/updateable UI objects.
 - `Engine::UIManager` owns UI elements and updates/draws visible elements in order.
 - `GameUIComponent` connects gameplay state to the game UI.
+- `PlayerItemEffectsComponent` applies consumable and equipment effects to the player.
 - `HUD` draws health, armor, level, and enemy objective.
 - `InventoryPanel` draws paged inventory slots.
 - `EquipmentPanel` accepts equipment items.
@@ -17,7 +18,7 @@ The UI is built from separate screens and panels instead of one large UI file.
 ## State Handling
 
 The engine forwards SFML events through `GameWorld` to active game objects. `GameUIComponent`
-receives those events and handles modal states first:
+receives those events and routes them using one `ScreenState` value:
 
 1. game over;
 2. level complete;
@@ -29,6 +30,9 @@ This order prevents gameplay input from leaking through menu screens. When inven
 pause, game over, or level-complete screens are active, `GameWorld::SetPaused(true)` blocks
 normal gameplay updates. The UI object is marked as pause-ignored, so it still receives
 input and can close menus or restart the scene.
+
+`MainMenu`, `Playing`, `Paused`, `GameOver`, and `LevelComplete` are mutually exclusive.
+This avoids contradictory combinations that were possible with several independent flags.
 
 ## Event-Driven HUD
 
@@ -66,8 +70,8 @@ The inventory remains the source of truth for carried items:
 - `HotbarPanel` stores `ItemData` shortcuts only, and reads counts from inventory every update;
 - `EquipmentPanel` stores equipped items only after `GameUIComponent` removes one item from
   inventory; replaced equipment is returned to inventory before the slot is committed;
-- equipment bonuses are applied by `GameUIComponent` when a slot changes, and removed when
-  that slot is replaced.
+- equipment and consumable effects are applied by `PlayerItemEffectsComponent`; UI only
+  coordinates the selected item and displays the result.
 
 Inventory supports:
 
@@ -108,4 +112,5 @@ The important design point is separation:
 - `InventoryComponent` stores data;
 - UI panels draw and interact with data;
 - `GameUIComponent` coordinates state transitions;
+- `PlayerItemEffectsComponent` changes player stats from item data;
 - `GameWorld` pauses gameplay while modal UI is active.

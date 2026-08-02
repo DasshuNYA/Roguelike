@@ -9,6 +9,11 @@ class GameObject;
 
 namespace Roguelike
 {
+namespace GameConfig
+{
+struct CharacterConfig;
+}
+
 class Character
 {
    public:
@@ -17,6 +22,8 @@ class Character
     Engine::GameObject* GetGameObject() const;
 
    protected:
+    void BuildCharacter(const GameConfig::CharacterConfig& config, float x, float y);
+
     Engine::GameObject* gameObject = nullptr;
 };
 }  // namespace Roguelike

@@ -3,15 +3,7 @@
 #pragma once
 
 #include "Component.h"
-#include "EquipmentPanel.h"
-#include "GameObject.h"
-#include "GameScreenOverlay.h"
-#include "HUD.h"
-#include "HotbarPanel.h"
-#include "InventoryComponent.h"
-#include "InventoryPanel.h"
-#include "ItemDescriptionPanel.h"
-#include "PopupMessage.h"
+#include "ItemData.h"
 #include "UIItemView.h"
 #include "UIManager.h"
 
@@ -21,12 +13,40 @@
 #include <string>
 #include <vector>
 
+namespace Engine
+{
+class GameObject;
+class StatsComponent;
+}  // namespace Engine
+
 namespace Roguelike
 {
+class EquipmentPanel;
+class GameScreenOverlay;
+class HotbarPanel;
+class HUD;
+class InventoryComponent;
+class InventoryPanel;
+class ItemDescriptionPanel;
+class PlayerItemEffectsComponent;
+class PlayerMovementComponent;
+class PopupMessage;
+
 class GameUIComponent : public Engine::Component
 {
+   private:
+    enum class ScreenState
+    {
+        MainMenu,
+        Playing,
+        Paused,
+        GameOver,
+        LevelComplete
+    };
+
    public:
     explicit GameUIComponent(Engine::GameObject* gameObject);
+    ~GameUIComponent() override;
 
     void SetPlayer(Engine::GameObject* player);
     void SetLevelObjective(const std::vector<Engine::GameObject*>& enemies, int level);
@@ -38,6 +58,9 @@ class GameUIComponent : public Engine::Component
    private:
     // UI creation and frame refresh.
     void CreateUI();
+    void SetScreenState(ScreenState newState);
+    bool IsGameplayScreen() const;
+    void SyncWorldPause();
     void UpdateHUD();
     void UpdateHUDStats(float health, float armor);
     void UpdateInventory();
@@ -61,10 +84,7 @@ class GameUIComponent : public Engine::Component
     void HandleGameOverRestartPressed();
     void HandleLevelCompleteNextPressed();
 
-    // Consumable effects and run persistence between levels.
-    std::string ApplyHotbarItemEffect(const ItemData& itemData);
-    void ApplyEquipmentChange(const ItemData* equippedItem, const ItemData* replacedItem);
-    void ApplyEquipmentBonuses(const ItemData* itemData, float direction);
+    // Run persistence between levels.
     void RestorePlayerRunState();
     void SavePlayerRunState();
 
@@ -82,13 +102,16 @@ class GameUIComponent : public Engine::Component
    private:
     Engine::GameObject* playerObject = nullptr;
     InventoryComponent* playerInventory = nullptr;
+    PlayerItemEffectsComponent* playerItemEffects = nullptr;
+    PlayerMovementComponent* playerMovement = nullptr;
+    Engine::StatsComponent* playerStats = nullptr;
 
     // Objective state: enemies are tracked as alive/total, HUD converts to killed/total.
     std::vector<Engine::GameObject*> objectiveEnemies;
     int levelNumber = 1;
     int totalEnemyCount = 0;
     int aliveEnemyCount = 0;
-    bool isLevelComplete = false;
+    ScreenState screenState = ScreenState::MainMenu;
 
     Engine::UIManager uiManager;
 
@@ -107,11 +130,5 @@ class GameUIComponent : public Engine::Component
     // Currently dragged inventory item and snapshot used for hotbar auto-placement.
     std::optional<UIItemView> draggedItem;
     std::vector<ItemStack> knownInventoryItems;
-
-    // Modal state flags. Only one top-level overlay should own input at a time.
-    bool isMainMenuOpen = true;
-    bool isPauseOpen = false;
-    bool isGameOver = false;
-
 };
 }  // namespace Roguelike

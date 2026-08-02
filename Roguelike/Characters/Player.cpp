@@ -3,28 +3,23 @@
 #include "pch.h"
 #include "Player.h"
 
-#include "DeathComponent.h"
-#include "DirectionalSpriteComponent.h"
+#include "CameraComponent.h"
 #include "GameConfig.h"
+#include "GameObject.h"
 #include "InventoryComponent.h"
+#include "InputComponent.h"
 #include "Logger.h"
 #include "PlayerMovementComponent.h"
+#include "PlayerItemEffectsComponent.h"
 #include "RangedAttackComponent.h"
-#include "ResourceSystem.h"
-#include "SpriteColliderComponent.h"
-#include "StatsComponent.h"
+#include "RenderSystem.h"
 
 namespace Roguelike
 {
 Player::Player()
 {
-    gameObject = Engine::GameWorld::Instance()->CreateGameObject("Player");
-
-    auto playerRenderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
-
-    playerRenderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared("player"));
-
-    playerRenderer->SetPixelSize(GameConfig::CharacterPixelSize, GameConfig::CharacterPixelSize);
+    const GameConfig::PlayerConfig& config = GameConfig::PlayerEntity;
+    BuildCharacter(config.character, 0.f, 0.f);
 
     auto playerCamera = gameObject->AddComponent<Engine::CameraComponent>();
 
@@ -34,23 +29,14 @@ Player::Player()
 
     gameObject->AddComponent<Engine::InputComponent>();
 
-    gameObject->AddComponent<Engine::RigidbodyComponent>();
+    auto movement = gameObject->AddComponent<PlayerMovementComponent>();
+    movement->SetSpeed(config.character.movement.moveSpeed);
 
-    auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
-    directionalSprite->SetTextures("player_default", "player_down", "player_right", "player_up",
-                                   "player_left");
-
-    gameObject->AddComponent<PlayerMovementComponent>();
-    gameObject->AddComponent<Engine::SpriteColliderComponent>();
     gameObject->AddComponent<InventoryComponent>();
+    gameObject->AddComponent<PlayerItemEffectsComponent>();
 
-    auto stats = gameObject->AddComponent<Engine::StatsComponent>();
-    stats->SetStats(GameConfig::PlayerHealth, GameConfig::PlayerArmor);
-    stats->SetAttackPower(GameConfig::PlayerAttackPower);
-
-    gameObject->AddComponent<Engine::DeathComponent>();
     auto rangedAttack = gameObject->AddComponent<RangedAttackComponent>();
-    rangedAttack->SetProjectileTextureKey(GameConfig::PlayerProjectileTextureKey);
+    rangedAttack->SetProjectileTextureKey(config.projectileTextureKey);
 
     LOG_INFO("Player created.");
 }

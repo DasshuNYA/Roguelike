@@ -3,7 +3,11 @@
 #pragma once
 
 #include "ColliderComponent.h"
-#include "TransformComponent.h"
+
+namespace Engine
+{
+class TransformComponent;
+}
 
 namespace Roguelike
 {

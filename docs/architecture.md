@@ -41,8 +41,16 @@ Each `GameObject` is built from small components:
 - game components such as `StatsComponent`, `AttackComponent`, and `InventoryComponent`
   add gameplay behavior.
 
+`PlayerItemEffectsComponent` owns the gameplay consequences of consumables and equipment.
+This keeps `GameUIComponent` focused on screen state and user interaction instead of changing
+player stats directly.
+
 This makes entities composable: the player and enemies share engine components, but use
 different game components and configuration.
+
+`Character::BuildCharacter` assembles the components shared by the player and every enemy.
+`Player` and `Enemy` then add only their specific behavior. This removes duplicated setup while
+keeping component ownership in `GameObject`.
 
 ## Resources
 
@@ -55,7 +63,7 @@ is needed. Missing assets are logged and invalid requests return `nullptr`.
 
 ## Configuration
 
-`GameConfig` contains the important gameplay constants:
+`GameConfig` contains the important gameplay values and entity definitions:
 
 - window and tile sizes;
 - player/enemy stats;
@@ -64,6 +72,15 @@ is needed. Missing assets are logged and invalid requests return `nullptr`.
 - inventory dimensions;
 - item definitions;
 - background music tracks.
+
+`PlayerEntity` describes the player. The `EnemyTypes` table describes every regular enemy,
+including its textures, stats, movement, detection, and spawn rules. `DeveloperLevel` and
+`EnemySpawner` iterate this table, so adding a regular enemy does not require a new subclass,
+enumeration value, factory branch, or level-specific spawn code.
+
+Character settings are grouped into named `textures`, `stats`, and `movement` sections, while
+enemy placement uses a separate `spawn` section. Values in the entity definitions are placed on
+labelled lines so balance can be edited without memorizing a long positional parameter list.
 
 For defense, this is the best place to show that balance and content values are not hard
 coded deep inside gameplay classes.

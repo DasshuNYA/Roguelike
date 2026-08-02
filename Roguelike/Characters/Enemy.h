@@ -4,8 +4,6 @@
 
 #include "Character.h"
 
-#include <string>
-
 namespace Engine
 {
 class GameObject;
@@ -13,12 +11,14 @@ class GameObject;
 
 namespace Roguelike
 {
+namespace GameConfig
+{
+struct EnemyConfig;
+}
+
 class Enemy : public Character
 {
-   protected:
-    void BuildEnemy(Engine::GameObject* player, const std::string& name,
-                    const std::string& textureKey, const std::string& directionTexturePrefix,
-                    float x, float y, float health, float armor, float attackPower, float speed,
-                    float detectionRadius);
+   public:
+    Enemy(Engine::GameObject* player, const GameConfig::EnemyConfig& config, float x, float y);
 };
 }  // namespace Roguelike

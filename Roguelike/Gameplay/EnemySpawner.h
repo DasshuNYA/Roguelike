@@ -16,18 +16,10 @@ namespace Roguelike
 {
 class Character;
 
-enum class EnemyType
+namespace GameConfig
 {
-    Creeper,
-    Warrior
-};
-
-struct EnemySpawnSettings
-{
-    int count = 5;
-    float minDistanceFromPlayer = 300.f;
-    EnemyType enemyType = EnemyType::Creeper;
-};
+struct EnemyConfig;
+}
 
 // Creates enemies on generated floor tiles.
 // The spawner avoids player spawn area and prevents enemies from spawning
@@ -36,8 +28,8 @@ class EnemySpawner
 {
    public:
     std::vector<std::unique_ptr<Character>> Spawn(
-        const EnemySpawnSettings& settings, const std::vector<Engine::Vector2Df>& floorPositions,
-        Engine::GameObject* player);
+        const GameConfig::EnemyConfig& config, int count,
+        const std::vector<Engine::Vector2Df>& floorPositions, Engine::GameObject* player);
 
    private:
     std::vector<Engine::Vector2Df> usedPositions;
@@ -47,8 +39,5 @@ class EnemySpawner
 
     bool IsPositionReachableFromPlayer(const Engine::Vector2Df& position,
                                        Engine::GameObject* player) const;
-
-    std::unique_ptr<Character> CreateEnemy(EnemyType enemyType, Engine::GameObject* player,
-                                           const Engine::Vector2Df& position) const;
 };
 }  // namespace Roguelike

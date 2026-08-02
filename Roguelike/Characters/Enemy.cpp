@@ -4,68 +4,29 @@
 #include "Enemy.h"
 
 #include "AttackComponent.h"
-#include "DeathComponent.h"
 #include "DetectionTriggerComponent.h"
-#include "DirectionalSpriteComponent.h"
 #include "GameConfig.h"
 #include "GameObject.h"
-#include "GameWorld.h"
 #include "Logger.h"
 #include "PlayerSearchComponent.h"
-#include "ResourceSystem.h"
-#include "RigidbodyComponent.h"
-#include "SpriteColliderComponent.h"
-#include "SpriteRendererComponent.h"
-#include "StatsComponent.h"
-#include "TransformComponent.h"
 #include "Trigger.h"
 
 namespace Roguelike
 {
-void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
-                       const std::string& textureKey, const std::string& directionTexturePrefix,
-                       float x, float y, float health, float armor, float attackPower, float speed,
-                       float detectionRadius)
+Enemy::Enemy(Engine::GameObject* player, const GameConfig::EnemyConfig& config, float x, float y)
 {
-    gameObject = Engine::GameWorld::Instance()->CreateGameObject(name);
-
-    auto transform = gameObject->GetComponent<Engine::TransformComponent>();
-
-    transform->SetWorldPosition(x, y);
-
-    auto renderer = gameObject->AddComponent<Engine::SpriteRendererComponent>();
-
-    renderer->SetTexture(*Engine::ResourceSystem::Instance()->GetTextureShared(textureKey));
-
-    renderer->SetPixelSize(GameConfig::CharacterPixelSize, GameConfig::CharacterPixelSize);
-
-    gameObject->AddComponent<Engine::SpriteColliderComponent>();
-
-    auto rigidbody = gameObject->AddComponent<Engine::RigidbodyComponent>();
-
-    rigidbody->SetLinearDamping(1.f);
-
-    auto directionalSprite = gameObject->AddComponent<DirectionalSpriteComponent>();
-    directionalSprite->SetTextures(
-        directionTexturePrefix + "_default", directionTexturePrefix + "_down",
-        directionTexturePrefix + "_right", directionTexturePrefix + "_up",
-        directionTexturePrefix + "_left");
-
-    auto stats = gameObject->AddComponent<Engine::StatsComponent>();
-    stats->SetStats(health, armor);
-
-    gameObject->AddComponent<Engine::DeathComponent>();
+    BuildCharacter(config.character, x, y);
 
     auto attack = gameObject->AddComponent<Engine::AttackComponent>();
-    attack->SetAttackPower(attackPower);
+    attack->SetAttackPower(config.character.stats.attackPower);
 
     auto search = gameObject->AddComponent<PlayerSearchComponent>();
     search->SetPlayer(player);
-    search->SetSpeed(speed);
+    search->SetSpeed(config.character.movement.moveSpeed);
 
     auto detectionTrigger = gameObject->AddComponent<DetectionTriggerComponent>();
 
-    detectionTrigger->SetRadius(detectionRadius);
+    detectionTrigger->SetRadius(config.detectionRadius);
     detectionTrigger->SetShowDebug(false);
 
     detectionTrigger->SubscribeTriggerEnter(
@@ -86,6 +47,6 @@ void Enemy::BuildEnemy(Engine::GameObject* player, const std::string& name,
             }
         });
 
-    LOG_DEBUG(name + " created.");
+    LOG_DEBUG(std::string(config.character.name) + " created.");
 }
 }  // namespace Roguelike

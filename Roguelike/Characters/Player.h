@@ -2,15 +2,14 @@
 
 #pragma once
 
-#include "CameraComponent.h"
 #include "Character.h"
-#include "GameObject.h"
-#include "GameWorld.h"
-#include "InputComponent.h"
-#include "RenderSystem.h"
-#include "SpriteRendererComponent.h"
 
 #include <vector>
+
+namespace Engine
+{
+class GameObject;
+}
 
 namespace Roguelike
 {

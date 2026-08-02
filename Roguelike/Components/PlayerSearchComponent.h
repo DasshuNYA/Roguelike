@@ -3,9 +3,6 @@
 #pragma once
 
 #include "Component.h"
-#include "GameObject.h"
-#include "RigidbodyComponent.h"
-#include "TransformComponent.h"
 #include "Vector.h"
 
 #include <vector>
@@ -13,7 +10,10 @@
 namespace Engine
 {
 class AttackComponent;
-}
+class GameObject;
+class RigidbodyComponent;
+class TransformComponent;
+}  // namespace Engine
 
 namespace Roguelike
 {

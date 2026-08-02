@@ -184,10 +184,8 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Characters\Character.cpp" />
-    <ClCompile Include="Characters\Creeper.cpp" />
     <ClCompile Include="Characters\Enemy.cpp" />
     <ClCompile Include="Characters\Player.cpp" />
-    <ClCompile Include="Characters\Warrior.cpp" />
     <ClCompile Include="Components\AttackComponent.cpp" />
     <ClCompile Include="Components\DeathComponent.cpp" />
     <ClCompile Include="Components\DetectionTriggerComponent.cpp" />
@@ -196,6 +194,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClCompile Include="Components\InventoryComponent.cpp" />
     <ClCompile Include="Components\ItemPickupComponent.cpp" />
     <ClCompile Include="Components\PickupComponent.cpp" />
+    <ClCompile Include="Components\PlayerItemEffectsComponent.cpp" />
     <ClCompile Include="Components\PlayerMovementComponent.cpp" />
     <ClCompile Include="Components\PlayerSearchComponent.cpp" />
     <ClCompile Include="Components\ProjectileComponent.cpp" />
@@ -225,10 +224,8 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Characters\Character.h" />
-    <ClInclude Include="Characters\Creeper.h" />
     <ClInclude Include="Characters\Enemy.h" />
     <ClInclude Include="Characters\Player.h" />
-    <ClInclude Include="Characters\Warrior.h" />
     <ClInclude Include="Components\AttackComponent.h" />
     <ClInclude Include="Components\DeathComponent.h" />
     <ClInclude Include="Components\DetectionTriggerComponent.h" />
@@ -237,6 +234,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClInclude Include="Components\InventoryComponent.h" />
     <ClInclude Include="Components\ItemPickupComponent.h" />
     <ClInclude Include="Components\PickupComponent.h" />
+    <ClInclude Include="Components\PlayerItemEffectsComponent.h" />
     <ClInclude Include="Components\PlayerMovementComponent.h" />
     <ClInclude Include="Components\PlayerSearchComponent.h" />
     <ClInclude Include="Components\ProjectileComponent.h" />

@@ -103,8 +103,9 @@ void RangedAttackComponent::Shoot()
     projectileComponent->SetDirection(direction);
     Engine::StatsComponent* stats = gameObject->GetComponent<Engine::StatsComponent>();
     // Attack potion modifies StatsComponent, so projectile damage is read at shot time.
-    projectileComponent->SetDamage(stats != nullptr ? stats->GetAttackPower()
-                                                    : GameConfig::PlayerAttackPower);
+    projectileComponent->SetDamage(stats != nullptr
+                                       ? stats->GetAttackPower()
+                                       : GameConfig::PlayerEntity.character.stats.attackPower);
     projectileComponent->SetSpeed(GameConfig::ProjectileSpeed);
     projectileComponent->SetRadius(GameConfig::ProjectileRadius);
     projectileComponent->SetLifeTime(GameConfig::ProjectileLifeTime);

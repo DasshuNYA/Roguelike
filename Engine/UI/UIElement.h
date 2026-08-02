@@ -13,7 +13,6 @@ class UIElement
    public:
     virtual ~UIElement() = default;
 
-    virtual void HandleEvent(const sf::Event& event);
     virtual void Update(float deltaTime);
     virtual void Draw(sf::RenderWindow& window) = 0;
 
