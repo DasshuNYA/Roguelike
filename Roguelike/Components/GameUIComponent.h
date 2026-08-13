@@ -4,6 +4,7 @@
 
 #include "Component.h"
 #include "ItemData.h"
+#include "UIConfig.h"
 #include "UIItemView.h"
 #include "UIManager.h"
 
@@ -96,7 +97,8 @@ class GameUIComponent : public Engine::Component
     bool TryPlaceSelectedItem(sf::Vector2f mousePosition);
     bool TryEquipSelectedItem(sf::Vector2f mousePosition);
     bool TryAssignSelectedItemToHotbar(sf::Vector2f mousePosition);
-    void ShowPopupMessage(const std::string& message, float duration = 1.5f);
+    void ShowPopupMessage(const std::string& message,
+                          float duration = UIConfig::Popup::QuickDuration);
     void DrawDraggedItem(sf::RenderWindow& window);
 
    private:

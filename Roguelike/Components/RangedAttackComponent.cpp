@@ -64,6 +64,8 @@ void RangedAttackComponent::SetProjectileTextureKey(const std::string& newTextur
     projectileTextureKey = newTextureKey;
 }
 
+void RangedAttackComponent::SuppressUntilMouseReleased() { wasLeftMousePressed = true; }
+
 void RangedAttackComponent::Shoot()
 {
     if (transform == nullptr)

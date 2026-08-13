@@ -2,41 +2,50 @@
 
 #include "pch.h"
 #include "FramedPanel.h"
+#include "UIConfig.h"
 
 namespace Roguelike
 {
-namespace
+FramedPanel::FramedPanel(const sf::Font& uiFont, sf::FloatRect bounds, const std::string& title)
+    : font(uiFont)
 {
-// Generic fallback frame styling for inventory-like panels when custom textures are unavailable.
-const sf::Color FrameBackgroundColor = sf::Color(38, 54, 38, 236);
-const sf::Color FrameOutlineColor = sf::Color(145, 142, 86, 255);
-const sf::Color FrameTitleColor = sf::Color(226, 210, 132);
-const float FrameOutlineThickness = 3.0f;
-const unsigned int FrameTitleSize = 26;
-const sf::Vector2f FrameTitleOffset = {24.0f, 18.0f};
-}  // namespace
-
-FramedPanel::FramedPanel(const sf::Font& uiFont) : font(uiFont)
-{
-    background.setFillColor(FrameBackgroundColor);
-    background.setOutlineColor(FrameOutlineColor);
-    background.setOutlineThickness(FrameOutlineThickness);
+    background.setPosition({bounds.left, bounds.top});
+    background.setSize({bounds.width, bounds.height});
+    background.setFillColor(UIConfig::Frame::BackgroundColor);
+    background.setOutlineColor(UIConfig::Frame::OutlineColor);
+    background.setOutlineThickness(UIConfig::Frame::OutlineThickness);
 
     titleText.setFont(font);
-    titleText.setCharacterSize(FrameTitleSize);
-    titleText.setFillColor(FrameTitleColor);
+    titleText.setString(title);
+    titleText.setCharacterSize(UIConfig::Frame::TitleSize);
+    titleText.setFillColor(UIConfig::Frame::TitleColor);
+    titleText.setPosition(bounds.left + UIConfig::Frame::TitleOffset.x,
+                          bounds.top + UIConfig::Frame::TitleOffset.y);
 
     GetAnimation().SetAlpha(0.0f);
     Hide();
 }
 
-void FramedPanel::SetupFrame(sf::Vector2f position, sf::Vector2f size, const std::string& title)
+void FramedPanel::SetOpen(bool open)
 {
-    background.setPosition(position);
-    background.setSize(size);
+    isOpen = open;
+    if (isOpen)
+    {
+        Show();
+    }
+    else
+    {
+        Hide();
+    }
+}
 
-    titleText.setString(title);
-    titleText.setPosition(position.x + FrameTitleOffset.x, position.y + FrameTitleOffset.y);
+void FramedPanel::Toggle() { SetOpen(!isOpen); }
+
+bool FramedPanel::IsOpen() const { return isOpen; }
+
+bool FramedPanel::ContainsPoint(sf::Vector2f point) const
+{
+    return isOpen && GetBounds().contains(point);
 }
 
 void FramedPanel::DrawFrame(sf::RenderWindow& window)
@@ -44,15 +53,19 @@ void FramedPanel::DrawFrame(sf::RenderWindow& window)
     sf::Uint8 alpha = GetAlphaByte();
 
     // The frame is redrawn every frame with current fade alpha from UIAnimation.
-    background.setFillColor(sf::Color(FrameBackgroundColor.r, FrameBackgroundColor.g,
-                                      FrameBackgroundColor.b, alpha));
-    background.setOutlineColor(sf::Color(FrameOutlineColor.r, FrameOutlineColor.g,
-                                         FrameOutlineColor.b, alpha));
-    titleText.setFillColor(sf::Color(FrameTitleColor.r, FrameTitleColor.g, FrameTitleColor.b,
-                                     alpha));
+    background.setFillColor(UIConfig::WithAlpha(UIConfig::Frame::BackgroundColor, alpha));
+    background.setOutlineColor(UIConfig::WithAlpha(UIConfig::Frame::OutlineColor, alpha));
+    titleText.setFillColor(UIConfig::WithAlpha(UIConfig::Frame::TitleColor, alpha));
 
     window.draw(background);
     window.draw(titleText);
+}
+
+sf::FloatRect FramedPanel::GetBounds() const
+{
+    const sf::Vector2f position = background.getPosition();
+    const sf::Vector2f size = background.getSize();
+    return {position.x, position.y, size.x, size.y};
 }
 
 sf::Vector2f FramedPanel::GetPosition() const { return background.getPosition(); }

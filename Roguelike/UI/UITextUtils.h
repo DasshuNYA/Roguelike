@@ -8,6 +8,8 @@
 
 namespace Roguelike::UITextUtils
 {
+void Center(sf::Text& text, sf::Vector2f position);
+
 std::string FitTextToWidth(const sf::Font& font,
                            const std::string& text,
                            unsigned int characterSize,

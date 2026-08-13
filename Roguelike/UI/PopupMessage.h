@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "UIConfig.h"
 #include "UIElement.h"
 
 #include <SFML/Graphics.hpp>
@@ -15,7 +16,8 @@ class PopupMessage : public Engine::UIElement
    public:
     explicit PopupMessage(const sf::Font& font);
 
-    void ShowMessage(const std::string& message, float duration = 2.0f);
+    void ShowMessage(const std::string& message,
+                     float duration = UIConfig::Popup::QuickDuration);
 
     void Update(float deltaTime) override;
     void Draw(sf::RenderWindow& window) override;
@@ -29,6 +31,6 @@ class PopupMessage : public Engine::UIElement
 
     // Lifetime controls auto-hide; fade alpha is handled by UIAnimation.
     float timer = 0.0f;
-    float lifeTime = 2.0f;
+    float lifeTime = UIConfig::Popup::QuickDuration;
 };
 }  // namespace Roguelike

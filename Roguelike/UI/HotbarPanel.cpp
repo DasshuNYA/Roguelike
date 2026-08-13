@@ -3,31 +3,13 @@
 #include "pch.h"
 #include "HotbarPanel.h"
 
+#include "UIConfig.h"
 #include "UITextureUtils.h"
 
 #include <algorithm>
 
 namespace Roguelike
 {
-namespace
-{
-// Hotbar frame layout.
-// Panel position, slot size, and gap live in HotbarPanel.h.
-// Padding expands the decorative frame around the computed slot row.
-const sf::Vector2f HotbarFramePadding = {28.0f, 18.0f};
-const float HotbarFrameHeight = 88.0f;
-
-// Per-slot text/icon layout. These offsets are local to the slot bounds.
-const sf::FloatRect HotbarItemIconBounds = {10.0f, 10.0f, 32.0f, 32.0f};
-const sf::Vector2f HotbarCountPosition = {34.0f, 34.0f};
-const sf::Vector2f HotbarNumberPosition = {4.0f, 2.0f};
-
-// Hotkey feedback animation. Duration controls how long the slot pulse lasts;
-// inflate controls how far the slot grows during that pulse.
-const float HotbarPulseSeconds = 0.18f;
-const float HotbarPulseInflate = 3.0f;
-}  // namespace
-
 HotbarPanel::HotbarPanel(const sf::Font& uiFont) : font(uiFont) {}
 
 bool HotbarPanel::TryPlaceItem(sf::Vector2f mousePosition, const UIItemView& item)
@@ -116,7 +98,7 @@ HotbarUseResult HotbarPanel::TryUseHotkey(sf::Keyboard::Key key)
         return {};
     }
 
-    pulseTimers[slotIndex] = HotbarPulseSeconds;
+    pulseTimers[slotIndex] = UIConfig::Hotbar::PulseSeconds;
 
     const ItemData* itemData = slots[slotIndex];
     if (itemData == nullptr || GetInventoryCount(itemData) <= 0)
@@ -172,12 +154,16 @@ void HotbarPanel::Update(float deltaTime)
 
 void HotbarPanel::Draw(sf::RenderWindow& window)
 {
-    const float totalWidth = static_cast<float>(slots.size()) * slotSize +
-                             static_cast<float>(slots.size() - 1) * gap;
+    const float totalWidth =
+        static_cast<float>(slots.size()) * UIConfig::Hotbar::SlotSize +
+        static_cast<float>(slots.size() - 1) * UIConfig::Hotbar::SlotGap;
     UITextureUtils::DrawTexture(window, "ui_hotbar_frame",
-                                {position.x - HotbarFramePadding.x,
-                                 position.y - HotbarFramePadding.y,
-                                 totalWidth + HotbarFramePadding.x * 2.0f, HotbarFrameHeight},
+                                {UIConfig::Hotbar::Position.x -
+                                     UIConfig::Hotbar::FramePadding.x,
+                                 UIConfig::Hotbar::Position.y -
+                                     UIConfig::Hotbar::FramePadding.y,
+                                 totalWidth + UIConfig::Hotbar::FramePadding.x * 2.0f,
+                                 UIConfig::Hotbar::FrameHeight},
                                 GetAlphaByte());
 
     for (int i = 0; i < static_cast<int>(slots.size()); ++i)
@@ -192,8 +178,8 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
     sf::Uint8 alpha = GetAlphaByte();
     // Pulse gently enlarges the slot after hotkey use. Highlight is separate
     // and shows valid drag-and-drop targets while the inventory is open.
-    float pulse = pulseTimers[index] / HotbarPulseSeconds;
-    float inflate = HotbarPulseInflate * pulse;
+    float pulse = pulseTimers[index] / UIConfig::Hotbar::PulseSeconds;
+    float inflate = UIConfig::Hotbar::PulseInflate * pulse;
     bool isTargetSlot = highlightedItem.has_value() && CanUseOnHotbar(highlightedItem->stack) &&
                         (slots[index] == nullptr || slots[index] == highlightedItem->stack.data);
 
@@ -209,13 +195,21 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
         sf::RectangleShape slot;
         slot.setPosition({bounds.left - inflate, bounds.top - inflate});
         slot.setSize({bounds.width + inflate * 2.0f, bounds.height + inflate * 2.0f});
-        slot.setFillColor(isTargetSlot
-                              ? sf::Color(68, 58, 35, alpha)
-                              : sf::Color(45 + static_cast<sf::Uint8>(35.0f * pulse), 36, 32,
-                                          alpha));
-        slot.setOutlineColor((pulse > 0.0f || isTargetSlot) ? sf::Color(245, 225, 130, alpha)
-                                                            : sf::Color(190, 150, 90, alpha));
-        slot.setOutlineThickness((isTargetSlot ? 4.0f : 2.0f) + 2.0f * pulse);
+        sf::Color slotColor = isTargetSlot ? UIConfig::Hotbar::TargetSlotColor
+                                           : UIConfig::Hotbar::SlotColor;
+        if (!isTargetSlot)
+        {
+            slotColor.r += static_cast<sf::Uint8>(UIConfig::Hotbar::PulseRedBoost * pulse);
+        }
+        slot.setFillColor(UIConfig::WithAlpha(slotColor, alpha));
+        slot.setOutlineColor(UIConfig::WithAlpha(
+            (pulse > 0.0f || isTargetSlot) ? UIConfig::Hotbar::ActiveOutlineColor
+                                           : UIConfig::Hotbar::OutlineColor,
+            alpha));
+        slot.setOutlineThickness(
+            (isTargetSlot ? UIConfig::Hotbar::TargetOutlineThickness
+                          : UIConfig::Hotbar::OutlineThickness) +
+            UIConfig::Hotbar::PulseOutlineBoost * pulse);
 
         window.draw(slot);
     }
@@ -226,19 +220,23 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
         highlight.setPosition({bounds.left - inflate, bounds.top - inflate});
         highlight.setSize({bounds.width + inflate * 2.0f, bounds.height + inflate * 2.0f});
         highlight.setFillColor(sf::Color::Transparent);
-        highlight.setOutlineColor(sf::Color(245, 225, 130, alpha));
-        highlight.setOutlineThickness((isTargetSlot ? 4.0f : 2.0f) + 2.0f * pulse);
+        highlight.setOutlineColor(
+            UIConfig::WithAlpha(UIConfig::Hotbar::ActiveOutlineColor, alpha));
+        highlight.setOutlineThickness(
+            (isTargetSlot ? UIConfig::Hotbar::TargetOutlineThickness
+                          : UIConfig::Hotbar::OutlineThickness) +
+            UIConfig::Hotbar::PulseOutlineBoost * pulse);
 
         window.draw(highlight);
     }
 
     sf::Text numberText;
     numberText.setFont(font);
-    numberText.setCharacterSize(12);
+    numberText.setCharacterSize(UIConfig::Hotbar::NumberTextSize);
     numberText.setString(std::to_string(index + 1));
-    numberText.setFillColor(sf::Color(230, 220, 190, alpha));
-    numberText.setPosition(bounds.left + HotbarNumberPosition.x,
-                           bounds.top + HotbarNumberPosition.y);
+    numberText.setFillColor(UIConfig::WithAlpha(UIConfig::Hotbar::NumberTextColor, alpha));
+    numberText.setPosition(bounds.left + UIConfig::Hotbar::NumberPosition.x,
+                           bounds.top + UIConfig::Hotbar::NumberPosition.y);
 
     window.draw(numberText);
 
@@ -252,40 +250,35 @@ void HotbarPanel::DrawSlot(sf::RenderWindow& window, int index)
 
     UIItemView item = UIItemView::FromStack(ItemStack{itemData, itemCount});
 
-    if (!UITextureUtils::DrawItemTexture(window, item,
-                                         {bounds.left + HotbarItemIconBounds.left,
-                                          bounds.top + HotbarItemIconBounds.top,
-                                          HotbarItemIconBounds.width,
-                                          HotbarItemIconBounds.height},
-                                         alpha))
-    {
-        sf::RectangleShape icon;
-        icon.setPosition({bounds.left + 13.0f, bounds.top + 14.0f});
-        icon.setSize({26.0f, 26.0f});
-
-        sf::Color iconColor = item.iconColor;
-        iconColor.a = alpha;
-        icon.setFillColor(iconColor);
-
-        window.draw(icon);
-    }
+    UITextureUtils::DrawItem(
+        window, item,
+        {bounds.left + UIConfig::Hotbar::ItemIconBounds.left,
+         bounds.top + UIConfig::Hotbar::ItemIconBounds.top,
+         UIConfig::Hotbar::ItemIconBounds.width, UIConfig::Hotbar::ItemIconBounds.height},
+        {bounds.left + UIConfig::Hotbar::FallbackIconPosition.x,
+         bounds.top + UIConfig::Hotbar::FallbackIconPosition.y,
+         UIConfig::Hotbar::FallbackIconSize.x, UIConfig::Hotbar::FallbackIconSize.y},
+        alpha);
 
     sf::Text countText;
     countText.setFont(font);
-    countText.setCharacterSize(12);
+    countText.setCharacterSize(UIConfig::Hotbar::CountTextSize);
     countText.setString(std::to_string(itemCount));
-    countText.setFillColor(sf::Color(255, 255, 255, alpha));
-    countText.setPosition(bounds.left + HotbarCountPosition.x, bounds.top + HotbarCountPosition.y);
+    countText.setFillColor(UIConfig::WithAlpha(UIConfig::Hotbar::CountTextColor, alpha));
+    countText.setPosition(bounds.left + UIConfig::Hotbar::CountPosition.x,
+                          bounds.top + UIConfig::Hotbar::CountPosition.y);
 
     window.draw(countText);
 }
 
 sf::FloatRect HotbarPanel::GetSlotBounds(int index) const
 {
-    float x = position.x + static_cast<float>(index) * (slotSize + gap);
-    float y = position.y;
+    float x = UIConfig::Hotbar::Position.x + static_cast<float>(index) *
+                                                   (UIConfig::Hotbar::SlotSize +
+                                                    UIConfig::Hotbar::SlotGap);
+    float y = UIConfig::Hotbar::Position.y;
 
-    return {x, y, slotSize, slotSize};
+    return {x, y, UIConfig::Hotbar::SlotSize, UIConfig::Hotbar::SlotSize};
 }
 
 int HotbarPanel::GetSlotIndexForKey(sf::Keyboard::Key key) const

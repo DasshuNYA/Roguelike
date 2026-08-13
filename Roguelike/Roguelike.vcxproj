@@ -241,6 +241,7 @@ $(SystemRoot)\System32\xcopy.exe "$(ProjectDir)Resources" "$(ProjectDir)$(Platfo
     <ClInclude Include="Components\RangedAttackComponent.h" />
     <ClInclude Include="Components\StatsComponent.h" />
     <ClInclude Include="Config\GameConfig.h" />
+    <ClInclude Include="Config\UIConfig.h" />
     <ClInclude Include="Gameplay\DeveloperLevel.h" />
     <ClInclude Include="Gameplay\EnemySpawner.h" />
     <ClInclude Include="Gameplay\Floor.h" />

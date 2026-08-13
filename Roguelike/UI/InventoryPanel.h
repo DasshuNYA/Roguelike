@@ -18,7 +18,6 @@ class InventoryPanel : public FramedPanel
     explicit InventoryPanel(const sf::Font& font);
 
     void Toggle();
-    bool IsOpen() const;
 
     void SetItems(const std::vector<ItemStack>& newItems);
     void ClearSelection();
@@ -61,14 +60,5 @@ class InventoryPanel : public FramedPanel
     float previousArrowPressTimer = 0.0f;
     float nextArrowPressTimer = 0.0f;
 
-    bool isOpen = false;
-
-    // Main inventory panel geometry in screen-space.
-    sf::Vector2f position = {580.0f, 370.0f};
-    sf::Vector2f size = {760.0f, 350.0f};
-
-    // Slot grid tuning. Column/row count comes from GameConfig.
-    float slotSize = 92.0f;
-    float gap = 18.0f;
 };
 }  // namespace Roguelike

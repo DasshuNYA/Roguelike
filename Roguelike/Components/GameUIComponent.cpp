@@ -21,9 +21,11 @@
 #include "PlayerRunSnapshot.h"
 #include "PopupMessage.h"
 #include "RenderSystem.h"
+#include "RangedAttackComponent.h"
 #include "SaveSystem.h"
 #include "StatsComponent.h"
 #include "UITextureUtils.h"
+#include "UIConfig.h"
 
 #include <algorithm>
 
@@ -31,17 +33,6 @@ namespace Roguelike
 {
 namespace
 {
-// Dragged item cursor visual tuning.
-const float DraggedItemTextureSize = 44.0f;
-const float DraggedItemFallbackSize = 32.0f;
-const sf::Uint8 DraggedItemTextureAlpha = 230;
-const sf::Uint8 DraggedItemFallbackAlpha = 220;
-
-// Popup feedback durations.
-const float LevelPopupSeconds = 2.0f;
-const float TutorialPopupSeconds = 3.0f;
-const float QuickFeedbackSeconds = 1.5f;
-
 float ClampPlayerArmor(float armor)
 {
     return std::clamp(armor, 0.0f, GameConfig::PlayerEntity.character.stats.maxArmor);
@@ -109,12 +100,40 @@ void GameUIComponent::SetLevelObjective(const std::vector<Engine::GameObject*>& 
     if (levelNumber > 1)
     {
         SetScreenState(ScreenState::Playing);
-        ShowPopupMessage("Level " + std::to_string(levelNumber), LevelPopupSeconds);
+        ShowPopupMessage("Level " + std::to_string(levelNumber), UIConfig::Popup::LevelDuration);
     }
 }
 
 void GameUIComponent::HandleEvent(const sf::Event& event)
 {
+    if (screenState == ScreenState::Paused && overlay != nullptr)
+    {
+        sf::RenderWindow& window = Engine::RenderSystem::Instance()->GetMainWindow();
+        PauseMenuAction action = overlay->HandlePauseEvent(event, window);
+
+        if (action == PauseMenuAction::Resume)
+        {
+            if (playerObject != nullptr)
+            {
+                RangedAttackComponent* rangedAttack =
+                    playerObject->GetComponent<RangedAttackComponent>();
+                if (rangedAttack != nullptr)
+                {
+                    rangedAttack->SuppressUntilMouseReleased();
+                }
+            }
+
+            SetScreenState(ScreenState::Playing);
+            return;
+        }
+
+        if (action == PauseMenuAction::ExitGame)
+        {
+            window.close();
+            return;
+        }
+    }
+
     if (event.type == sf::Event::KeyPressed)
     {
         HandleKeyPressed(event.key.code);
@@ -395,7 +414,7 @@ void GameUIComponent::HandleStartPressed()
 
     if (popup != nullptr)
     {
-        popup->ShowMessage("Press I to open inventory", TutorialPopupSeconds);
+        popup->ShowMessage("Press I to open inventory", UIConfig::Popup::TutorialDuration);
     }
 }
 
@@ -473,7 +492,7 @@ void GameUIComponent::HandleHotbarKey(sf::Keyboard::Key key)
 
     if (useResult.state == HotbarUseState::Empty || useResult.itemData == nullptr)
     {
-        popup->ShowMessage("Empty slot", QuickFeedbackSeconds);
+        popup->ShowMessage("Empty slot", UIConfig::Popup::QuickDuration);
         return;
     }
 
@@ -487,7 +506,7 @@ void GameUIComponent::HandleHotbarKey(sf::Keyboard::Key key)
     }
 
     popup->ShowMessage(GetItemEffectMessage(effectResult, *useResult.itemData),
-                       QuickFeedbackSeconds);
+                       UIConfig::Popup::QuickDuration);
 }
 
 void GameUIComponent::HandleDeathState()
@@ -641,7 +660,7 @@ void GameUIComponent::ClearSelectedItem()
 
     if (descriptionPanel != nullptr)
     {
-        descriptionPanel->Hide();
+        descriptionPanel->SetOpen(false);
     }
 
     if (equipment != nullptr)
@@ -773,25 +792,27 @@ void GameUIComponent::DrawDraggedItem(sf::RenderWindow& window)
 
     if (!textureKey.empty() &&
         UITextureUtils::DrawTexture(window, textureKey,
-                                    {mousePosition.x - DraggedItemTextureSize * 0.5f,
-                                     mousePosition.y - DraggedItemTextureSize * 0.5f,
-                                     DraggedItemTextureSize, DraggedItemTextureSize},
-                                    DraggedItemTextureAlpha))
+                                    {mousePosition.x - UIConfig::DraggedItem::TextureSize * 0.5f,
+                                     mousePosition.y - UIConfig::DraggedItem::TextureSize * 0.5f,
+                                     UIConfig::DraggedItem::TextureSize,
+                                     UIConfig::DraggedItem::TextureSize},
+                                    UIConfig::DraggedItem::TextureAlpha))
     {
         return;
     }
 
     sf::RectangleShape icon;
-    icon.setPosition({mousePosition.x - DraggedItemFallbackSize * 0.5f,
-                      mousePosition.y - DraggedItemFallbackSize * 0.5f});
-    icon.setSize({DraggedItemFallbackSize, DraggedItemFallbackSize});
+    icon.setPosition({mousePosition.x - UIConfig::DraggedItem::FallbackSize * 0.5f,
+                      mousePosition.y - UIConfig::DraggedItem::FallbackSize * 0.5f});
+    icon.setSize(
+        {UIConfig::DraggedItem::FallbackSize, UIConfig::DraggedItem::FallbackSize});
 
     sf::Color iconColor = draggedItem->iconColor;
-    iconColor.a = DraggedItemFallbackAlpha;
+    iconColor.a = UIConfig::DraggedItem::FallbackAlpha;
 
     icon.setFillColor(iconColor);
-    icon.setOutlineColor(sf::Color(255, 255, 255, 180));
-    icon.setOutlineThickness(2.0f);
+    icon.setOutlineColor(UIConfig::DraggedItem::FallbackOutlineColor);
+    icon.setOutlineThickness(UIConfig::DraggedItem::FallbackOutlineThickness);
 
     window.draw(icon);
 }

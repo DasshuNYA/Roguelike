@@ -4,6 +4,7 @@
 #include "InventoryPanel.h"
 
 #include "GameConfig.h"
+#include "UIConfig.h"
 #include "UITextureUtils.h"
 
 #include <algorithm>
@@ -12,33 +13,6 @@ namespace Roguelike
 {
 namespace
 {
-// Inventory panel layout.
-// Panel position, panel size, slot size, and slot gap live in InventoryPanel.h.
-// Values below are local offsets from InventoryPanel::position.
-const sf::Vector2f InventoryTitlePosition = {120.0f, 36.0f};
-
-// Pager text positions. Move these together with the click bounds below.
-const sf::Vector2f PagerPreviousPosition = {590.0f, 40.0f};
-const sf::Vector2f PagerTextPosition = {628.0f, 44.0f};
-const sf::Vector2f PagerNextPosition = {682.0f, 40.0f};
-
-// Pager click areas. They are intentionally wider than the visible arrows.
-const sf::FloatRect PagerPreviousClickBounds = {580.0f, 48.0f, 42.0f, 36.0f};
-const sf::FloatRect PagerNextClickBounds = {682.0f, 48.0f, 42.0f, 36.0f};
-
-// Top edge of the inventory slot grid, relative to the panel.
-const float InventoryGridTop = 94.0f;
-const float PageTransitionDuration = 0.22f;
-const float PageSlideDistance = 34.0f;
-const float ArrowPressDuration = 0.16f;
-const float ArrowPressDistance = 5.0f;
-
-// Item drawing inside a slot. Bounds are local to each slot.
-const sf::FloatRect ItemIconBounds = {14.0f, 12.0f, 64.0f, 64.0f};
-const sf::Vector2f ItemFallbackIconPosition = {18.0f, 16.0f};
-const sf::Vector2f ItemFallbackIconSize = {56.0f, 56.0f};
-const sf::Vector2f ItemCountOffsetFromBottomRight = {24.0f, 24.0f};
-
 float Clamp01(float value)
 {
     return std::clamp(value, 0.0f, 1.0f);
@@ -81,29 +55,26 @@ sf::Color LerpColor(sf::Color from, sf::Color to, float amount, sf::Uint8 alpha)
 }
 }  // namespace
 
-InventoryPanel::InventoryPanel(const sf::Font& uiFont) : FramedPanel(uiFont), font(uiFont)
+InventoryPanel::InventoryPanel(const sf::Font& uiFont)
+    : FramedPanel(uiFont,
+                  {UIConfig::Inventory::Position.x, UIConfig::Inventory::Position.y,
+                   UIConfig::Inventory::Size.x, UIConfig::Inventory::Size.y},
+                  "Inventory"),
+      font(uiFont)
 {
-    SetupFrame(position, size, "Inventory");
 }
 
 void InventoryPanel::Toggle()
 {
-    isOpen = !isOpen;
+    FramedPanel::Toggle();
 
-    if (isOpen)
+    if (!IsOpen())
     {
-        Show();
-    }
-    else
-    {
-        Hide();
         pageTransitionTimer = 0.0f;
         previousArrowPressTimer = 0.0f;
         nextArrowPressTimer = 0.0f;
     }
 }
-
-bool InventoryPanel::IsOpen() const { return isOpen; }
 
 void InventoryPanel::SetItems(const std::vector<ItemStack>& newItems)
 {
@@ -130,7 +101,7 @@ void InventoryPanel::ClearSelection() { selectedIndex = -1; }
 
 bool InventoryPanel::TryChangePage(sf::Vector2f mousePosition)
 {
-    if (!isOpen)
+    if (!IsOpen())
     {
         return false;
     }
@@ -152,7 +123,7 @@ bool InventoryPanel::TryChangePage(sf::Vector2f mousePosition)
 
 std::optional<UIItemView> InventoryPanel::TryPickItem(sf::Vector2f mousePosition)
 {
-    if (!isOpen)
+    if (!IsOpen())
     {
         return std::nullopt;
     }
@@ -192,7 +163,11 @@ void InventoryPanel::Draw(sf::RenderWindow& window)
     sf::Uint8 alpha = GetAlphaByte();
 
     if (!UITextureUtils::DrawTexture(window, "ui_inventory_menu_grid",
-                                     {position.x, position.y, size.x, size.y}, alpha))
+                                     {UIConfig::Inventory::Position.x,
+                                      UIConfig::Inventory::Position.y,
+                                      UIConfig::Inventory::Size.x,
+                                      UIConfig::Inventory::Size.y},
+                                     alpha))
     {
         DrawFrame(window);
     }
@@ -200,10 +175,12 @@ void InventoryPanel::Draw(sf::RenderWindow& window)
     {
         sf::Text titleText;
         titleText.setFont(font);
-        titleText.setCharacterSize(26);
+        titleText.setCharacterSize(UIConfig::Inventory::TitleTextSize);
         titleText.setString("Inventory");
-        titleText.setFillColor(sf::Color(226, 210, 132, alpha));
-        titleText.setPosition(position + InventoryTitlePosition);
+        const sf::Color& titleColor = UIConfig::Inventory::TitleTextColor;
+        titleText.setFillColor(sf::Color(titleColor.r, titleColor.g, titleColor.b, alpha));
+        titleText.setPosition(UIConfig::Inventory::Position +
+                              UIConfig::Inventory::TitlePosition);
 
         window.draw(titleText);
     }
@@ -212,15 +189,19 @@ void InventoryPanel::Draw(sf::RenderWindow& window)
 
     if (pageTransitionTimer > 0.0f && pageTransitionDirection != 0)
     {
-        float progress = 1.0f - pageTransitionTimer / PageTransitionDuration;
+        float progress =
+            1.0f - pageTransitionTimer / UIConfig::Inventory::PageTransitionDuration;
         float easedProgress = SmoothStep(progress);
         float direction = static_cast<float>(pageTransitionDirection);
 
         DrawInventoryPage(window, previousPage,
-                          {-direction * PageSlideDistance * easedProgress, 0.0f},
+                          {-direction * UIConfig::Inventory::PageSlideDistance * easedProgress,
+                           0.0f},
                           ScaleAlpha(alpha, 1.0f - easedProgress));
         DrawInventoryPage(window, currentPage,
-                          {direction * PageSlideDistance * (1.0f - easedProgress), 0.0f},
+                          {direction * UIConfig::Inventory::PageSlideDistance *
+                               (1.0f - easedProgress),
+                           0.0f},
                           ScaleAlpha(alpha, easedProgress));
         return;
     }
@@ -231,36 +212,48 @@ void InventoryPanel::Draw(sf::RenderWindow& window)
 void InventoryPanel::DrawPageControls(sf::RenderWindow& window)
 {
     sf::Uint8 alpha = GetAlphaByte();
-    float pagePulse = RemainingPulse(pageTransitionTimer, PageTransitionDuration);
-    float previousPulse = RemainingPulse(previousArrowPressTimer, ArrowPressDuration);
-    float nextPulse = RemainingPulse(nextArrowPressTimer, ArrowPressDuration);
+    float pagePulse = RemainingPulse(pageTransitionTimer,
+                                     UIConfig::Inventory::PageTransitionDuration);
+    float previousPulse =
+        RemainingPulse(previousArrowPressTimer, UIConfig::Inventory::ArrowPressDuration);
+    float nextPulse =
+        RemainingPulse(nextArrowPressTimer, UIConfig::Inventory::ArrowPressDuration);
 
     sf::Text pageText;
     pageText.setFont(font);
-    pageText.setCharacterSize(16);
+    pageText.setCharacterSize(UIConfig::Inventory::PagerTextSize);
     pageText.setString(std::to_string(currentPage + 1) + "/" +
                        std::to_string(GameConfig::InventoryPages));
-    pageText.setFillColor(LerpColor(sf::Color(216, 198, 118), sf::Color(255, 236, 154),
-                                    pagePulse, alpha));
-    pageText.setPosition(position + PagerTextPosition + sf::Vector2f{0.0f, -2.0f * pagePulse});
+    pageText.setFillColor(LerpColor(UIConfig::Inventory::PagerColor,
+                                    UIConfig::Inventory::PagerPulseColor, pagePulse, alpha));
+    pageText.setPosition(UIConfig::Inventory::Position +
+                         UIConfig::Inventory::PagerTextPosition +
+                         sf::Vector2f{0.0f, -2.0f * pagePulse});
 
     sf::Text previousText;
     previousText.setFont(font);
-    previousText.setCharacterSize(22);
+    previousText.setCharacterSize(UIConfig::Inventory::PagerArrowTextSize);
     previousText.setString("<");
-    previousText.setFillColor(LerpColor(sf::Color(232, 205, 116), sf::Color(255, 238, 160),
-                                        previousPulse, alpha));
-    previousText.setPosition(position + PagerPreviousPosition +
-                             sf::Vector2f{-ArrowPressDistance * previousPulse, 0.0f});
+    previousText.setFillColor(
+        LerpColor(UIConfig::Inventory::PagerArrowColor,
+                  UIConfig::Inventory::PagerArrowPulseColor, previousPulse, alpha));
+    previousText.setPosition(UIConfig::Inventory::Position +
+                             UIConfig::Inventory::PagerPreviousPosition +
+                             sf::Vector2f{-UIConfig::Inventory::ArrowPressDistance *
+                                              previousPulse,
+                                          0.0f});
 
     sf::Text nextText;
     nextText.setFont(font);
-    nextText.setCharacterSize(22);
+    nextText.setCharacterSize(UIConfig::Inventory::PagerArrowTextSize);
     nextText.setString(">");
-    nextText.setFillColor(LerpColor(sf::Color(232, 205, 116), sf::Color(255, 238, 160),
-                                    nextPulse, alpha));
-    nextText.setPosition(position + PagerNextPosition +
-                         sf::Vector2f{ArrowPressDistance * nextPulse, 0.0f});
+    nextText.setFillColor(
+        LerpColor(UIConfig::Inventory::PagerArrowColor,
+                  UIConfig::Inventory::PagerArrowPulseColor, nextPulse, alpha));
+    nextText.setPosition(UIConfig::Inventory::Position +
+                         UIConfig::Inventory::PagerNextPosition +
+                         sf::Vector2f{UIConfig::Inventory::ArrowPressDistance * nextPulse,
+                                      0.0f});
 
     window.draw(pageText);
     window.draw(previousText);
@@ -301,10 +294,14 @@ void InventoryPanel::DrawEmptyText(sf::RenderWindow& window, sf::Vector2f offset
 {
     sf::Text emptyText;
     emptyText.setFont(font);
-    emptyText.setCharacterSize(18);
+    emptyText.setCharacterSize(UIConfig::Inventory::EmptyTextSize);
     emptyText.setString("No items yet");
-    emptyText.setFillColor(sf::Color(205, 198, 130, pageAlpha));
-    emptyText.setPosition({position.x + 68.0f + offset.x, position.y + size.y - 56.0f + offset.y});
+    const sf::Color& emptyColor = UIConfig::Inventory::EmptyTextColor;
+    emptyText.setFillColor(sf::Color(emptyColor.r, emptyColor.g, emptyColor.b, pageAlpha));
+    emptyText.setPosition(
+        {UIConfig::Inventory::Position.x + UIConfig::Inventory::EmptyTextOffset.x + offset.x,
+         UIConfig::Inventory::Position.y + UIConfig::Inventory::Size.y +
+             UIConfig::Inventory::EmptyTextOffset.y + offset.y});
 
     window.draw(emptyText);
 }
@@ -322,9 +319,10 @@ void InventoryPanel::DrawSlot(sf::RenderWindow& window, int localIndex, sf::Vect
     sf::RectangleShape slot;
     slot.setPosition({bounds.left, bounds.top});
     slot.setSize({bounds.width, bounds.height});
-    slot.setFillColor(sf::Color(48, 64, 42, pageAlpha));
-    slot.setOutlineColor(sf::Color(104, 118, 66, pageAlpha));
-    slot.setOutlineThickness(2.0f);
+    slot.setFillColor(UIConfig::WithAlpha(UIConfig::Inventory::FallbackSlotColor, pageAlpha));
+    slot.setOutlineColor(
+        UIConfig::WithAlpha(UIConfig::Inventory::FallbackSlotOutlineColor, pageAlpha));
+    slot.setOutlineThickness(UIConfig::Inventory::FallbackSlotOutlineThickness);
     window.draw(slot);
 }
 
@@ -339,39 +337,35 @@ void InventoryPanel::DrawItem(sf::RenderWindow& window, const UIItemView& item, 
         selection.setPosition({bounds.left, bounds.top});
         selection.setSize({bounds.width, bounds.height});
         selection.setFillColor(sf::Color::Transparent);
-        selection.setOutlineColor(sf::Color(236, 214, 126, pageAlpha));
-        selection.setOutlineThickness(4.0f);
+        const sf::Color& selectionColor = UIConfig::Inventory::SelectionColor;
+        selection.setOutlineColor(
+            sf::Color(selectionColor.r, selectionColor.g, selectionColor.b, pageAlpha));
+        selection.setOutlineThickness(UIConfig::Inventory::SelectionThickness);
 
         window.draw(selection);
     }
 
-    bool drewItemTexture = UITextureUtils::DrawItemTexture(
+    UITextureUtils::DrawItem(
         window, item,
-        {bounds.left + ItemIconBounds.left, bounds.top + ItemIconBounds.top,
-         ItemIconBounds.width, ItemIconBounds.height},
+        {bounds.left + UIConfig::Inventory::ItemIconBounds.left,
+         bounds.top + UIConfig::Inventory::ItemIconBounds.top,
+         UIConfig::Inventory::ItemIconBounds.width,
+         UIConfig::Inventory::ItemIconBounds.height},
+        {bounds.left + UIConfig::Inventory::ItemFallbackIconPosition.x,
+         bounds.top + UIConfig::Inventory::ItemFallbackIconPosition.y,
+         UIConfig::Inventory::ItemFallbackIconSize.x,
+         UIConfig::Inventory::ItemFallbackIconSize.y},
         pageAlpha);
 
     sf::Text countText;
     countText.setFont(font);
-    countText.setCharacterSize(13);
+    countText.setCharacterSize(UIConfig::Inventory::ItemCountTextSize);
     countText.setString(std::to_string(item.stack.count));
-    countText.setFillColor(sf::Color(238, 214, 142, pageAlpha));
-    countText.setPosition({bounds.left + bounds.width - ItemCountOffsetFromBottomRight.x,
-                           bounds.top + bounds.height - ItemCountOffsetFromBottomRight.y});
-
-    if (!drewItemTexture)
-    {
-        sf::RectangleShape icon;
-        icon.setPosition({bounds.left + ItemFallbackIconPosition.x,
-                          bounds.top + ItemFallbackIconPosition.y});
-        icon.setSize(ItemFallbackIconSize);
-
-        sf::Color iconColor = item.iconColor;
-        iconColor.a = pageAlpha;
-        icon.setFillColor(iconColor);
-
-        window.draw(icon);
-    }
+    const sf::Color& countColor = UIConfig::Inventory::ItemCountTextColor;
+    countText.setFillColor(sf::Color(countColor.r, countColor.g, countColor.b, pageAlpha));
+    countText.setPosition(
+        {bounds.left + bounds.width - UIConfig::Inventory::ItemCountOffsetFromBottomRight.x,
+         bounds.top + bounds.height - UIConfig::Inventory::ItemCountOffsetFromBottomRight.y});
 
     window.draw(countText);
 }
@@ -382,26 +376,34 @@ sf::FloatRect InventoryPanel::GetSlotBounds(int localIndex, sf::Vector2f offset)
     int column = localIndex % GameConfig::InventoryColumns;
 
     const float gridWidth =
-        static_cast<float>(GameConfig::InventoryColumns) * slotSize +
-        static_cast<float>(GameConfig::InventoryColumns - 1) * gap;
-    const float startX = position.x + (size.x - gridWidth) * 0.5f;
+        static_cast<float>(GameConfig::InventoryColumns) * UIConfig::Inventory::SlotSize +
+        static_cast<float>(GameConfig::InventoryColumns - 1) * UIConfig::Inventory::SlotGap;
+    const float startX = UIConfig::Inventory::Position.x +
+                         (UIConfig::Inventory::Size.x - gridWidth) * 0.5f;
 
-    float x = startX + static_cast<float>(column) * (slotSize + gap) + offset.x;
-    float y = position.y + InventoryGridTop + static_cast<float>(row) * (slotSize + gap) + offset.y;
+    float x = startX + static_cast<float>(column) *
+                          (UIConfig::Inventory::SlotSize + UIConfig::Inventory::SlotGap) +
+              offset.x;
+    float y = UIConfig::Inventory::Position.y + UIConfig::Inventory::GridTop +
+              static_cast<float>(row) *
+                  (UIConfig::Inventory::SlotSize + UIConfig::Inventory::SlotGap) +
+              offset.y;
 
-    return {x, y, slotSize, slotSize};
+    return {x, y, UIConfig::Inventory::SlotSize, UIConfig::Inventory::SlotSize};
 }
 
 sf::FloatRect InventoryPanel::GetPreviousPageBounds() const
 {
-    return {position.x + PagerPreviousClickBounds.left, position.y + PagerPreviousClickBounds.top,
-            PagerPreviousClickBounds.width, PagerPreviousClickBounds.height};
+    const sf::FloatRect& bounds = UIConfig::Inventory::PagerPreviousClickBounds;
+    return {UIConfig::Inventory::Position.x + bounds.left,
+            UIConfig::Inventory::Position.y + bounds.top, bounds.width, bounds.height};
 }
 
 sf::FloatRect InventoryPanel::GetNextPageBounds() const
 {
-    return {position.x + PagerNextClickBounds.left, position.y + PagerNextClickBounds.top,
-            PagerNextClickBounds.width, PagerNextClickBounds.height};
+    const sf::FloatRect& bounds = UIConfig::Inventory::PagerNextClickBounds;
+    return {UIConfig::Inventory::Position.x + bounds.left,
+            UIConfig::Inventory::Position.y + bounds.top, bounds.width, bounds.height};
 }
 
 int InventoryPanel::GetFirstPageItemIndex() const
@@ -430,15 +432,15 @@ void InventoryPanel::ChangePage(int direction)
     currentPage =
         (currentPage + GameConfig::InventoryPages + direction) % GameConfig::InventoryPages;
     pageTransitionDirection = direction < 0 ? -1 : 1;
-    pageTransitionTimer = PageTransitionDuration;
+        pageTransitionTimer = UIConfig::Inventory::PageTransitionDuration;
 
     if (direction < 0)
     {
-        previousArrowPressTimer = ArrowPressDuration;
+        previousArrowPressTimer = UIConfig::Inventory::ArrowPressDuration;
     }
     else
     {
-        nextArrowPressTimer = ArrowPressDuration;
+        nextArrowPressTimer = UIConfig::Inventory::ArrowPressDuration;
     }
 
     ClearSelection();

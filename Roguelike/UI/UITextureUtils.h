@@ -36,4 +36,10 @@ bool DrawItemTexture(sf::RenderWindow& window,
                      const UIItemView& item,
                      sf::FloatRect bounds,
                      sf::Uint8 alpha);
+
+void DrawItem(sf::RenderWindow& window,
+              const UIItemView& item,
+              sf::FloatRect textureBounds,
+              sf::FloatRect fallbackBounds,
+              sf::Uint8 alpha);
 }  // namespace Roguelike::UITextureUtils

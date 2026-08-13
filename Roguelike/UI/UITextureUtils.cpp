@@ -17,6 +17,12 @@ sf::Sprite& GetReusableSprite()
     return sprite;
 }
 
+sf::RectangleShape& GetReusableRectangle()
+{
+    static sf::RectangleShape rectangle;
+    return rectangle;
+}
+
 // Draws one texture fragment into one destination fragment. Nine-slice and progress bars
 // both rely on this small primitive so texture math stays in one place.
 void DrawTexturePatch(sf::RenderWindow& window,
@@ -191,5 +197,25 @@ bool DrawItemTexture(sf::RenderWindow& window,
 {
     const std::string textureKey = GetItemTextureKey(item.stack);
     return !textureKey.empty() && DrawTexture(window, textureKey, bounds, alpha);
+}
+
+void DrawItem(sf::RenderWindow& window,
+              const UIItemView& item,
+              sf::FloatRect textureBounds,
+              sf::FloatRect fallbackBounds,
+              sf::Uint8 alpha)
+{
+    if (DrawItemTexture(window, item, textureBounds, alpha))
+    {
+        return;
+    }
+
+    sf::RectangleShape& fallback = GetReusableRectangle();
+    fallback.setPosition({fallbackBounds.left, fallbackBounds.top});
+    fallback.setSize({fallbackBounds.width, fallbackBounds.height});
+    fallback.setFillColor(
+        sf::Color(item.iconColor.r, item.iconColor.g, item.iconColor.b, alpha));
+    fallback.setOutlineThickness(0.0f);
+    window.draw(fallback);
 }
 }  // namespace Roguelike::UITextureUtils

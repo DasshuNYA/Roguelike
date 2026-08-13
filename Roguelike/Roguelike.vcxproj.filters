@@ -118,6 +118,9 @@
     <ClInclude Include="Config\GameConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
+    <ClInclude Include="Config\UIConfig.h">
+      <Filter>Config</Filter>
+    </ClInclude>
     <ClInclude Include="Characters\Character.h">
       <Filter>Characters</Filter>
     </ClInclude>

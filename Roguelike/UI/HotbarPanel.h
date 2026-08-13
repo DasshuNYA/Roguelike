@@ -63,10 +63,5 @@ class HotbarPanel : public Engine::UIElement
     // Per-slot pulse animation timers.
     std::array<float, 6> pulseTimers = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
-    // Hotbar row geometry in screen-space.
-    sf::Vector2f position = {784.0f, 980.0f};
-
-    float slotSize = 52.0f;
-    float gap = 8.0f;
 };
 }  // namespace Roguelike

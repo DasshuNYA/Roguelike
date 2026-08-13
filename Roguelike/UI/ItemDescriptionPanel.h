@@ -20,8 +20,6 @@ class ItemDescriptionPanel : public FramedPanel
    private:
     const sf::Font& font;
 
-    sf::RectangleShape icon;
-
     sf::Text nameText;
     sf::Text descriptionText;
     sf::Text countText;

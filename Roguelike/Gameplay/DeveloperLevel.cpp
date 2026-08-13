@@ -169,7 +169,8 @@ void DeveloperLevel::CreateMusic()
     music->SetAudio(*soundBuffer);
 
     music->SetLoop(true);
-    music->SetVolume(GameConfig::MusicVolume);
+    // Master volume is controlled by the pause menu through sf::Listener.
+    music->SetVolume(100.0f);
     music->Play();
 }
 

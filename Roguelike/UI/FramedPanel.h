@@ -12,12 +12,18 @@ namespace Roguelike
 {
 class FramedPanel : public Engine::UIElement
 {
-   protected:
-    explicit FramedPanel(const sf::Font& font);
+   public:
+    void SetOpen(bool open);
+    void Toggle();
+    bool IsOpen() const;
+    bool ContainsPoint(sf::Vector2f point) const;
 
-    void SetupFrame(sf::Vector2f position, sf::Vector2f size, const std::string& title);
+   protected:
+    FramedPanel(const sf::Font& font, sf::FloatRect bounds, const std::string& title = "");
+
     void DrawFrame(sf::RenderWindow& window);
 
+    sf::FloatRect GetBounds() const;
     sf::Vector2f GetPosition() const;
     sf::Vector2f GetSize() const;
 
@@ -26,5 +32,6 @@ class FramedPanel : public Engine::UIElement
 
     sf::RectangleShape background;
     sf::Text titleText;
+    bool isOpen = false;
 };
 }  // namespace Roguelike

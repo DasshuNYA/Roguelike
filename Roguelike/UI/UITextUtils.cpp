@@ -7,6 +7,13 @@
 
 namespace Roguelike::UITextUtils
 {
+void Center(sf::Text& text, sf::Vector2f position)
+{
+    const sf::FloatRect bounds = text.getLocalBounds();
+    text.setOrigin(bounds.left + bounds.width * 0.5f, bounds.top + bounds.height * 0.5f);
+    text.setPosition(position);
+}
+
 // Measures rendered text with the exact SFML font and character size used by the UI.
 static float GetTextWidth(const sf::Font& font, const std::string& text, unsigned int characterSize)
 {

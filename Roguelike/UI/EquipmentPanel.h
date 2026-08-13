@@ -9,7 +9,6 @@
 
 #include <array>
 #include <optional>
-#include <string>
 
 namespace Roguelike
 {
@@ -26,13 +25,9 @@ class EquipmentPanel : public FramedPanel
    public:
     explicit EquipmentPanel(const sf::Font& font);
 
-    void SetOpen(bool value);
-    bool IsOpen() const;
-
     EquipmentPlacementPreview PreviewPlacement(sf::Vector2f mousePosition,
                                                const UIItemView& item) const;
     void CommitPlacement(const EquipmentPlacementPreview& preview, const UIItemView& item);
-    bool ContainsPoint(sf::Vector2f mousePosition) const;
     void SetHighlightedItem(const std::optional<UIItemView>& item);
     void ClearHighlightedItem();
     std::array<std::optional<ItemStack>, 5> GetSavedSlots() const;
@@ -47,8 +42,6 @@ class EquipmentPanel : public FramedPanel
     bool IsPointOnAnySlot(sf::Vector2f mousePosition) const;
 
    private:
-    const sf::Font& font;
-
     // Equipment slots are drawn in this order and validated against slotTypes.
     std::array<std::optional<UIItemView>, 5> slots;
     std::optional<UIItemView> highlightedItem;
@@ -57,14 +50,5 @@ class EquipmentPanel : public FramedPanel
                                                   EquipmentSlotType::Boots,
                                                   EquipmentSlotType::Amulet,
                                                   EquipmentSlotType::Weapon};
-    std::array<std::string, 5> slotLabels = {"Head", "Armor", "Boots", "Amulet", "Weapon"};
-
-    bool isOpen = false;
-
-    // Equipment panel geometry in screen-space.
-    sf::Vector2f position = {580.0f, 90.0f};
-    sf::Vector2f size = {760.0f, 280.0f};
-
-    float slotSize = 76.0f;
 };
 }  // namespace Roguelike
